@@ -1,0 +1,20 @@
+<% if @thought_of_the_day %>
+  <div class="notification is-info is-light">
+    <strong>Thought of the Day:</strong><br>
+    <em><%= @thought_of_the_day.content %></em>
+   
+  </div>
+<% end %>
+
+
+<% content_for :title, "New diary entry" %>
+
+<h1>New diary entry</h1>
+
+<%= render "form", diary_entry: @diary_entry %>
+
+<br>
+
+<div>
+  <%= link_to "Back to diary entries", diary_entries_path %>
+</div>

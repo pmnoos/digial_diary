@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Digital Diary</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags "application" %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  </head>
+
+  <body>
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          📔 Digital Diary
+        </a>
+      </div>
+
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <% if user_signed_in? %>
+            <div class="navbar-item">Hello, <%= current_user.username.presence || current_user.email %></div>
+            <div class="navbar-item">
+              <%= button_to "Log out", destroy_user_session_path, method: :delete, form_class: "is-inline", class: "button is-light" %>
+            </div>
+          <% else %>
+            <div class="navbar-item"><%= link_to "Log in", new_user_session_path, class: "button is-light" %></div>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="columns m-0">
+      <% unless (controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index') %>
+        <aside class="column is-2 is-narrow has-background-light p-3">
+          <p class="menu-label">Navigation</p>
+          <ul class="menu-list">
+            <li><%= link_to "Entries", diary_entries_path %></li>
+            <li><%= link_to "New Entry", new_diary_entry_path %></li>
+            <li><%= link_to "Archive", archive_path %></li>
+          </ul>
+        </aside>
+        <main class="column p-4">
+          <%= yield %>
+        </main>
+      <% else %>
+        <main class="column p-4 is-full">
+          <%= yield %>
+        </main>
+      <% end %>
+    </div>
+    <footer class="footer has-background-light mt-5">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Digital Diary</strong><br>
+          <span class="is-size-5 has-text-grey">Created By EasyABC-International &copy; <%= Time.current.year %></span>
+        </p>
+        <p class="mt-2">
+          Made with Ruby on Rails & Bulma.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+

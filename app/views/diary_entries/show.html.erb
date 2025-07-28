@@ -1,0 +1,29 @@
+<p style="color: green"><%= notice %></p>
+
+<!-- Thought of the Day block -->
+<div class="notification is-info is-light mb-4">
+  <strong>Thought of the Day:</strong><br>
+  <%= thought_of_the_day(mood: @diary_entry.mood) %>
+</div>
+
+<%= render @diary_entry %>
+
+<% if @diary_entry.content.present? %>
+  <div class="box mb-4">
+    <h2 class="subtitle">Content</h2>
+    <%= @diary_entry.content.body.to_s.html_safe %>
+  </div>
+<% end %>
+
+<% if @diary_entry.images.attached? %>
+  <div class="mb-4">
+    <h2 class="subtitle">Images</h2>
+    <div class="thumbnails">
+      <% @diary_entry.images.each do |image| %>
+        <%= link_to url_for(image), target: "_blank" do %>
+          <%= image_tag url_for(image.variant(resize_to_fill: [100, 100]).processed), class: "image is-128x128 mr-2", style: "width: 100px; height: 100px; object-fit: cover;" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
