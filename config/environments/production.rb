@@ -88,7 +88,8 @@ Rails.application.configure do
   #   ENV.fetch("APP_HOST", "example.com"),
   #   /.*\.example\.com/
   # ]
-
+config.require_master_key = false
+  config.secret_key_base = ENV["facfb0bf05d5aef761d84cd1cb4e80a141b6071c5fded1a12abeac8b708be285e2761509736d63b1ebeb2704c3ef32e427566ec1a26cfcd7fdf910bce95b9239cls"]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
