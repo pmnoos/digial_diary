@@ -1,0 +1,28 @@
+<% content_for :title, "Diary Archive" %>
+
+<h1 class="title is-3 has-text-centered mb-5">📚 Diary Archive</h1>
+
+<% # Correctly group by year using the first element of the month key %>
+<% grouped_by_year = @archive.group_by { |(year, _), _| year } %>
+
+<% grouped_by_year.sort.reverse.each do |year, months| %>
+  <div class="box mb-5">
+    <h2 class="title is-4 has-text-primary">📁 <%= year %></h2>
+
+    <% months.sort.reverse.each do |(y, month_name), entries| %>
+      <div class="box mb-3 has-background-light">
+        <h3 class="subtitle is-5 has-text-info">🗓️ <%= "#{month_name} #{y}" %></h3>
+        <ul class="ml-4">
+          <% entries.each do |entry| %>
+            <li class="mb-1">
+              <%= link_to entry.title, diary_entry_path(entry), class: "has-text-dark has-text-weight-semibold" %>
+              <% if entry.mood.present? %>
+                <span class="tag is-info is-light ml-2"><%= entry.mood.capitalize %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+<% end %>

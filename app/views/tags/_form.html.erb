@@ -1,0 +1,25 @@
+<%= form_with(model: @tag, local: true) do |form| %>
+  <% if @tag.errors.any? %>
+    <div class="notification is-danger">
+      <h2><%= pluralize(@tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
+      <ul>
+        <% @tag.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name, class: "label" %>
+    <div class="control">
+      <%= form.text_field :name, class: "input" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="control">
+      <%= form.submit class: "button is-primary" %>
+    </div>
+  </div>
+<% end %>

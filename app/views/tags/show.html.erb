@@ -1,0 +1,11 @@
+<h1>Tag Details</h1>
+
+<div class="box">
+  <p>
+    <strong>Name:</strong>
+    <%= @tag.name %>
+  </p>
+</div>
+
+<%= link_to 'Edit', edit_tag_path(@tag), class: "button" %> |
+<%= link_to 'Back to Tags', tags_path, class: "button" %> 

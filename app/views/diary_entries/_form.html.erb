@@ -1,0 +1,47 @@
+<%= form_with(model: @diary_entry, local: true) do |form| %>
+
+  <% if @diary_entry.errors.any? %>
+    <div class="notification is-danger">
+      <ul>
+        <% @diary_entry.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title, class: "label" %>
+    <div class="control">
+      <%= form.text_field :title, class: "input" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :entry_date, class: "label" %>
+    <div class="control">
+      <%= form.date_field :entry_date, class: "input" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :content, "Diary Entry Content", class: "label" %>
+    <div class="control">
+      <%= form.rich_text_area :content, class: "rich-text-area", data: { behavior: "content-placeholder" } %>
+    </div>
+    <p class="help">Write your diary entry here...</p>
+  </div>
+
+
+
+  <div class="field">
+    <div class="control">
+      <%= form.submit class: "button is-primary" %>
+    </div>
+  </div>
+<% end %>
+
+
+
+
+

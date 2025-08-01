@@ -1,0 +1,31 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Diary entries" %>
+
+<h1 class="title is-3">Diary entries</h1>
+
+<div class="columns is-multiline">
+  <% @diary_entries.each do |diary_entry| %>
+    <div class="column is-one-third">
+      <div class="box">
+        <h2 class="title is-5">
+          <%= link_to diary_entry.title, diary_entry_path(diary_entry) %>
+        </h2>
+        <p><em><%= diary_entry.entry_date.strftime("%B %-d, %Y") %></em></p>
+        <p><%= truncate(diary_entry.content.body.to_plain_text, length: 100) %></p>
+        <p>
+          <%= link_to "Read entry", diary_entry, class: "button is-link is-small mt-2" %>
+        </p>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="mt-4">
+  <%= link_to "New diary entry", new_diary_entry_path, class: "button is-primary" %>
+</div>
+
+<div class="pagination mt-4">
+  <%= paginate @diary_entries %>
+</div>
+

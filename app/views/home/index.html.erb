@@ -1,0 +1,37 @@
+<section class="section">
+  <div class="container">
+    <h1 class="title is-2 has-text-centered mb-2">📔 <%= current_user.username.presence || current_user.email %>'s Digital Diary</h1>
+    <div class="has-text-centered mb-5">
+      <span class="is-size-5 has-text-weight-semibold has-text-grey"> <%= Time.current.year %></span>
+    </div>
+    <div class="box has-background-light  has-text-centered">
+      <h2 class="subtitle is-4">Welcome to your Digital Diary!</h2>
+      <p>
+        This is a private, secure place to record your thoughts, feelings, and daily experiences. You can:
+      </p>
+      <ul>
+        <li>Write new diary entries with formatted text and images</li>
+        <li>Browse and search your entries</li>
+        <li>View your archive by year and month</li>
+        <li>Edit or delete entries at any time</li>
+      </ul>
+      <p class="mt-4">
+        <strong>Get started by using the navigation links below!</strong>
+      </p>
+    </div>
+    <nav class="navbar is-light mb-5" role="navigation" aria-label="main navigation">
+      <div class="navbar-menu is-active">
+        <div class="navbar-start">
+          <a class="navbar-item" href="<%= diary_entries_path %>">Entries</a>
+          <a class="navbar-item" href="<%= new_diary_entry_path %>">New Entry</a>
+          <a class="navbar-item" href="<%= archive_path %>">Archive</a>
+        </div>
+      </div>
+    </nav>
+    <% if user_signed_in? %>
+      <div class="has-text-centered  mt-4">
+        <%= button_to "Delete My Account", registration_path(:user), method: :delete, data: { confirm: "Are you sure you want to delete your account? This cannot be undone." }, class: "button is-danger is-light" %>
+      </div>
+    <% end %>
+  </div>
+</section>

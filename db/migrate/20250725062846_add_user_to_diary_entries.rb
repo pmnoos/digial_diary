@@ -1,0 +1,5 @@
+class AddUserToDiaryEntries < ActiveRecord::Migration[8.0]
+  def change
+    add_reference :diary_entries, :user, null: false, foreign_key: true
+  end
+end
