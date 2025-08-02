@@ -15,4 +15,11 @@ production:
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <% if ENV['DATABASE_URL'] %>
   url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  database: my_diary_app_production
+  host: localhost
+  username: postgres
+  password: ""
+  <% end %>
