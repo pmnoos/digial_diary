@@ -52,7 +52,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
   
-  # Use sqlite3 as the database for Active Record in development
+  # Use sqlite3 as the database for Active Record in development and test
   gem "sqlite3", ">= 2.1"
 end
 
@@ -65,8 +65,6 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  # Use sqlite3 for testing
-  gem "sqlite3", ">= 2.1"
 end
 
 group :production do
