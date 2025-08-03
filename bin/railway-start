@@ -1,16 +1,42 @@
 #!/bin/bash
 
 # Railway deployment script for Rails app
-echo "Starting Railway deployment..."
+echo "🚂 Starting Railway deployment..."
+
+# Set environment variables for Rails
+export RAILS_ENV=production
+export RAILS_SERVE_STATIC_FILES=true
+export RAILS_LOG_TO_STDOUT=true
+
+# Check if we have all required environment variables
+if [ -z "$RAILS_MASTER_KEY" ]; then
+  echo "❌ RAILS_MASTER_KEY is not set!"
+  exit 1
+fi
+
+if [ -z "$DATABASE_URL" ] && [ -z "$PGHOST" ]; then
+  echo "❌ No database configuration found!"
+  exit 1
+fi
+
+echo "✅ Environment variables check passed"
 
 # Run database migrations
-echo "Running database migrations..."
-bundle exec rails db:migrate
+echo "🗄️ Running database migrations..."
+bundle exec rails db:migrate || {
+  echo "❌ Database migration failed!"
+  exit 1
+}
 
-# Precompile assets if needed
-echo "Precompiling assets..."
-bundle exec rails assets:precompile
+echo "✅ Database migrations completed"
+
+# Check if the app can boot
+echo "🔍 Testing app boot..."
+bundle exec rails runner "puts '✅ Rails app boots successfully'" || {
+  echo "❌ Rails app failed to boot!"
+  exit 1
+}
 
 # Start the Rails server
-echo "Starting Rails server..."
+echo "🚀 Starting Rails server on port $PORT..."
 bundle exec rails server -b 0.0.0.0 -p $PORT
