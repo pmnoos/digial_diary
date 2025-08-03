@@ -6,10 +6,13 @@ class DiaryEntriesController < ApplicationController
   end
 
   def show
+    @thought_of_the_day = Thought.where(mood: @diary_entry.mood)
+                                 .order(Arel.sql("RANDOM()")).first || 
+                          Thought.order(Arel.sql("RANDOM()")).first
   end
 
   def new
-    @diary_entry = DiaryEntry.new
+    @diary_entry = DiaryEntry.new(status: "draft")
 
     @thought_of_the_day = Thought.where(mood: %w[calm encouraging motivational positive hopeful reflective peaceful joyful])
                                  .order(Arel.sql("RANDOM()")).first || Thought.order(Arel.sql("RANDOM()")).first

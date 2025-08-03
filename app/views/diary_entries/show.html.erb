@@ -1,10 +1,12 @@
 <p style="color: green"><%= notice %></p>
 
-<!-- Thought of the Day block -->
-<div class="notification is-info is-light mb-4">
-  <strong>Thought of the Day:</strong><br>
-  <%= thought_of_the_day(mood: @diary_entry.mood) %>
-</div>
+<% if @thought_of_the_day %>
+  <!-- Thought of the Day block -->
+  <div class="notification is-info is-light mb-4">
+    <strong>Thought of the Day:</strong><br>
+    <em><%= @thought_of_the_day.content %></em>
+  </div>
+<% end %>
 
 <%= render @diary_entry %>
 
@@ -16,13 +18,45 @@
 <% end %>
 
 <% if @diary_entry.images.attached? %>
-  <div class="mb-4">
-    <h2 class="subtitle">Images</h2>
-    <div class="thumbnails">
-      <% @diary_entry.images.each do |image| %>
-        <%= link_to url_for(image), target: "_blank" do %>
-          <%= image_tag url_for(image.variant(resize_to_fill: [100, 100]).processed), class: "image is-128x128 mr-2", style: "width: 100px; height: 100px; object-fit: cover;" %>
-        <% end %>
+  <div class="mb-6">
+    <h2 class="subtitle has-text-weight-semibold">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-images"></i>
+        </span>
+        <span>Photo Gallery</span>
+      </span>
+    </h2>
+    
+    <!-- Simple Image Gallery with Bulma styling (no variants) -->
+    <div class="columns is-multiline is-mobile">
+      <% @diary_entry.images.each_with_index do |image, index| %>
+        <div class="column is-one-quarter-desktop is-one-third-tablet is-half-mobile">
+          <div class="card image-card" style="transition: transform 0.2s ease, box-shadow 0.2s ease;">
+            <div class="card-image">
+              <figure class="image is-square">
+                <%= image_tag url_for(image), 
+                    alt: "Photo #{index + 1} from #{@diary_entry.title}",
+                    class: "gallery-image",
+                    style: "width: 100%; height: 200px; object-fit: cover; cursor: pointer; border-radius: 6px;",
+                    onclick: "openModal('modal-image-#{index}')" %>
+              </figure>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal for enlarged image -->
+        <div id="modal-image-#{index}" class="modal">
+          <div class="modal-background" onclick="closeModal('modal-image-#{index}')"></div>
+          <div class="modal-content">
+            <p class="image">
+              <%= image_tag url_for(image), 
+                  alt: "Photo #{index + 1} from #{@diary_entry.title}",
+                  style: "max-width: 90vw; max-height: 90vh; object-fit: contain;" %>
+            </p>
+          </div>
+          <button class="modal-close is-large" onclick="closeModal('modal-image-#{index}')" aria-label="close"></button>
+        </div>
       <% end %>
     </div>
   </div>

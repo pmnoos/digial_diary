@@ -2,7 +2,7 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-
+// Action Text support
 import "trix"
 import "@rails/actiontext"
 

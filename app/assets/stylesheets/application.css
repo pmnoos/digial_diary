@@ -15,6 +15,38 @@ trix-editor[contenteditable="false"] {
   opacity: 0.6;
   pointer-events: none;
 }
+
+/* Image Gallery Styles */
+.image-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-image {
+  transition: transform 0.3s ease;
+}
+
+.gallery-image:hover {
+  transform: scale(1.05);
+}
+
+/* Modal styling enhancements */
+.modal-content .image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content img {
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
 /*
  * This is a manifest file that'll be compiled into application.css.
  *

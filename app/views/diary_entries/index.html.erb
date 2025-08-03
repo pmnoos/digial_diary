@@ -13,6 +13,18 @@
         </h2>
         <p><em><%= diary_entry.entry_date.strftime("%B %-d, %Y") %></em></p>
         <p><%= truncate(diary_entry.content.body.to_plain_text, length: 100) %></p>
+        
+        <% if diary_entry.images.attached? %>
+          <div class="mt-2 mb-2">
+            <% diary_entry.images.first(3).each do |image| %>
+              <%= image_tag rails_blob_path(image), class: "image is-inline-block mr-1", style: "width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" %>
+            <% end %>
+            <% if diary_entry.images.count > 3 %>
+              <span class="tag is-light">+<%= diary_entry.images.count - 3 %> more</span>
+            <% end %>
+          </div>
+        <% end %>
+        
         <p>
           <%= link_to "Read entry", diary_entry, class: "button is-link is-small mt-2" %>
         </p>

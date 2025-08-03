@@ -1,21 +1,25 @@
 default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
-
-development:
-  <<: *default
-  database: storage/development.sqlite3
-
-test:
-  <<: *default
-  database: storage/test.sqlite3
-
-production:
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: <%= ENV.fetch("PGDATABASE", "my_diary_app_production") %>
+  host: 127.0.0.1
+  port: 5432
+
+development:
+  <<: *default
+  database: my_diary_development
+  username: postgres
+  password: peter284
+
+test:
+  <<: *default
+  database: my_diary_test
+  username: postgres
+  password: peter284
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("PGDATABASE", "my_diary_production") %>
   username: <%= ENV.fetch("PGUSER", "postgres") %>
   password: <%= ENV.fetch("PGPASSWORD", "") %>
   host: <%= ENV.fetch("PGHOST", "localhost") %>

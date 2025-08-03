@@ -12,6 +12,8 @@
     <link rel="icon" type="image/png" href="/icons/icon-192.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <%= javascript_importmap_tags %>
   </head>
   <body>
     <nav class="navbar is-dark  ml-3" role="navigation" aria-label="main navigation">
@@ -83,6 +85,52 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.error('❌ Service Worker registration failed:', err));
   });
 }
+
+// Image gallery modal functionality
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('is-active');
+  }
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('is-active');
+  }
+}
+
+// Add click handlers for gallery images
+document.addEventListener('DOMContentLoaded', function() {
+  const galleryImages = document.querySelectorAll('.gallery-image');
+  galleryImages.forEach((image, index) => {
+    image.addEventListener('click', function() {
+      const modalId = `modal-image-${index}`;
+      openModal(modalId);
+    });
+  });
+  
+  // Close modal when clicking outside
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-background') || e.target.classList.contains('modal-close')) {
+      const activeModal = document.querySelector('.modal.is-active');
+      if (activeModal) {
+        activeModal.classList.remove('is-active');
+      }
+    }
+  });
+  
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const activeModal = document.querySelector('.modal.is-active');
+      if (activeModal) {
+        activeModal.classList.remove('is-active');
+      }
+    }
+  });
+});
 
 </script>
   </body>

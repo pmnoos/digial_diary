@@ -4,7 +4,6 @@ source "https://rubygems.org"
 gem "rails", "~> 8.0.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
-
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -36,11 +35,17 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Use mini_magick for image processing instead of vips
+gem "mini_magick"
+
 # Authentication
 gem "devise", "~> 4.9"
 
 # Pagination
 gem "kaminari"
+
+# Use postgresql as the database for Active Record
+gem "pg", "~> 1.1"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -51,9 +56,6 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-  
-  # Use sqlite3 as the database for Active Record in development and test
-
 end
 
 group :development do
@@ -68,6 +70,5 @@ group :test do
 end
 
 group :production do
-  # Use postgresql as the database for Active Record in production
-  gem "pg", "~> 1.1"
+  # Production-specific gems can be added here
 end
