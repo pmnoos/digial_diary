@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Railway deployment script for Rails app
+echo "Starting Railway deployment..."
+
+# Run database migrations
+echo "Running database migrations..."
+bundle exec rails db:migrate
+
+# Precompile assets if needed
+echo "Precompiling assets..."
+bundle exec rails assets:precompile
+
+# Start the Rails server
+echo "Starting Rails server..."
+bundle exec rails server -b 0.0.0.0 -p $PORT
