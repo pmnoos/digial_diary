@@ -1,12 +1,13 @@
 #!/bin/bash
 
-# Railway deployment script for Rails app
-echo "🚂 Starting Railway deployment..."
+# Railway deployment script for Rails app with Nixpacks
+echo "🚂 Starting Railway deployment with Nixpacks..."
 
 # Set environment variables for Rails
 export RAILS_ENV=production
 export RAILS_SERVE_STATIC_FILES=true
 export RAILS_LOG_TO_STDOUT=true
+export DISABLE_SPRING=1
 
 # Check if we have all required environment variables
 if [ -z "$RAILS_MASTER_KEY" ]; then
@@ -21,22 +22,31 @@ fi
 
 echo "✅ Environment variables check passed"
 
-# Run database migrations
-echo "🗄️ Running database migrations..."
-bundle exec rails db:migrate || {
-  echo "❌ Database migration failed!"
+# Ensure we're using the production bundle
+echo "📦 Checking bundle configuration..."
+bundle config set --local deployment 'true'
+bundle config set --local without 'development test'
+
+# Create the database if it doesn't exist and run migrations
+echo "🗄️ Preparing database..."
+bundle exec rails db:prepare 2>/dev/null || {
+  echo "🔄 Database prepare failed, trying create and migrate..."
+  bundle exec rails db:create 2>/dev/null || echo "Database might already exist"
+  bundle exec rails db:migrate || {
+    echo "❌ Database migration failed!"
+    exit 1
+  }
+}
+
+echo "✅ Database is ready"
+
+# Test basic Rails connectivity
+echo "🔍 Testing Rails application..."
+timeout 30 bundle exec rails runner "Rails.application.eager_load!; puts '✅ Rails app loads successfully'" || {
+  echo "❌ Rails app failed to load!"
   exit 1
 }
 
-echo "✅ Database migrations completed"
-
-# Check if the app can boot
-echo "🔍 Testing app boot..."
-bundle exec rails runner "puts '✅ Rails app boots successfully'" || {
-  echo "❌ Rails app failed to boot!"
-  exit 1
-}
-
-# Start the Rails server
-echo "🚀 Starting Rails server on port $PORT..."
-bundle exec rails server -b 0.0.0.0 -p $PORT
+# Start the Rails server with proper binding
+echo "🚀 Starting Rails server on 0.0.0.0:$PORT..."
+exec bundle exec rails server -b 0.0.0.0 -p ${PORT:-3000}
