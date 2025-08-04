@@ -23,7 +23,3 @@ class DiaryEntry < ApplicationRecord
     self.status ||= "draft"
   end
 end
-
-
-
-  

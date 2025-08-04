@@ -8,5 +8,3 @@ class User < ApplicationRecord
 
   # if using Devise or other logic, leave those lines alone
 end
-       
-

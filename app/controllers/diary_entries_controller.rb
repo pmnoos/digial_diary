@@ -3,30 +3,30 @@ class DiaryEntriesController < ApplicationController
 
   def index
     @diary_entries = current_user.diary_entries.includes(:images_attachments)
-    
+
     # Filter by year if specified
     if params[:year].present?
       year = params[:year].to_i
       @diary_entries = @diary_entries.where(entry_date: Date.new(year, 1, 1)..Date.new(year, 12, 31))
     end
-    
+
     # Search functionality
     if params[:search].present?
       @diary_entries = @diary_entries.joins(:content).where(
-        "diary_entries.title ILIKE ? OR action_text_rich_texts.body ILIKE ?", 
+        "diary_entries.title ILIKE ? OR action_text_rich_texts.body ILIKE ?",
         "%#{params[:search]}%", "%#{params[:search]}%"
       )
     end
-    
+
     @diary_entries = @diary_entries.order(entry_date: :desc).page(params[:page]).per(12)
-    
+
     # Get available years for filter dropdown
     @available_years = current_user.diary_entries.distinct.pluck(Arel.sql("EXTRACT(YEAR FROM entry_date)")).sort.reverse
   end
 
   def show
     @thought_of_the_day = Thought.where(mood: @diary_entry.mood)
-                                 .order(Arel.sql("RANDOM()")).first || 
+                                 .order(Arel.sql("RANDOM()")).first ||
                           Thought.order(Arel.sql("RANDOM()")).first
   end
 
