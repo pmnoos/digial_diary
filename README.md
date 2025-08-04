@@ -1,4 +1,8 @@
-# README
+# Digital Diary App
+
+A beautiful, feature-rich digital diary application with subscription management.
+
+Live at: https://digital-diary-app.fly.dev/
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
