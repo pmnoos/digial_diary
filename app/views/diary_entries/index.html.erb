@@ -11,7 +11,7 @@
         <h2 class="title is-5">
           <%= link_to diary_entry.title, diary_entry_path(diary_entry) %>
         </h2>
-        <p><em><%= diary_entry.entry_date.strftime("%B %-d, %Y") %></em></p>
+        <p><em><%= diary_entry.entry_date.strftime("%A, %-d %B %Y") %></em></p>
         <p><%= truncate(diary_entry.content.body.to_plain_text, length: 100) %></p>
         
         <% if diary_entry.images.attached? %>

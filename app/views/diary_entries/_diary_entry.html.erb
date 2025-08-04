@@ -5,7 +5,7 @@
         <strong>Title:</strong> <%= diary_entry.title %>
       </p>
       <p>
-        <strong>Entry date:</strong> <%= diary_entry.entry_date %>
+        <strong>Entry date:</strong> <%= diary_entry.entry_date.strftime("%A, %-d %B %Y") %>
       </p>
       <p>
         <strong>Status:</strong> <%= diary_entry.status %>
