@@ -1,0 +1,212 @@
+<div class="hero is-primary is-medium">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <h1 class="title is-2">
+        <span class="icon-text">
+          <span class="icon is-large">
+            <i class="fas fa-gem"></i>
+          </span>
+          <span>Choose Your Plan</span>
+        </span>
+      </h1>
+      <p class="subtitle is-4">
+        Unlock the full potential of your digital diary
+      </p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      
+      <!-- Free Trial Card -->
+      <div class="column is-4">
+        <div class="card" style="height: 100%; border: 2px solid #f5f5f5;">
+          <div class="card-header has-background-info-light">
+            <p class="card-header-title is-centered has-text-info">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-gift"></i>
+                </span>
+                <span>Free Trial</span>
+              </span>
+            </p>
+          </div>
+          <div class="card-content">
+            <div class="content has-text-centered">
+              <p class="title is-1 has-text-info">FREE</p>
+              <p class="subtitle">for 30 days</p>
+              
+              <div class="content">
+                <ul class="has-text-left">
+                  <li>✅ 50 diary entries</li>
+                  <li>✅ Rich text editing</li>
+                  <li>✅ Photo attachments</li>
+                  <li>✅ Mood tracking</li>
+                  <li>✅ Basic search</li>
+                  <li>✅ Mobile responsive</li>
+                  <li>❌ Unlimited entries</li>
+                  <li>❌ Advanced features</li>
+                  <li>❌ Export options</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-footer-item">
+              <%= link_to "Start Free Trial", new_user_registration_path, 
+                  class: "button is-info is-medium is-fullwidth" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly Plan Card -->
+      <div class="column is-4">
+        <div class="card" style="height: 100%; border: 2px solid #3273dc; transform: scale(1.05);">
+          <div class="card-header has-background-primary">
+            <p class="card-header-title is-centered has-text-white">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-star"></i>
+                </span>
+                <span>Monthly Plan</span>
+              </span>
+            </p>
+            <div class="card-header-icon">
+              <span class="tag is-warning">POPULAR</span>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="content has-text-centered">
+              <p class="title is-1 has-text-primary">$9.99</p>
+              <p class="subtitle">per month</p>
+              
+              <div class="content">
+                <ul class="has-text-left">
+                  <li>✅ <strong>Unlimited</strong> diary entries</li>
+                  <li>✅ Rich text editing</li>
+                  <li>✅ Photo attachments</li>
+                  <li>✅ Mood tracking</li>
+                  <li>✅ Advanced search & filters</li>
+                  <li>✅ Mobile responsive</li>
+                  <li>✅ Export to PDF/Word</li>
+                  <li>✅ Cloud backup</li>
+                  <li>✅ Priority support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-footer-item">
+              <%= form_with url: upgrade_subscriptions_path, method: :post, local: true do |form| %>
+                <%= form.hidden_field :plan, value: 'monthly' %>
+                <%= form.submit "Choose Monthly", class: "button is-primary is-medium is-fullwidth" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Yearly Plan Card -->
+      <div class="column is-4">
+        <div class="card" style="height: 100%; border: 2px solid #48c774;">
+          <div class="card-header has-background-success-light">
+            <p class="card-header-title is-centered has-text-success">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-crown"></i>
+                </span>
+                <span>Yearly Plan</span>
+              </span>
+            </p>
+            <div class="card-header-icon">
+              <span class="tag is-success">SAVE 40%</span>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="content has-text-centered">
+              <p class="title is-1 has-text-success">$59.99</p>
+              <p class="subtitle">per year</p>
+              <p class="has-text-grey">
+                <s>$119.88</s> - Save $59.89!
+              </p>
+              
+              <div class="content">
+                <ul class="has-text-left">
+                  <li>✅ <strong>Everything in Monthly</strong></li>
+                  <li>✅ Unlimited diary entries</li>
+                  <li>✅ Rich text editing</li>
+                  <li>✅ Photo attachments</li>
+                  <li>✅ Mood tracking</li>
+                  <li>✅ Advanced search & filters</li>
+                  <li>✅ Export to PDF/Word</li>
+                  <li>✅ Cloud backup</li>
+                  <li>✅ Premium support</li>
+                  <li>🎁 <strong>2 months FREE!</strong></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="card-footer-item">
+              <%= form_with url: upgrade_subscriptions_path, method: :post, local: true do |form| %>
+                <%= form.hidden_field :plan, value: 'yearly' %>
+                <%= form.submit "Choose Yearly", class: "button is-success is-medium is-fullwidth" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="content has-text-centered mt-6">
+      <h2 class="title is-3">Frequently Asked Questions</h2>
+      
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="box">
+            <h4 class="title is-5">Can I cancel anytime?</h4>
+            <p>Yes! You can cancel your subscription at any time. You'll continue to have access until the end of your billing period.</p>
+          </div>
+        </div>
+        
+        <div class="column is-6">
+          <div class="box">
+            <h4 class="title is-5">Is my data secure?</h4>
+            <p>Absolutely! We use industry-standard encryption and security measures to protect your personal diary entries.</p>
+          </div>
+        </div>
+        
+        <div class="column is-6">
+          <div class="box">
+            <h4 class="title is-5">Can I export my data?</h4>
+            <p>Yes! Premium subscribers can export their diary entries to PDF or Word documents for backup or printing.</p>
+          </div>
+        </div>
+        
+        <div class="column is-6">
+          <div class="box">
+            <h4 class="title is-5">What payment methods do you accept?</h4>
+            <p>We accept all major credit cards, PayPal, and other secure payment methods through our payment processor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Notice -->
+    <div class="notification is-warning mt-6">
+      <div class="content has-text-centered">
+        <h4 class="title is-4">🚀 This is a Demo Application</h4>
+        <p class="subtitle">
+          This pricing page is for demonstration purposes. In the demo, you can "upgrade" without payment to test all features.
+        </p>
+        <p>
+          <strong>Demo Features:</strong> Try the app with sample data, test all functionality, and see how it works with a full subscription.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -55,7 +55,39 @@
                 🗄️ Archive
               <% end %>
             </li>
+            <li>
+              <%= link_to subscriptions_path do %>
+                💎 Subscription
+              <% end %>
+            </li>
           </ul>
+          
+          <% if user_signed_in? && current_user.trial_active? %>
+            <div class="notification is-warning is-small mt-4">
+              <p class="is-size-7 has-text-centered">
+                <strong>Trial:</strong> <%= current_user.days_left_in_trial %> days left
+              </p>
+              <p class="is-size-7 has-text-centered">
+                <strong>Entries:</strong> <%= current_user.remaining_trial_entries %> remaining
+              </p>
+              <%= link_to "Upgrade", pricing_subscriptions_path, 
+                  class: "button is-warning is-small is-fullwidth mt-2" %>
+            </div>
+          <% elsif user_signed_in? && current_user.trial_expired? %>
+            <div class="notification is-danger is-small mt-4">
+              <p class="is-size-7 has-text-centered has-text-white">
+                <strong>Trial Expired</strong>
+              </p>
+              <%= link_to "Upgrade Now", pricing_subscriptions_path, 
+                  class: "button is-light is-small is-fullwidth mt-2" %>
+            </div>
+          <% elsif user_signed_in? && current_user.subscription_active? %>
+            <div class="notification is-success is-small mt-4">
+              <p class="is-size-7 has-text-centered">
+                <strong><%= current_user.subscription_plan.humanize %></strong> Plan Active
+              </p>
+            </div>
+          <% end %>
         </aside>
         <main class="column p-4">
           <%= yield %>

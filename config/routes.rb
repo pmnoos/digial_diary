@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :subscriptions, only: [:index] do
+    collection do
+      get :pricing
+      post :upgrade
+      post :demo_mode
+    end
+  end
   resources :thoughts
   resources :diary_entries
   devise_for :users

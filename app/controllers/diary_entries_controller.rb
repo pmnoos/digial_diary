@@ -1,5 +1,7 @@
 class DiaryEntriesController < ApplicationController
   before_action :set_diary_entry, only: %i[show edit update destroy]
+  before_action :check_subscription_access, except: [:show]
+  before_action :check_entry_limit, only: [:new, :create]
 
   def index
     @diary_entries = current_user.diary_entries.includes(:images_attachments)
@@ -78,6 +80,22 @@ class DiaryEntriesController < ApplicationController
 
   def set_diary_entry
     @diary_entry = current_user.diary_entries.find(params[:id])
+  end
+
+  def check_subscription_access
+    unless current_user.can_access_app?
+      redirect_to pricing_subscriptions_path, alert: "Your trial has expired. Please upgrade to continue using Digital Diary."
+    end
+  end
+
+  def check_entry_limit
+    unless current_user.can_create_entry?
+      if current_user.trial_active?
+        redirect_to subscriptions_path, alert: "You've reached the limit of 50 entries for your trial. Upgrade to create unlimited entries!"
+      else
+        redirect_to pricing_subscriptions_path, alert: "Please upgrade your subscription to create new entries."
+      end
+    end
   end
 
   def diary_entry_params
