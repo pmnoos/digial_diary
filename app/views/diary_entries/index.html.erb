@@ -4,6 +4,42 @@
 
 <h1 class="title is-3">Diary entries</h1>
 
+<!-- Search and Filter Section -->
+<div class="box mb-4">
+  <%= form_with url: diary_entries_path, method: :get, local: true, class: "field is-grouped" do |form| %>
+    <div class="control is-expanded">
+      <%= form.text_field :search, value: params[:search], 
+          placeholder: "Search your diary entries...", 
+          class: "input" %>
+    </div>
+    <div class="control">
+      <%= form.select :year, options_from_collection_for_select(@available_years, :to_s, :to_s, params[:year]), 
+          { prompt: "All years" }, 
+          { class: "select" } %>
+    </div>
+    <div class="control">
+      <%= form.submit "Filter", class: "button is-primary" %>
+    </div>
+    <% if params[:search].present? || params[:year].present? %>
+      <div class="control">
+        <%= link_to "Clear", diary_entries_path, class: "button is-light" %>
+      </div>
+    <% end %>
+  <% end %>
+  
+  <% if params[:search].present? %>
+    <p class="has-text-grey mt-2">
+      <em>Searching for: "<%= params[:search] %>"</em>
+    </p>
+  <% end %>
+  
+  <% if params[:year].present? %>
+    <p class="has-text-grey mt-2">
+      <em>Showing entries from: <%= params[:year] %></em>
+    </p>
+  <% end %>
+</div>
+
 <div class="columns is-multiline">
   <% @diary_entries.each do |diary_entry| %>
     <div class="column is-one-third">
@@ -35,6 +71,33 @@
 
 <div class="mt-4">
   <%= link_to "New diary entry", new_diary_entry_path, class: "button is-primary" %>
+</div>
+
+<!-- Statistics Section -->
+<div class="box mt-4">
+  <h3 class="title is-5">📊 Your Diary Statistics</h3>
+  <div class="columns">
+    <div class="column">
+      <div class="has-text-centered">
+        <p class="title is-4 has-text-primary"><%= @diary_entries.total_count %></p>
+        <p class="subtitle is-6">Total Entries</p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="has-text-centered">
+        <p class="title is-4 has-text-info"><%= @available_years.count %></p>
+        <p class="subtitle is-6">Years of Memories</p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="has-text-centered">
+        <p class="title is-4 has-text-success">
+          <%= current_user.diary_entries.joins(:images_attachments).distinct.count %>
+        </p>
+        <p class="subtitle is-6">Entries with Photos</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="pagination mt-4">
