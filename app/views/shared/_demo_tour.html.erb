@@ -96,8 +96,23 @@ function showDemoTour() {
 // Auto-show demo tour for first-time visitors
 document.addEventListener('DOMContentLoaded', function() {
   const hideDemo = localStorage.getItem('hideDemoTour');
-  if (!hideDemo) {
-    // Show tour after a short delay to let page load
+  const visitCount = parseInt(localStorage.getItem('demoVisitCount') || '0') + 1;
+  localStorage.setItem('demoVisitCount', visitCount.toString());
+  
+  // Show different messages based on visit count
+  const banner = document.querySelector('.demo-visit-banner');
+  if (banner && visitCount > 1) {
+    banner.innerHTML = `
+      <div class="content has-text-centered">
+        <p class="has-text-weight-semibold">👋 Welcome back! (Visit #${visitCount})</p>
+        <p>Thanks for exploring our demo again! 
+           <a href="/users/sign_up" class="has-text-link has-text-weight-semibold">Ready to start your own diary?</a></p>
+      </div>
+    `;
+  }
+  
+  if (!hideDemo && visitCount === 1) {
+    // Show tour after a short delay to let page load - only for first-time visitors
     setTimeout(showDemoTour, 1500);
   }
 });
