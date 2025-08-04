@@ -20,16 +20,29 @@
   <div class="field">
     <%= form.label :entry_date, class: "label" %>
     <div class="control">
-      <!-- Hidden date field for form submission -->
-      <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "display: none;" %>
-      <!-- Visible formatted date input -->
-      <input type="text" 
-             id="diary_entry_date_display" 
-             class="input" 
-             placeholder="Select a date..."
-             readonly
-             onclick="document.getElementById('diary_entry_date_hidden').showPicker()"
-             style="cursor: pointer;">
+      <div class="field has-addons">
+        <!-- Hidden date field for form submission -->
+        <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "position: absolute; opacity: 0; pointer-events: none;" %>
+        <!-- Visible formatted date input -->
+        <div class="control is-expanded">
+          <input type="text" 
+                 id="diary_entry_date_display" 
+                 class="input" 
+                 placeholder="📅 Click to select a date..."
+                 readonly
+                 style="cursor: pointer; background-color: white;">
+        </div>
+        <div class="control">
+          <button type="button" 
+                  class="button is-primary" 
+                  onclick="openDatePicker()"
+                  style="border-left: none;">
+            <span class="icon">
+              <i class="fas fa-calendar-alt"></i>
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
     <p class="help has-text-info">Click to select a date - it will show with day name</p>
   </div>
@@ -52,6 +65,17 @@
 <% end %>
 
 <script>
+function openDatePicker() {
+  const dateInputHidden = document.getElementById('diary_entry_date_hidden');
+  if (dateInputHidden.showPicker) {
+    dateInputHidden.showPicker();
+  } else {
+    // Fallback for browsers that don't support showPicker
+    dateInputHidden.focus();
+    dateInputHidden.click();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const dateInputHidden = document.getElementById('diary_entry_date_hidden');
   const dateInputDisplay = document.getElementById('diary_entry_date_display');
@@ -67,10 +91,12 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       const formattedDate = selectedDate.toLocaleDateString('en-US', options);
       dateInputDisplay.value = `📅 ${formattedDate}`;
-      dateInputDisplay.classList.add('has-text-primary');
+      dateInputDisplay.style.color = '#3273dc';
+      dateInputDisplay.style.fontWeight = '600';
     } else {
       dateInputDisplay.value = '';
-      dateInputDisplay.classList.remove('has-text-primary');
+      dateInputDisplay.style.color = '';
+      dateInputDisplay.style.fontWeight = '';
     }
   }
   
@@ -78,15 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
   dateInputHidden.addEventListener('change', updateDateDisplay);
   
   // Handle clicking on display input to open date picker
-  dateInputDisplay.addEventListener('click', function() {
-    if (dateInputHidden.showPicker) {
-      dateInputHidden.showPicker();
-    } else {
-      // Fallback for browsers that don't support showPicker
-      dateInputHidden.focus();
-      dateInputHidden.click();
-    }
-  });
+  dateInputDisplay.addEventListener('click', openDatePicker);
   
   // Update display on page load if date is already set
   updateDateDisplay();
