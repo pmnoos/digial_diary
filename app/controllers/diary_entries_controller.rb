@@ -1,29 +1,47 @@
 class DiaryEntriesController < ApplicationController
   before_action :set_diary_entry, only: %i[show edit update destroy]
-  before_action :check_subscription_access, except: [:show]
+  before_action :check_subscription_access, except: [:show, :index]
   before_action :check_entry_limit, only: [:new, :create]
+  skip_before_action :authenticate_user!, only: [:index, :show]
 
   def index
-    @diary_entries = current_user.diary_entries.includes(:images_attachments)
+    if user_signed_in?
+      # Logged in users see their own entries
+      @diary_entries = current_user.diary_entries.includes(:images_attachments)
+      
+      # Filter by year if specified
+      if params[:year].present?
+        year = params[:year].to_i
+        @diary_entries = @diary_entries.where(entry_date: Date.new(year, 1, 1)..Date.new(year, 12, 31))
+      end
 
-    # Filter by year if specified
-    if params[:year].present?
-      year = params[:year].to_i
-      @diary_entries = @diary_entries.where(entry_date: Date.new(year, 1, 1)..Date.new(year, 12, 31))
+      # Search functionality
+      if params[:search].present?
+        @diary_entries = @diary_entries.joins(:content).where(
+          "diary_entries.title ILIKE ? OR action_text_rich_texts.body ILIKE ?",
+          "%#{params[:search]}%", "%#{params[:search]}%"
+        )
+      end
+
+      @diary_entries = @diary_entries.order(entry_date: :desc).page(params[:page]).per(12)
+
+      # Get available years for filter dropdown
+      @available_years = current_user.diary_entries.distinct.pluck(Arel.sql("EXTRACT(YEAR FROM entry_date)")).sort.reverse
+    else
+      # Visitors see demo entries
+      @demo_mode = true
+      @diary_entries = DiaryEntry.joins(:user)
+                                 .where(users: { username: 'DemoUser' })
+                                 .includes(:images_attachments)
+                                 .order(entry_date: :desc)
+                                 .page(params[:page]).per(12)
+      
+      @available_years = DiaryEntry.joins(:user)
+                                   .where(users: { username: 'DemoUser' })
+                                   .distinct
+                                   .pluck(Arel.sql("EXTRACT(YEAR FROM entry_date)"))
+                                   .sort.reverse
     end
-
-    # Search functionality
-    if params[:search].present?
-      @diary_entries = @diary_entries.joins(:content).where(
-        "diary_entries.title ILIKE ? OR action_text_rich_texts.body ILIKE ?",
-        "%#{params[:search]}%", "%#{params[:search]}%"
-      )
-    end
-
-    @diary_entries = @diary_entries.order(entry_date: :desc).page(params[:page]).per(12)
-
-    # Get available years for filter dropdown
-    @available_years = current_user.diary_entries.distinct.pluck(Arel.sql("EXTRACT(YEAR FROM entry_date)")).sort.reverse
   end
 
   def show
@@ -79,7 +97,17 @@ class DiaryEntriesController < ApplicationController
   private
 
   def set_diary_entry
-    @diary_entry = current_user.diary_entries.find(params[:id])
+    if current_user
+      @diary_entry = current_user.diary_entries.find(params[:id])
+    else
+      # For visitors in demo mode, find entry from demo user
+      demo_user = User.find_by(username: 'DemoUser')
+      if demo_user
+        @diary_entry = demo_user.diary_entries.find(params[:id])
+      else
+        redirect_to diary_entries_path, alert: "Demo content not available"
+      end
+    end
   end
 
   def check_subscription_access

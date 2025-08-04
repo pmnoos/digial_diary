@@ -2,6 +2,17 @@
 
 <% content_for :title, "Diary entries" %>
 
+<% unless user_signed_in? %>
+  <div class="notification is-info is-light mb-4">
+    <div class="content has-text-centered">
+      <p class="has-text-weight-semibold">📔 You're viewing demo content</p>
+      <p>This is a sample diary with real entries to showcase the Digital Diary experience. 
+         <%= link_to "Sign up for free", new_user_registration_path, class: "has-text-link has-text-weight-semibold" %> 
+         to start your own digital diary!</p>
+    </div>
+  </div>
+<% end %>
+
 <h1 class="title is-3">Diary entries</h1>
 
 <!-- Search and Filter Section -->
@@ -70,7 +81,17 @@
 </div>
 
 <div class="mt-4">
-  <%= link_to "New diary entry", new_diary_entry_path, class: "button is-primary" %>
+  <% if user_signed_in? %>
+    <%= link_to "New diary entry", new_diary_entry_path, class: "button is-primary" %>
+  <% else %>
+    <div class="notification is-info is-light">
+      <p class="has-text-centered">
+        <strong>Want to create your own diary entries?</strong><br>
+        <%= link_to "Sign up now", new_user_registration_path, class: "button is-primary" %> 
+        to start your personal diary journey!
+      </p>
+    </div>
+  <% end %>
 </div>
 
 <!-- Statistics Section -->
@@ -92,7 +113,11 @@
     <div class="column">
       <div class="has-text-centered">
         <p class="title is-4 has-text-success">
-          <%= current_user.diary_entries.joins(:images_attachments).distinct.count %>
+          <% if user_signed_in? %>
+            <%= current_user.diary_entries.joins(:images_attachments).distinct.count %>
+          <% else %>
+            <%= DiaryEntry.joins(:user, :images_attachments).where(users: { username: 'DemoUser' }).distinct.count %>
+          <% end %>
         </p>
         <p class="subtitle is-6">Entries with Photos</p>
       </div>

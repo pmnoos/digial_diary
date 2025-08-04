@@ -30,13 +30,16 @@
               <%= button_to "Log out", destroy_user_session_path, method: :delete, form_class: "is-inline", class: "button is-light" %>
             </div>
           <% else %>
-            <div class="navbar-item"><%= link_to "Log in", new_user_session_path, class: "button is-light" %></div>
+            <div class="navbar-item">
+              <%= link_to "Sign Up", new_user_registration_path, class: "button is-primary" %>
+              <%= link_to "Log in", new_user_session_path, class: "button is-light" %>
+            </div>
           <% end %>
         </div>
       </div>
     </nav>
     <div class="columns m-0">
-      <% unless (controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index') %>
+      <% if user_signed_in? && !((controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index')) %>
         <aside class="column is-2 is-narrow has-background-light p-3" style="margin-left: 1.5rem;">
           <p class="menu-label ml-3 is-capitalized is-size-6 has-text-weight-bold has-text-info">Navigation</p>
           <ul class="menu-list">

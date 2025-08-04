@@ -1,5 +1,5 @@
 class SubscriptionsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:pricing]
 
   def index
     @user = current_user
@@ -9,7 +9,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def pricing
-    # Pricing information page
+    # Pricing information page - accessible to everyone
   end
 
   def upgrade
