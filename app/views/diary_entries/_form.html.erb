@@ -20,9 +20,18 @@
   <div class="field">
     <%= form.label :entry_date, class: "label" %>
     <div class="control">
-      <%= form.date_field :entry_date, class: "input", id: "diary_entry_date" %>
+      <!-- Hidden date field for form submission -->
+      <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "display: none;" %>
+      <!-- Visible formatted date input -->
+      <input type="text" 
+             id="diary_entry_date_display" 
+             class="input" 
+             placeholder="Select a date..."
+             readonly
+             onclick="document.getElementById('diary_entry_date_hidden').showPicker()"
+             style="cursor: pointer;">
     </div>
-    <p class="help" id="date-preview">Select a date to see the day name</p>
+    <p class="help has-text-info">Click to select a date - it will show with day name</p>
   </div>
 
   <div class="field">
@@ -44,12 +53,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const dateInput = document.getElementById('diary_entry_date');
-  const datePreview = document.getElementById('date-preview');
+  const dateInputHidden = document.getElementById('diary_entry_date_hidden');
+  const dateInputDisplay = document.getElementById('diary_entry_date_display');
   
-  function updateDatePreview() {
-    if (dateInput.value) {
-      const selectedDate = new Date(dateInput.value + 'T00:00:00');
+  function updateDateDisplay() {
+    if (dateInputHidden.value) {
+      const selectedDate = new Date(dateInputHidden.value + 'T00:00:00');
       const options = { 
         weekday: 'long', 
         year: 'numeric', 
@@ -57,19 +66,30 @@ document.addEventListener('DOMContentLoaded', function() {
         day: 'numeric' 
       };
       const formattedDate = selectedDate.toLocaleDateString('en-US', options);
-      datePreview.textContent = `📅 ${formattedDate}`;
-      datePreview.classList.add('has-text-info');
+      dateInputDisplay.value = `📅 ${formattedDate}`;
+      dateInputDisplay.classList.add('has-text-primary');
     } else {
-      datePreview.textContent = 'Select a date to see the day name';
-      datePreview.classList.remove('has-text-info');
+      dateInputDisplay.value = '';
+      dateInputDisplay.classList.remove('has-text-primary');
     }
   }
   
-  // Update preview when date changes
-  dateInput.addEventListener('change', updateDatePreview);
+  // Update display when hidden date input changes
+  dateInputHidden.addEventListener('change', updateDateDisplay);
   
-  // Update preview on page load if date is already set
-  updateDatePreview();
+  // Handle clicking on display input to open date picker
+  dateInputDisplay.addEventListener('click', function() {
+    if (dateInputHidden.showPicker) {
+      dateInputHidden.showPicker();
+    } else {
+      // Fallback for browsers that don't support showPicker
+      dateInputHidden.focus();
+      dateInputHidden.click();
+    }
+  });
+  
+  // Update display on page load if date is already set
+  updateDateDisplay();
 });
 </script>
 
