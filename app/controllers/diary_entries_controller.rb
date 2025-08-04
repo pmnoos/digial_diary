@@ -30,11 +30,36 @@ class DiaryEntriesController < ApplicationController
     else
       # Visitors see demo entries
       @demo_mode = true
+      
+      # Check if DemoUser exists
+      demo_user = User.find_by(username: 'DemoUser')
+      if demo_user.nil?
+        # Fallback: redirect to sign up if no demo data available
+        redirect_to new_user_registration_path, 
+                    alert: "Demo data not available. Please sign up to try the app!"
+        return
+      end
+      
       @diary_entries = DiaryEntry.joins(:user)
                                  .where(users: { username: 'DemoUser' })
                                  .includes(:images_attachments)
-                                 .order(entry_date: :desc)
-                                 .page(params[:page]).per(12)
+      
+      # Filter by year if specified
+      if params[:year].present?
+        year = params[:year].to_i
+        @diary_entries = @diary_entries.where(entry_date: Date.new(year, 1, 1)..Date.new(year, 12, 31))
+      end
+
+      # Search functionality for demo entries
+      if params[:search].present?
+        @diary_entries = @diary_entries.joins(:content).where(
+          "diary_entries.title ILIKE ? OR action_text_rich_texts.body ILIKE ?",
+          "%#{params[:search]}%", "%#{params[:search]}%"
+        )
+      end
+      
+      @diary_entries = @diary_entries.order(entry_date: :desc)
+                                     .page(params[:page]).per(12)
       
       @available_years = DiaryEntry.joins(:user)
                                    .where(users: { username: 'DemoUser' })
