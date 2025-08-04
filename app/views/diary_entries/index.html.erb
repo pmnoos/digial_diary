@@ -9,6 +9,32 @@
       <p>This is a sample diary with real entries to showcase the Digital Diary experience. 
          <%= link_to "Sign up for free", new_user_registration_path, class: "has-text-link has-text-weight-semibold" %> 
          to start your own digital diary!</p>
+      <button class="button is-primary is-small mt-2" onclick="showDemoTour()">
+        <span class="icon">
+          <i class="fas fa-map-marked-alt"></i>
+        </span>
+        <span>Take Demo Tour</span>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Include Demo Tour Modal -->
+  <%= render 'shared/demo_tour' %>
+  
+  <!-- Tag Suggestions for Demo Visitors -->
+  <div class="notification is-success is-light mb-4">
+    <div class="content">
+      <h5 class="title is-5">🏷️ Explore by Popular Tags</h5>
+      <p>Try searching for these topics to discover interesting entries:</p>
+      <div class="tags mt-2">
+        <% popular_tags = ['travel', 'work-life', 'family-time', 'creativity', 'fitness', 'cooking', 'reading', 'meditation', 'friends', 'celebrations'] %>
+        <% popular_tags.each do |tag| %>
+          <%= link_to diary_entries_path(search: tag), class: "tag is-success is-medium" do %>
+            <span><%= tag.titleize %></span>
+          <% end %>
+        <% end %>
+      </div>
+      <p class="help">Click any tag to search for related entries!</p>
     </div>
   </div>
 <% end %>
@@ -96,18 +122,29 @@
 
 <!-- Statistics Section -->
 <div class="box mt-4">
-  <h3 class="title is-5">📊 Your Diary Statistics</h3>
+  <% if user_signed_in? %>
+    <h3 class="title is-5">📊 Your Diary Statistics</h3>
+  <% else %>
+    <h3 class="title is-5">📊 Demo Diary Statistics</h3>
+    <p class="subtitle is-6 has-text-grey">See what your stats could look like!</p>
+  <% end %>
   <div class="columns">
     <div class="column">
       <div class="has-text-centered">
         <p class="title is-4 has-text-primary"><%= @diary_entries.total_count %></p>
         <p class="subtitle is-6">Total Entries</p>
+        <% unless user_signed_in? %>
+          <span class="tag is-info is-light">Demo shows <%= @diary_entries.total_count %> entries!</span>
+        <% end %>
       </div>
     </div>
     <div class="column">
       <div class="has-text-centered">
         <p class="title is-4 has-text-info"><%= @available_years.count %></p>
         <p class="subtitle is-6">Years of Memories</p>
+        <% unless user_signed_in? %>
+          <span class="tag is-info is-light">Spanning <%= @available_years.count %> years</span>
+        <% end %>
       </div>
     </div>
     <div class="column">
@@ -120,9 +157,26 @@
           <% end %>
         </p>
         <p class="subtitle is-6">Entries with Photos</p>
+        <% unless user_signed_in? %>
+          <span class="tag is-success is-light">Visual memories!</span>
+        <% end %>
       </div>
     </div>
   </div>
+  
+  <% unless user_signed_in? %>
+    <div class="has-text-centered mt-4">
+      <p class="has-text-grey">
+        <em>Imagine your own diary growing this rich with memories...</em>
+      </p>
+      <%= link_to new_user_registration_path, class: "button is-primary mt-2" do %>
+        <span class="icon">
+          <i class="fas fa-rocket"></i>
+        </span>
+        <span>Start Your Journey Today</span>
+      <% end %>
+    </div>
+  <% end %>
 </div>
 
 <div class="pagination mt-4">

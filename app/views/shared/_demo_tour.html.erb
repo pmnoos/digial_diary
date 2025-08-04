@@ -1,0 +1,104 @@
+<!-- Demo Tour Modal -->
+<div id="demo-tour-modal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">
+        <span class="icon-text">
+          <span class="icon has-text-primary">
+            <i class="fas fa-map-marked-alt"></i>
+          </span>
+          <span>Welcome to Digital Diary Demo!</span>
+        </span>
+      </p>
+      <button class="delete" aria-label="close" onclick="closeDemoTour()"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="content">
+        <h4 class="title is-4 has-text-centered">🎯 Try These Demo Features</h4>
+        
+        <div class="columns is-multiline">
+          <div class="column is-6">
+            <div class="box has-background-info-light">
+              <h5 class="title is-5">📖 Browse Entries</h5>
+              <p>Explore <strong>300+ sample diary entries</strong> from our demo user with different moods, photos, and dates.</p>
+              <p class="has-text-info has-text-weight-semibold">You're already here!</p>
+            </div>
+          </div>
+          
+          <div class="column is-6">
+            <div class="box has-background-success-light">
+              <h5 class="title is-5">🔍 Search & Filter</h5>
+              <p>Use the <strong>search box</strong> and <strong>year filter</strong> to find specific entries about travel, work, family, etc.</p>
+              <p class="has-text-success has-text-weight-semibold">Try searching "vacation"!</p>
+            </div>
+          </div>
+          
+          <div class="column is-6">
+            <div class="box has-background-warning-light">
+              <h5 class="title is-5">📱 View Individual Entries</h5>
+              <p>Click <strong>"Read entry"</strong> on any diary card to see full content, photos, and rich formatting.</p>
+              <p class="has-text-warning-dark has-text-weight-semibold">Check out entries with photos!</p>
+            </div>
+          </div>
+          
+          <div class="column is-6">
+            <div class="box has-background-primary-light">
+              <h5 class="title is-5">📊 Statistics View</h5>
+              <p>See the <strong>statistics section</strong> below showing total entries, years of memories, and photo counts.</p>
+              <p class="has-text-primary has-text-weight-semibold">Scroll down to see them!</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="notification is-primary">
+          <h5 class="title is-5 has-text-white">💡 Ready to Start Your Own Diary?</h5>
+          <p class="has-text-white">
+            Sign up for free to get <strong>50 diary entries</strong> in your 30-day trial, 
+            plus all the features you see in this demo!
+          </p>
+          <div class="buttons is-centered mt-3">
+            <%= link_to "Start Free Trial", new_user_registration_path, 
+                class: "button is-white has-text-primary is-medium" %>
+            <%= link_to "See Pricing", pricing_subscriptions_path, 
+                class: "button is-light has-text-primary is-medium" %>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-primary" onclick="closeDemoTour()">Start Exploring!</button>
+      <label class="checkbox ml-3">
+        <input type="checkbox" id="dont-show-again"> 
+        Don't show this again
+      </label>
+    </footer>
+  </div>
+</div>
+
+<script>
+function closeDemoTour() {
+  const modal = document.getElementById('demo-tour-modal');
+  const checkbox = document.getElementById('dont-show-again');
+  
+  if (checkbox.checked) {
+    localStorage.setItem('hideDemoTour', 'true');
+  }
+  
+  modal.classList.remove('is-active');
+}
+
+function showDemoTour() {
+  const modal = document.getElementById('demo-tour-modal');
+  modal.classList.add('is-active');
+}
+
+// Auto-show demo tour for first-time visitors
+document.addEventListener('DOMContentLoaded', function() {
+  const hideDemo = localStorage.getItem('hideDemoTour');
+  if (!hideDemo) {
+    // Show tour after a short delay to let page load
+    setTimeout(showDemoTour, 1500);
+  }
+});
+</script>
