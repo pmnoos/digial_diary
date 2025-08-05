@@ -11,10 +11,46 @@
           <%= link_to "See Pricing", pricing_subscriptions_path, class: "button is-link is-large" %>
         </div>
         
+        <!-- Demo Login Credentials -->
+        <div class="notification is-success is-light mt-5">
+          <div class="content has-text-centered">
+            <h4 class="title is-4">🔑 Try Demo Login</h4>
+            <p class="subtitle is-5">Want to see the full experience? Log in with our demo account!</p>
+            <div class="box has-background-white mt-3" style="max-width: 400px; margin: 0 auto;">
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="control has-icons-left">
+                  <input class="input" type="text" value="demo@digitaldiaryapp.com" readonly onclick="this.select()">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field">
+                <label class="label">Password</label>
+                <div class="control has-icons-left">
+                  <input class="input" type="text" value="demopassword123" readonly onclick="this.select()">
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="field mt-4">
+                <%= link_to "Login with Demo Account", new_user_session_path(demo: true), 
+                    class: "button is-success is-medium is-fullwidth", 
+                    id: "demo-login-btn" %>
+              </div>
+              <p class="help has-text-grey is-size-7 mt-2">
+                Click fields above to copy • Experience all features with sample data
+              </p>
+            </div>
+          </div>
+        </div>
+        
         <!-- Demo Stats Preview -->
         <div class="notification is-primary is-light mt-5">
           <div class="content has-text-centered">
-            <h4 class="title is-4">🎯 Try Our Live Demo</h4>
+            <h4 class="title is-4">🎯 What You'll See in the Demo</h4>
             <p>Explore a real diary with <strong><%= @total_demo_entries %> actual entries</strong> to see exactly how Digital Diary works!</p>
             <div class="columns is-mobile has-text-centered mt-3">
               <div class="column">
