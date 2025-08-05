@@ -7,6 +7,7 @@ class DiaryEntry < ApplicationRecord
   has_many :tags, through: :diary_entry_tags
 
   validates :title, presence: true
+  validates :entry_date, presence: true
   validates :status, inclusion: { in: %w[draft published] }
 
   # Set default status
@@ -21,5 +22,6 @@ class DiaryEntry < ApplicationRecord
 
   def set_defaults
     self.status ||= "draft"
+    self.entry_date ||= Date.current
   end
 end
