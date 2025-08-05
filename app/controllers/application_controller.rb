@@ -4,12 +4,6 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  def manual_logout
-    reset_session
-    sign_out_all_scopes
-    redirect_to root_path, notice: "Successfully logged out!"
-  end
-
   protected
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :username ])

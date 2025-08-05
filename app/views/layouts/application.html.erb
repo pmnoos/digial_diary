@@ -33,9 +33,6 @@
                     turbo_confirm: "Are you sure you want to log out?",
                     csrf: true
                   } %>
-              <!-- Alternative logout if the main one doesn't work -->
-              <%= link_to "Manual Logout", "/manual_logout", class: "button is-warning is-small ml-2",
-                  title: "Use this if regular logout doesn't work" %>
             </div>
           <% else %>
             <div class="navbar-item">
