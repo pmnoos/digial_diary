@@ -1,8 +1,8 @@
 class DiaryEntriesController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_diary_entry, only: %i[show edit update destroy]
   before_action :check_subscription_access, except: [:show, :index]
   before_action :check_entry_limit, only: [:new, :create]
-  skip_before_action :authenticate_user!, only: [:index, :show]
 
   def index
     if user_signed_in?
@@ -17,7 +17,7 @@ class DiaryEntriesController < ApplicationController
 
       # Search functionality
       if params[:search].present?
-        @diary_entries = @diary_entries.joins(:content).where(
+        @diary_entries = @diary_entries.joins("LEFT JOIN action_text_rich_texts ON action_text_rich_texts.record_type = 'DiaryEntry' AND action_text_rich_texts.record_id = diary_entries.id AND action_text_rich_texts.name = 'content'").where(
           "diary_entries.title ILIKE ? OR action_text_rich_texts.body ILIKE ?",
           "%#{params[:search]}%", "%#{params[:search]}%"
         )
@@ -52,7 +52,7 @@ class DiaryEntriesController < ApplicationController
 
       # Search functionality for demo entries
       if params[:search].present?
-        @diary_entries = @diary_entries.joins(:content).where(
+        @diary_entries = @diary_entries.joins("LEFT JOIN action_text_rich_texts ON action_text_rich_texts.record_type = 'DiaryEntry' AND action_text_rich_texts.record_id = diary_entries.id AND action_text_rich_texts.name = 'content'").where(
           "diary_entries.title ILIKE ? OR action_text_rich_texts.body ILIKE ?",
           "%#{params[:search]}%", "%#{params[:search]}%"
         )

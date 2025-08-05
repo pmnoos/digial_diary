@@ -89,11 +89,19 @@
         
         <% if diary_entry.images.attached? %>
           <div class="mt-2 mb-2">
+            <div class="is-flex is-align-items-center mb-2">
+              <span class="icon-text has-text-primary">
+                <span class="icon">
+                  <i class="fas fa-images"></i>
+                </span>
+                <span class="is-size-7 has-text-weight-semibold">Photo Gallery (<%= diary_entry.images.count %> <%= 'photo'.pluralize(diary_entry.images.count) %>)</span>
+              </span>
+            </div>
             <% diary_entry.images.first(3).each do |image| %>
-              <%= image_tag rails_blob_path(image), class: "image is-inline-block mr-1", style: "width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" %>
+              <%= image_tag rails_blob_path(image), class: "image is-inline-block mr-1", style: "width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 2px solid #dbdbdb;" %>
             <% end %>
             <% if diary_entry.images.count > 3 %>
-              <span class="tag is-light">+<%= diary_entry.images.count - 3 %> more</span>
+              <span class="tag is-light is-small">+<%= diary_entry.images.count - 3 %> more</span>
             <% end %>
           </div>
         <% end %>

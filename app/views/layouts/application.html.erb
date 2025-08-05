@@ -27,7 +27,15 @@
           <% if user_signed_in? %>
             <div class="navbar-item">Hello, <%= current_user.username.presence || current_user.email %></div>
             <div class="navbar-item">
-              <%= button_to "Log out", destroy_user_session_path, method: :delete, form_class: "is-inline", class: "button is-light" %>
+              <%= link_to "Log out", destroy_user_session_path, method: :delete, class: "button is-light",
+                  data: { 
+                    turbo_method: :delete, 
+                    turbo_confirm: "Are you sure you want to log out?",
+                    csrf: true
+                  } %>
+              <!-- Alternative logout if the main one doesn't work -->
+              <%= link_to "Manual Logout", "/manual_logout", class: "button is-warning is-small ml-2",
+                  title: "Use this if regular logout doesn't work" %>
             </div>
           <% else %>
             <div class="navbar-item">
@@ -123,36 +131,56 @@ if ('serviceWorker' in navigator) {
 
 // Image gallery modal functionality
 function openModal(modalId) {
+  console.log('Opening modal:', modalId);
   const modal = document.getElementById(modalId);
   if (modal) {
     modal.classList.add('is-active');
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+    console.log('Modal opened successfully');
+  } else {
+    console.error('Modal not found:', modalId);
   }
 }
 
 function closeModal(modalId) {
+  console.log('Closing modal:', modalId);
   const modal = document.getElementById(modalId);
   if (modal) {
     modal.classList.remove('is-active');
+    // Restore body scrolling
+    document.body.style.overflow = '';
+    console.log('Modal closed successfully');
+  } else {
+    console.error('Modal not found:', modalId);
   }
 }
 
 // Add click handlers for gallery images
 document.addEventListener('DOMContentLoaded', function() {
-  const galleryImages = document.querySelectorAll('.gallery-image');
-  galleryImages.forEach((image, index) => {
-    image.addEventListener('click', function() {
-      const modalId = `modal-image-${index}`;
-      openModal(modalId);
-    });
-  });
+  console.log('Gallery script loaded');
   
-  // Close modal when clicking outside
+  // Handle gallery image clicks using data attributes
   document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal-background') || e.target.classList.contains('modal-close')) {
-      const activeModal = document.querySelector('.modal.is-active');
-      if (activeModal) {
-        activeModal.classList.remove('is-active');
+    console.log('Click event:', e.target);
+    
+    // Open modal when clicking gallery images
+    if (e.target.classList.contains('gallery-image')) {
+      console.log('Gallery image clicked');
+      const modalTarget = e.target.dataset.modalTarget;
+      console.log('Modal target:', modalTarget);
+      if (modalTarget) {
+        openModal(modalTarget);
+      } else {
+        console.error('No modal target found on image');
       }
+    }
+    
+    // Close modal when clicking background or close button
+    if (e.target.hasAttribute('data-modal-close')) {
+      const modalId = e.target.getAttribute('data-modal-close');
+      console.log('Close button clicked for modal:', modalId);
+      closeModal(modalId);
     }
   });
   
@@ -161,7 +189,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.key === 'Escape') {
       const activeModal = document.querySelector('.modal.is-active');
       if (activeModal) {
+        console.log('Escape key pressed, closing modal');
         activeModal.classList.remove('is-active');
+        document.body.style.overflow = '';
       }
     }
   });

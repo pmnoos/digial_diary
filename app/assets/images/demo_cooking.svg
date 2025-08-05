@@ -1,0 +1,12 @@
+<!-- Sample SVG Image 1: Cooking Theme -->
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#f8f9fa"/>
+  <circle cx="200" cy="150" r="60" fill="#ff6b6b" opacity="0.8"/>
+  <rect x="160" y="120" width="80" height="60" fill="#4ecdc4" opacity="0.8"/>
+  <text x="200" y="220" text-anchor="middle" font-family="Arial" font-size="18" fill="#333">
+    Cooking Adventure
+  </text>
+  <text x="200" y="245" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">
+    Demo Image 1
+  </text>
+</svg>

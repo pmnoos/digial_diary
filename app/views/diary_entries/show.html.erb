@@ -48,15 +48,15 @@
                     alt: "Photo #{index + 1} from #{@diary_entry.title}",
                     class: "gallery-image",
                     style: "width: 100%; height: 200px; object-fit: cover; cursor: pointer; border-radius: 6px;",
-                    onclick: "openModal('modal-image-#{index}')" %>
+                    data: { modal_target: "modal-image-#{index}" } %>
               </figure>
             </div>
           </div>
         </div>
         
         <!-- Modal for enlarged image -->
-        <div id="modal-image-#{index}" class="modal">
-          <div class="modal-background" onclick="closeModal('modal-image-#{index}')"></div>
+        <div id="modal-image-<%= index %>" class="modal">
+          <div class="modal-background" data-modal-close="modal-image-<%= index %>"></div>
           <div class="modal-content">
             <p class="image">
               <%= image_tag url_for(image), 
@@ -64,7 +64,7 @@
                   style: "max-width: 90vw; max-height: 90vh; object-fit: contain;" %>
             </p>
           </div>
-          <button class="modal-close is-large" onclick="closeModal('modal-image-#{index}')" aria-label="close"></button>
+          <button class="modal-close is-large" data-modal-close="modal-image-<%= index %>" aria-label="close"></button>
         </div>
       <% end %>
     </div>

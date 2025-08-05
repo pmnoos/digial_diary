@@ -46,6 +46,28 @@ trix-editor[contenteditable="false"] {
 .modal-content img {
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+/* Gallery cursor pointer */
+.gallery-image {
+  cursor: pointer !important;
+}
+
+/* Modal background overlay */
+.modal.is-active .modal-background {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Smooth modal transitions */
+.modal {
+  transition: opacity 0.2s ease;
+}
+
+.modal.is-active {
+  opacity: 1;
 }
 /*
  * This is a manifest file that'll be compiled into application.css.
