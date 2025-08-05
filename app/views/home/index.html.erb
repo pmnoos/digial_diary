@@ -6,44 +6,56 @@
         <h1 class="title is-1 has-text-primary">📔 Digital Diary</h1>
         <h2 class="subtitle is-3">Your thoughts, memories, and experiences - beautifully preserved</h2>
         <div class="buttons is-centered mt-5">
+          <%= form_with url: demo_login_path, method: :post, local: true do |form| %>
+            <%= form.submit "🚀 Try Demo Now", class: "button is-success is-large", 
+                style: "animation: pulse 2s infinite;" %>
+          <% end %>
           <%= link_to "Start Free Trial", new_user_registration_path, class: "button is-primary is-large" %>
-          <%= link_to "View Live Demo", diary_entries_path, class: "button is-success is-large" %>
           <%= link_to "See Pricing", pricing_subscriptions_path, class: "button is-link is-large" %>
         </div>
         
-        <!-- Demo Login Credentials -->
-        <div class="notification is-success is-light mt-5">
+        <!-- Demo Features Preview -->
+        <div class="notification is-info is-light mt-5">
           <div class="content has-text-centered">
-            <h4 class="title is-4">🔑 Try Demo Login</h4>
-            <p class="subtitle is-5">Want to see the full experience? Log in with our demo account!</p>
-            <div class="box has-background-white mt-3" style="max-width: 400px; margin: 0 auto;">
-              <div class="field">
-                <label class="label">Email</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="text" value="demo@digitaldiaryapp.com" readonly onclick="this.select()">
-                  <span class="icon is-small is-left">
-                    <i class="fas fa-envelope"></i>
+            <h4 class="title is-4">✨ Instant Demo Access</h4>
+            <p class="subtitle is-5">No signup required! Experience all features immediately with sample data.</p>
+            <div class="columns is-multiline is-centered">
+              <div class="column is-3">
+                <div class="box has-text-centered">
+                  <span class="icon is-large has-text-success">
+                    <i class="fas fa-book-open fa-2x"></i>
                   </span>
+                  <p class="has-text-weight-bold">150+ Sample Entries</p>
                 </div>
               </div>
-              <div class="field">
-                <label class="label">Password</label>
-                <div class="control has-icons-left">
-                  <input class="input" type="text" value="demopassword123" readonly onclick="this.select()">
-                  <span class="icon is-small is-left">
-                    <i class="fas fa-lock"></i>
+              <div class="column is-3">
+                <div class="box has-text-centered">
+                  <span class="icon is-large has-text-info">
+                    <i class="fas fa-images fa-2x"></i>
                   </span>
+                  <p class="has-text-weight-bold">Photo Galleries</p>
                 </div>
               </div>
-              <div class="field mt-4">
-                <%= link_to "Login with Demo Account", new_user_session_path(demo: true), 
-                    class: "button is-success is-medium is-fullwidth", 
-                    id: "demo-login-btn" %>
+              <div class="column is-3">
+                <div class="box has-text-centered">
+                  <span class="icon is-large has-text-warning">
+                    <i class="fas fa-smile fa-2x"></i>
+                  </span>
+                  <p class="has-text-weight-bold">Mood Tracking</p>
+                </div>
               </div>
-              <p class="help has-text-grey is-size-7 mt-2">
-                Click fields above to copy • Experience all features with sample data
-              </p>
+              <div class="column is-3">
+                <div class="box has-text-centered">
+                  <span class="icon is-large has-text-danger">
+                    <i class="fas fa-search fa-2x"></i>
+                  </span>
+                  <p class="has-text-weight-bold">Search & Filter</p>
+                </div>
+              </div>
             </div>
+            <p class="help has-text-grey">
+              🔄 Demo resets daily • 💡 Create your own account to keep your data
+            </p>
           </div>
         </div>
         

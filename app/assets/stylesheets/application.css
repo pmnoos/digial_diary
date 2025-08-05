@@ -16,6 +16,13 @@ trix-editor[contenteditable="false"] {
   pointer-events: none;
 }
 
+/* Demo Button Animation */
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(72, 199, 142, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(72, 199, 142, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(72, 199, 142, 0); }
+}
+
 /* Image Gallery Styles */
 .image-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
