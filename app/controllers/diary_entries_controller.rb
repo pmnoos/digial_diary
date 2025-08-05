@@ -26,7 +26,7 @@ class DiaryEntriesController < ApplicationController
       @diary_entries = @diary_entries.order(entry_date: :desc).page(params[:page]).per(12)
 
       # Get available years for filter dropdown
-      @available_years = current_user.diary_entries.distinct.pluck(Arel.sql("EXTRACT(YEAR FROM entry_date)")).sort.reverse
+      @available_years = current_user.diary_entries.where.not(entry_date: nil).distinct.pluck(Arel.sql("EXTRACT(YEAR FROM entry_date)")).compact.sort.reverse
     else
       # Visitors see demo entries
       @demo_mode = true
@@ -63,9 +63,10 @@ class DiaryEntriesController < ApplicationController
       
       @available_years = DiaryEntry.joins(:user)
                                    .where(users: { username: 'DemoUser' })
+                                   .where.not(entry_date: nil)
                                    .distinct
                                    .pluck(Arel.sql("EXTRACT(YEAR FROM entry_date)"))
-                                   .sort.reverse
+                                   .compact.sort.reverse
     end
   end
 
