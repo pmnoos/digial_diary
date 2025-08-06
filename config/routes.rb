@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       get :pricing
       post :upgrade
       post :demo_mode
+      post :refresh_demo_trial  # For refreshing demo user trial
     end
   end
   resources :thoughts
