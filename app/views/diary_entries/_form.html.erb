@@ -22,7 +22,7 @@
     <div class="control">
       <div class="field has-addons">
         <!-- Hidden date field for form submission -->
-        <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "position: absolute; opacity: 0; pointer-events: none;", value: Date.current %>
+        <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "position: absolute; opacity: 0; pointer-events: none; z-index: -1;", value: (@diary_entry.entry_date || Date.current) %>
         <!-- Visible formatted date input -->
         <div class="control is-expanded">
           <input type="text" 
@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <p class="help has-text-info">Click to select a date - it will show with day name</p>
+    <p class="help has-text-info">Click to select a date - it will show as "Tuesday, 3 April 2025"</p>
   </div>
 
   <div class="field">
@@ -92,13 +92,14 @@ document.addEventListener('DOMContentLoaded', function() {
       if (dateInputHidden.value) {
         const selectedDate = new Date(dateInputHidden.value + 'T00:00:00');
         if (!isNaN(selectedDate.getTime())) {
+          // Format as "Tuesday, 3 April 2025"
           const options = { 
             weekday: 'long', 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
           };
-          const formattedDate = selectedDate.toLocaleDateString('en-US', options);
+          const formattedDate = selectedDate.toLocaleDateString('en-GB', options);
           dateInputDisplay.value = `📅 ${formattedDate}`;
           dateInputDisplay.style.color = '#3273dc';
           dateInputDisplay.style.fontWeight = '600';
@@ -119,13 +120,25 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Update display when hidden date input changes
-  dateInputHidden.addEventListener('change', updateDateDisplay);
+  dateInputHidden.addEventListener('change', function() {
+    console.log('Date changed to:', dateInputHidden.value);
+    updateDateDisplay();
+  });
+  
+  // Also listen for input events (more reliable on some browsers)
+  dateInputHidden.addEventListener('input', function() {
+    console.log('Date input to:', dateInputHidden.value);
+    updateDateDisplay();
+  });
   
   // Handle clicking on display input to open date picker
   dateInputDisplay.addEventListener('click', openDatePicker);
   
   // Update display on page load if date is already set
   updateDateDisplay();
+  
+  // Force update after a short delay to ensure everything is loaded
+  setTimeout(updateDateDisplay, 100);
 });
 </script>
 
