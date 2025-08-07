@@ -100,7 +100,7 @@ class DiaryEntriesController < ApplicationController
     if @diary_entry.update(diary_entry_params)
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("autosave-status", partial: "diary_entries/saved_indicator") }
-        format.html { redirect_to @diary_entry, notice: "Diary entry was successfully updated!" }
+        format.html { redirect_to diary_entries_path, notice: "Diary entry was successfully updated!" }
         format.json { render :show, status: :ok, location: @diary_entry }
       end
     else
