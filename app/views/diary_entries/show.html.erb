@@ -41,7 +41,7 @@
     <div class="columns is-multiline is-mobile">
       <% @diary_entry.images.each_with_index do |image, index| %>
         <div class="column is-one-quarter-desktop is-one-third-tablet is-half-mobile">
-          <div class="card image-card" style="transition: transform 0.2s ease, box-shadow 0.2s ease;">
+          <div class="card image-card" style="transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative;">
             <div class="card-image">
               <figure class="image is-square">
                 <%= image_tag url_for(image), 
@@ -50,6 +50,24 @@
                     style: "width: 100%; height: 200px; object-fit: cover; cursor: pointer; border-radius: 6px;",
                     data: { modal_target: "modal-image-#{index}" } %>
               </figure>
+              
+              <!-- Delete button for authenticated users -->
+              <% if user_signed_in? %>
+                <div style="position: absolute; top: 8px; right: 8px;">
+                  <%= link_to remove_image_diary_entry_path(@diary_entry, image_id: image.id), 
+                      method: :delete,
+                      data: { 
+                        turbo_method: :delete,
+                        turbo_confirm: "Are you sure you want to delete this image? This action cannot be undone." 
+                      },
+                      class: "button is-danger is-small is-rounded",
+                      style: "opacity: 0.9; box-shadow: 0 2px 4px rgba(0,0,0,0.3);" do %>
+                    <span class="icon is-small">
+                      <i class="fas fa-trash"></i>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
           </div>
         </div>

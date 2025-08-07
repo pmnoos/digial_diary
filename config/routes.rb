@@ -8,7 +8,11 @@ Rails.application.routes.draw do
     end
   end
   resources :thoughts
-  resources :diary_entries
+  resources :diary_entries do
+    member do
+      delete :remove_image
+    end
+  end
   devise_for :users
   
   # Demo login route for instant access

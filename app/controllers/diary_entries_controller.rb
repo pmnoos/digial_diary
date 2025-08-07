@@ -125,6 +125,22 @@ class DiaryEntriesController < ApplicationController
     @archive = entries.group_by { |e| e.entry_date.beginning_of_month }
   end
 
+  # DELETE /diary_entries/:id/remove_image
+  def remove_image
+    @diary_entry = current_user.diary_entries.find(params[:id])
+    image = @diary_entry.images.find(params[:image_id])
+    
+    if image
+      image.purge
+      flash[:notice] = "Image deleted successfully."
+    else
+      flash[:alert] = "Image not found."
+    end
+    
+    # Redirect back to where they came from, or show page as fallback
+    redirect_back(fallback_location: diary_entry_path(@diary_entry))
+  end
+
   private
 
   def set_diary_entry
