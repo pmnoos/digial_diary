@@ -22,7 +22,7 @@
     <div class="control">
       <div class="field has-addons">
         <!-- Hidden date field for form submission -->
-        <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "position: absolute; opacity: 0; pointer-events: none; z-index: -1;", value: (@diary_entry.entry_date || Date.current) %>
+        <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "position: absolute; left: -9999px; opacity: 0;", value: (@diary_entry.entry_date || Date.current) %>
         <!-- Visible formatted date input -->
         <div class="control is-expanded">
           <input type="text" 
@@ -66,21 +66,42 @@
 
 <script>
 function openDatePicker() {
+  console.log('Opening date picker...');
   const dateInputHidden = document.getElementById('diary_entry_date_hidden');
   if (dateInputHidden) {
+    console.log('Found hidden date input, current value:', dateInputHidden.value);
+    
+    // Try multiple methods to open the date picker
     if (dateInputHidden.showPicker) {
+      console.log('Using showPicker method');
       dateInputHidden.showPicker();
     } else {
-      // Fallback for browsers that don't support showPicker
+      console.log('Fallback: focusing and clicking');
+      dateInputHidden.style.position = 'static';
+      dateInputHidden.style.opacity = '1';
       dateInputHidden.focus();
       dateInputHidden.click();
+      
+      // Hide it again after a brief moment
+      setTimeout(() => {
+        dateInputHidden.style.position = 'absolute';
+        dateInputHidden.style.left = '-9999px';
+        dateInputHidden.style.opacity = '0';
+      }, 100);
     }
+  } else {
+    console.error('Hidden date input not found!');
   }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing date picker...');
+  
   const dateInputHidden = document.getElementById('diary_entry_date_hidden');
   const dateInputDisplay = document.getElementById('diary_entry_date_display');
+  
+  console.log('Hidden input found:', !!dateInputHidden);
+  console.log('Display input found:', !!dateInputDisplay);
   
   if (!dateInputHidden || !dateInputDisplay) {
     console.error('Date picker elements not found');
@@ -88,9 +109,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   function updateDateDisplay() {
+    console.log('Updating date display, hidden value:', dateInputHidden.value);
     try {
       if (dateInputHidden.value) {
         const selectedDate = new Date(dateInputHidden.value + 'T00:00:00');
+        console.log('Parsed date:', selectedDate);
+        
         if (!isNaN(selectedDate.getTime())) {
           // Format as "Tuesday, 3 April 2025"
           const options = { 
@@ -100,15 +124,21 @@ document.addEventListener('DOMContentLoaded', function() {
             day: 'numeric' 
           };
           const formattedDate = selectedDate.toLocaleDateString('en-GB', options);
+          console.log('Formatted date:', formattedDate);
+          
           dateInputDisplay.value = `📅 ${formattedDate}`;
           dateInputDisplay.style.color = '#3273dc';
           dateInputDisplay.style.fontWeight = '600';
+          
+          console.log('Display updated to:', dateInputDisplay.value);
         } else {
+          console.log('Invalid date, clearing display');
           dateInputDisplay.value = '';
           dateInputDisplay.style.color = '';
           dateInputDisplay.style.fontWeight = '';
         }
       } else {
+        console.log('No date value, clearing display');
         dateInputDisplay.value = '';
         dateInputDisplay.style.color = '';
         dateInputDisplay.style.fontWeight = '';
@@ -119,26 +149,57 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Update display when hidden date input changes
+  // Multiple event listeners for maximum compatibility
   dateInputHidden.addEventListener('change', function() {
-    console.log('Date changed to:', dateInputHidden.value);
+    console.log('CHANGE event - Date changed to:', dateInputHidden.value);
     updateDateDisplay();
   });
   
-  // Also listen for input events (more reliable on some browsers)
   dateInputHidden.addEventListener('input', function() {
-    console.log('Date input to:', dateInputHidden.value);
+    console.log('INPUT event - Date input to:', dateInputHidden.value);
     updateDateDisplay();
   });
+  
+  // Also try the 'onchange' property
+  dateInputHidden.onchange = function() {
+    console.log('ONCHANGE property - Date changed to:', dateInputHidden.value);
+    updateDateDisplay();
+  };
   
   // Handle clicking on display input to open date picker
   dateInputDisplay.addEventListener('click', openDatePicker);
   
   // Update display on page load if date is already set
+  console.log('Initial update...');
   updateDateDisplay();
   
-  // Force update after a short delay to ensure everything is loaded
-  setTimeout(updateDateDisplay, 100);
+  // Force multiple updates to catch any timing issues
+  setTimeout(() => {
+    console.log('Delayed update 1...');
+    updateDateDisplay();
+  }, 100);
+  
+  setTimeout(() => {
+    console.log('Delayed update 2...');
+    updateDateDisplay();
+  }, 500);
+  
+  // Add a mutation observer to watch for value changes
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+        console.log('Mutation observer - value changed:', dateInputHidden.value);
+        updateDateDisplay();
+      }
+    });
+  });
+  
+  observer.observe(dateInputHidden, {
+    attributes: true,
+    attributeFilter: ['value']
+  });
+  
+  console.log('Date picker initialization complete');
 });
 </script>
 
