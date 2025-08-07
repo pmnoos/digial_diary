@@ -33,6 +33,49 @@
     <p class="help">Write your diary entry here...</p>
   </div>
 
+  <!-- Existing Images Display -->
+  <% if @diary_entry.persisted? && @diary_entry.images.attached? %>
+    <div class="field">
+      <label class="label">Current Photos</label>
+      <div class="columns is-multiline is-mobile">
+        <% @diary_entry.images.each_with_index do |image, index| %>
+          <div class="column is-one-quarter-desktop is-one-third-tablet is-half-mobile">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-square">
+                  <%= image_tag url_for(image), 
+                      alt: "Photo #{index + 1}",
+                      style: "width: 100%; height: 150px; object-fit: cover;" %>
+                </figure>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <p class="help has-text-info">Current photos attached to this entry. Upload new photos below to add more.</p>
+    </div>
+  <% end %>
+
+  <!-- Image Upload Field -->
+  <div class="field">
+    <%= form.label :images, "Upload Photos", class: "label" %>
+    <div class="control">
+      <%= form.file_field :images, multiple: true, accept: "image/*", 
+          class: "file-input", id: "image-upload" %>
+      <label for="image-upload" class="file-label">
+        <span class="file-cta">
+          <span class="file-icon">
+            <i class="fas fa-upload"></i>
+          </span>
+          <span class="file-label">
+            Choose photos…
+          </span>
+        </span>
+      </label>
+    </div>
+    <p class="help">Select one or more photos to add to your diary entry (JPG, PNG, GIF)</p>
+  </div>
+
 
 
   <div class="field">
