@@ -100,17 +100,22 @@ class DiaryEntriesController < ApplicationController
     if @diary_entry.update(diary_entry_params)
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("autosave-status", partial: "diary_entries/saved_indicator") }
-        format.html { redirect_to @diary_entry, notice: "Saved!" }
+        format.html { redirect_to @diary_entry, notice: "Diary entry was successfully updated!" }
+        format.json { render :show, status: :ok, location: @diary_entry }
       end
     else
-      head :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @diary_entry.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   def destroy
+    @diary_entry = current_user.diary_entries.find(params[:id])
     @diary_entry.destroy!
     respond_to do |format|
-      format.html { redirect_to diary_entries_path, status: :see_other, notice: "Diary entry was successfully destroyed." }
+      format.html { redirect_to diary_entries_path, status: :see_other, notice: "Diary entry was successfully deleted." }
       format.json { head :no_content }
     end
   end
