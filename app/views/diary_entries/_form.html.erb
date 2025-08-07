@@ -20,31 +20,9 @@
   <div class="field">
     <%= form.label :entry_date, class: "label" %>
     <div class="control">
-      <div class="field has-addons">
-        <!-- Hidden date field for form submission -->
-        <%= form.date_field :entry_date, class: "input", id: "diary_entry_date_hidden", style: "position: absolute; left: -9999px; opacity: 0;", value: (@diary_entry.entry_date || Date.current) %>
-        <!-- Visible formatted date input -->
-        <div class="control is-expanded">
-          <input type="text" 
-                 id="diary_entry_date_display" 
-                 class="input" 
-                 placeholder="📅 Click to select a date..."
-                 readonly
-                 style="cursor: pointer; background-color: white;">
-        </div>
-        <div class="control">
-          <button type="button" 
-                  class="button is-primary" 
-                  onclick="openDatePicker()"
-                  style="border-left: none;">
-            <span class="icon">
-              <i class="fas fa-calendar-alt"></i>
-            </span>
-          </button>
-        </div>
-      </div>
+      <%= form.date_field :entry_date, class: "input", value: (@diary_entry.entry_date || Date.current) %>
     </div>
-    <p class="help has-text-info">Click to select a date - it will show as "Tuesday, 3 April 2025"</p>
+    <p class="help has-text-info">Select the date for your diary entry</p>
   </div>
 
   <div class="field">
@@ -65,141 +43,14 @@
 <% end %>
 
 <script>
-function openDatePicker() {
-  console.log('Opening date picker...');
-  const dateInputHidden = document.getElementById('diary_entry_date_hidden');
-  if (dateInputHidden) {
-    console.log('Found hidden date input, current value:', dateInputHidden.value);
-    
-    // Try multiple methods to open the date picker
-    if (dateInputHidden.showPicker) {
-      console.log('Using showPicker method');
-      dateInputHidden.showPicker();
-    } else {
-      console.log('Fallback: focusing and clicking');
-      dateInputHidden.style.position = 'static';
-      dateInputHidden.style.opacity = '1';
-      dateInputHidden.focus();
-      dateInputHidden.click();
-      
-      // Hide it again after a brief moment
-      setTimeout(() => {
-        dateInputHidden.style.position = 'absolute';
-        dateInputHidden.style.left = '-9999px';
-        dateInputHidden.style.opacity = '0';
-      }, 100);
-    }
-  } else {
-    console.error('Hidden date input not found!');
-  }
-}
-
+// Simple date picker enhancement
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, initializing date picker...');
-  
-  const dateInputHidden = document.getElementById('diary_entry_date_hidden');
-  const dateInputDisplay = document.getElementById('diary_entry_date_display');
-  
-  console.log('Hidden input found:', !!dateInputHidden);
-  console.log('Display input found:', !!dateInputDisplay);
-  
-  if (!dateInputHidden || !dateInputDisplay) {
-    console.error('Date picker elements not found');
-    return;
+  const dateInput = document.getElementById('diary_entry_entry_date');
+  if (dateInput && !dateInput.value) {
+    // Set today's date as default if no date is set
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
   }
-  
-  function updateDateDisplay() {
-    console.log('Updating date display, hidden value:', dateInputHidden.value);
-    try {
-      if (dateInputHidden.value) {
-        const selectedDate = new Date(dateInputHidden.value + 'T00:00:00');
-        console.log('Parsed date:', selectedDate);
-        
-        if (!isNaN(selectedDate.getTime())) {
-          // Format as "Tuesday, 3 April 2025"
-          const options = { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          };
-          const formattedDate = selectedDate.toLocaleDateString('en-GB', options);
-          console.log('Formatted date:', formattedDate);
-          
-          dateInputDisplay.value = `📅 ${formattedDate}`;
-          dateInputDisplay.style.color = '#3273dc';
-          dateInputDisplay.style.fontWeight = '600';
-          
-          console.log('Display updated to:', dateInputDisplay.value);
-        } else {
-          console.log('Invalid date, clearing display');
-          dateInputDisplay.value = '';
-          dateInputDisplay.style.color = '';
-          dateInputDisplay.style.fontWeight = '';
-        }
-      } else {
-        console.log('No date value, clearing display');
-        dateInputDisplay.value = '';
-        dateInputDisplay.style.color = '';
-        dateInputDisplay.style.fontWeight = '';
-      }
-    } catch (error) {
-      console.error('Error updating date display:', error);
-      dateInputDisplay.value = dateInputHidden.value || '';
-    }
-  }
-  
-  // Multiple event listeners for maximum compatibility
-  dateInputHidden.addEventListener('change', function() {
-    console.log('CHANGE event - Date changed to:', dateInputHidden.value);
-    updateDateDisplay();
-  });
-  
-  dateInputHidden.addEventListener('input', function() {
-    console.log('INPUT event - Date input to:', dateInputHidden.value);
-    updateDateDisplay();
-  });
-  
-  // Also try the 'onchange' property
-  dateInputHidden.onchange = function() {
-    console.log('ONCHANGE property - Date changed to:', dateInputHidden.value);
-    updateDateDisplay();
-  };
-  
-  // Handle clicking on display input to open date picker
-  dateInputDisplay.addEventListener('click', openDatePicker);
-  
-  // Update display on page load if date is already set
-  console.log('Initial update...');
-  updateDateDisplay();
-  
-  // Force multiple updates to catch any timing issues
-  setTimeout(() => {
-    console.log('Delayed update 1...');
-    updateDateDisplay();
-  }, 100);
-  
-  setTimeout(() => {
-    console.log('Delayed update 2...');
-    updateDateDisplay();
-  }, 500);
-  
-  // Add a mutation observer to watch for value changes
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
-        console.log('Mutation observer - value changed:', dateInputHidden.value);
-        updateDateDisplay();
-      }
-    });
-  });
-  
-  observer.observe(dateInputHidden, {
-    attributes: true,
-    attributeFilter: ['value']
-  });
-  
-  console.log('Date picker initialization complete');
 });
 </script>
 
