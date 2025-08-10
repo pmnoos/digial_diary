@@ -21,6 +21,10 @@ primary_region = "syd"
   cpu_kind = "shared"
   cpus = 1
 
+[mounts]
+  source = "diary_storage"
+  destination = "/rails/storage"
+
 [[statics]]
   guest_path = "/rails/public"
   url_prefix = "/"
