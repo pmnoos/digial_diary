@@ -23,5 +23,12 @@ module MyDiaryApp
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Active Storage Configuration
+    config.active_storage.variant_processor = :mini_magick
+    config.active_storage.web_image_content_types = %w[image/png image/jpeg image/jpg image/gif image/webp]
+    
+    # Set max file size (10MB)
+    config.active_storage.max_image_pixel_count = 16_777_216 # 4096x4096 pixels
   end
 end

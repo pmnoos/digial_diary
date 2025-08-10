@@ -23,6 +23,14 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+  
+  # Configure better image processing settings for production
+  config.active_storage.variant_processor = :mini_magick
+  config.active_storage.preprocess_variants = true
+  
+  # Set file size limits
+  config.active_storage.max_file_size = 100.megabytes
+  config.active_storage.max_image_pixel_count = 16_777_216
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true

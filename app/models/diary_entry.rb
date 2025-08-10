@@ -1,5 +1,10 @@
 class DiaryEntry < ApplicationRecord
-  has_many_attached :images
+  has_many_attached :images do |attachable|
+    attachable.variant :thumb, resize_to_limit: [200, 200]
+    attachable.variant :medium, resize_to_limit: [600, 600]
+    attachable.variant :large, resize_to_limit: [1200, 1200]
+  end
+  
   belongs_to :user
   has_rich_text :content
 
@@ -9,9 +14,13 @@ class DiaryEntry < ApplicationRecord
   validates :title, presence: true
   validates :entry_date, presence: true
   validates :status, inclusion: { in: %w[draft published] }
+  validate :acceptable_images
 
   # Set default status
   after_initialize :set_defaults
+  
+  # Process images after saving
+  after_create :process_images_async
 
   scope :published, -> { where(status: "published") }
   scope :by_month_year, -> {
@@ -23,5 +32,27 @@ class DiaryEntry < ApplicationRecord
   def set_defaults
     self.status ||= "draft"
     self.entry_date ||= Date.current
+  end
+
+  def acceptable_images
+    return unless images.attached?
+
+    images.each do |image|
+      unless image.blob.content_type.in?(%w[image/jpeg image/jpg image/png image/gif image/webp])
+        errors.add(:images, "must be a valid image format (JPEG, PNG, GIF, WebP)")
+      end
+
+      if image.blob.byte_size > 10.megabytes
+        errors.add(:images, "must be less than 10MB")
+      end
+    end
+  end
+
+  def process_images_async
+    return unless images.attached?
+    
+    images.each do |image|
+      ImageProcessingJob.perform_later(image.id) if image.blob.image?
+    end
   end
 end

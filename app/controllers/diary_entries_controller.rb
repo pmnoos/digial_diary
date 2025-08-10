@@ -88,9 +88,28 @@ class DiaryEntriesController < ApplicationController
 
   def create
     @diary_entry = current_user.diary_entries.new(diary_entry_params)
+    
     if @diary_entry.save
-      redirect_to @diary_entry, notice: "Entry created!"
+      # Process images in the background if they were uploaded
+      if @diary_entry.images.attached?
+        begin
+          # Pre-generate variants to catch any processing errors early
+          @diary_entry.images.each do |image|
+            image.variant(:thumb) if image.blob.content_type.in?(%w[image/jpeg image/jpg image/png image/gif image/webp])
+          end
+          flash[:notice] = "Entry created successfully!"
+        rescue => e
+          Rails.logger.error "Image processing warning: #{e.message}"
+          flash[:notice] = "Entry created! Some images may need time to process."
+        end
+      else
+        flash[:notice] = "Entry created!"
+      end
+      
+      redirect_to @diary_entry
     else
+      @thought_of_the_day = Thought.where(mood: %w[calm encouraging motivational positive hopeful reflective peaceful joyful])
+                                   .order(Arel.sql("RANDOM()")).first || Thought.order(Arel.sql("RANDOM()")).first
       render :new, status: :unprocessable_entity
     end
   end
