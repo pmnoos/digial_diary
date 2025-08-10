@@ -1,5 +1,5 @@
 // Digital Diary PWA Service Worker - Enhanced Version
-const CACHE_NAME = 'digital-diary-v2';
+const CACHE_NAME = 'digital-diary-v3';
 const OFFLINE_URL = '/';
 const OFFLINE_ENTRIES_URL = '/diary_entries';
 
@@ -26,7 +26,7 @@ self.addEventListener('install', (event) => {
       });
     })
   );
-  self.skipWaiting();
+  // Don't automatically skip waiting - let the user decide
 });
 
 // Activate event - clean up old caches
@@ -45,6 +45,14 @@ self.addEventListener('activate', (event) => {
     })
   );
   self.clients.claim();
+});
+
+// Listen for messages from the main thread
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    console.log('Received skipWaiting message, updating service worker');
+    self.skipWaiting();
+  }
 });
 
 // Fetch event - enhanced offline strategy
