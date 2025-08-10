@@ -6,6 +6,10 @@ import "controllers"
 import "trix"
 import "@rails/actiontext"
 
+// Import form enhancements
+import "./form_enhancement.js"
+import "./image_upload.js"
+
 // PWA functionality
 let deferredPrompt;
 let updateAvailable = false;
