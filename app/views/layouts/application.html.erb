@@ -4,18 +4,49 @@
     <title>Digital Diary</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    
+    <!-- PWA Meta Tags -->
     <%= tag.link rel: "manifest", href: "/manifest.json" %>
     <%= tag.meta name: "theme-color", content: "#00d1b2" %>
+    <%= tag.meta name: "apple-mobile-web-app-capable", content: "yes" %>
+    <%= tag.meta name: "apple-mobile-web-app-status-bar-style", content: "default" %>
+    <%= tag.meta name: "apple-mobile-web-app-title", content: "Digital Diary" %>
+    <%= tag.meta name: "mobile-web-app-capable", content: "yes" %>
+    <%= tag.meta name: "viewport", content: "width=device-width, initial-scale=1.0, viewport-fit=cover" %>
+    
+    <!-- Apple Touch Icons -->
+    <%= tag.link rel: "apple-touch-icon", href: "/icon.png" %>
+    <%= tag.link rel: "apple-touch-icon", sizes: "152x152", href: "/icon.png" %>
+    <%= tag.link rel: "apple-touch-icon", sizes: "180x180", href: "/icon.png" %>
+    <%= tag.link rel: "apple-touch-icon", sizes: "167x167", href: "/icon.png" %>
+    
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags "application" %>
     <%= stylesheet_link_tag "actiontext", media: "all", "data-turbo-track": "reload" %>
-    <link rel="icon" type="image/png" href="/icons/icon-192.png">
+    <link rel="icon" type="image/png" href="/icon.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <%= javascript_importmap_tags %>
   </head>
   <body>
+    <!-- PWA Install Banner -->
+    <div id="pwa-install-banner" class="notification is-info is-light" style="display: none; margin: 0; border-radius: 0;">
+      <button class="delete" id="dismiss-install-banner"></button>
+      <div class="columns is-vcentered">
+        <div class="column">
+          <strong>📱 Install Digital Diary</strong>
+          <p>Add this app to your home screen for a better experience!</p>
+        </div>
+        <div class="column is-narrow">
+          <button id="install-pwa-button" class="button is-primary">
+            <span class="icon"><i class="fas fa-download"></i></span>
+            <span>Install</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <nav class="navbar is-dark  ml-3" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="/">

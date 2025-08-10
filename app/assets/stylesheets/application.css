@@ -76,6 +76,92 @@ trix-editor[contenteditable="false"] {
 .modal.is-active {
   opacity: 1;
 }
+
+/* PWA Specific Styles */
+@media (display-mode: standalone) {
+  /* Styles for when app is installed as PWA */
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .navbar {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* iOS Safari specific PWA styles */
+@supports (-webkit-touch-callout: none) {
+  @media (display-mode: standalone) {
+    .navbar {
+      padding-top: calc(env(safe-area-inset-top) + 10px);
+    }
+  }
+}
+
+/* PWA Install Banner */
+#pwa-install-banner {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* Network status notifications */
+.network-status-notification {
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Offline-specific styles */
+.offline-mode {
+  opacity: 0.8;
+}
+
+.offline-mode::before {
+  content: "📡 Offline Mode";
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #ff6b6b;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  z-index: 9999;
+}
+
+/* Enhanced mobile experience */
+@media screen and (max-width: 768px) {
+  .columns {
+    margin: 0 !important;
+  }
+  
+  .column {
+    padding: 0.75rem !important;
+  }
+  
+  /* Better touch targets for mobile */
+  .button {
+    min-height: 44px;
+  }
+  
+  /* Mobile-friendly cards */
+  .card {
+    margin: 0.5rem;
+  }
+}
 /*
  * This is a manifest file that'll be compiled into application.css.
  *
