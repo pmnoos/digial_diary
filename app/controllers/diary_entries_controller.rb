@@ -116,13 +116,32 @@ class DiaryEntriesController < ApplicationController
 
   def update
     @diary_entry = current_user.diary_entries.find(params[:id])
+    
     if @diary_entry.update(diary_entry_params)
+      # Handle image processing with error handling
+      if @diary_entry.images.attached?
+        begin
+          # Pre-generate image variants to catch any processing errors early
+          @diary_entry.images.each do |image|
+            image.variant(:thumb).processed
+          end
+          flash[:notice] = "Entry updated successfully!"
+        rescue => e
+          Rails.logger.error "Image processing warning: #{e.message}"
+          flash[:notice] = "Entry updated! Some images may need time to process."
+        end
+      else
+        flash[:notice] = "Entry updated successfully!"
+      end
+      
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("autosave-status", partial: "diary_entries/saved_indicator") }
-        format.html { redirect_to diary_entries_path, notice: "Diary entry was successfully updated!" }
+        format.html { redirect_to @diary_entry, notice: flash[:notice] }
         format.json { render :show, status: :ok, location: @diary_entry }
       end
     else
+      @thought_of_the_day = Thought.where(mood: %w[calm encouraging motivational positive hopeful reflective peaceful joyful])
+                                   .order(Arel.sql("RANDOM()")).first || Thought.order(Arel.sql("RANDOM()")).first
       respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @diary_entry.errors, status: :unprocessable_entity }
