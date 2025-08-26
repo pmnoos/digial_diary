@@ -9,6 +9,8 @@ jobs:
   # First run the CI checks
   ci:
     uses: ./.github/workflows/ci.yml
+    with: {}
+    secrets: {}
 
   # Then deploy if CI passes
   deploy:
