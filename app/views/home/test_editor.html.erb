@@ -1,0 +1,107 @@
+<% content_for :title, "Test Rich Text Editor" %>
+
+<div class="container">
+  <div class="section">
+    <h1 class="title">Test Rich Text Editor</h1>
+    <p class="subtitle">This page is for testing the Trix rich text editor functionality</p>
+    
+    <div class="box">
+      <h2 class="title is-4">Logout Test Buttons</h2>
+      <p>Click these buttons to test if logout functionality works:</p>
+      
+      <div class="field">
+        <label class="label">Test 1: Standard logout with confirmation</label>
+        <%= button_to "Test Logout (with confirm)", destroy_user_session_path, method: :delete, class: "button is-danger",
+            data: { confirm: "Are you sure you want to log out?", turbo: false } %>
+      </div>
+      
+      <div class="field">
+        <label class="label">Test 2: Simple logout without confirmation</label>
+        <%= button_to "Test Logout (no confirm)", destroy_user_session_path, method: :delete, class: "button is-danger", data: { turbo: false } %>
+      </div>
+      
+      <div class="field">
+        <label class="label">Test 3: Link version</label>
+        <%= link_to "Test Logout (link)", destroy_user_session_path, method: :delete, class: "button is-danger",
+            data: { confirm: "Are you sure you want to log out?", turbo: false } %>
+      </div>
+      
+      <div class="field">
+        <label class="label">Test 4: Manual form</label>
+        <form method="post" action="/users/sign_out">
+          <input type="hidden" name="_method" value="delete">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <button type="submit" class="button is-danger">Test Logout (manual form)</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="box">
+      <h2 class="title is-4">Raw HTML for Standard Logout Button</h2>
+      <pre><code><%= button_to "Log out", destroy_user_session_path, method: :delete, class: "button is-light", 
+          data: { confirm: "Are you sure you want to log out?", turbo: false } %></code></pre>
+    </div>
+    
+    <div class="box">
+      <h2 class="title is-4">Rich Text Editor Test</h2>
+      <%= form_with(model: @diary_entry, local: true) do |form| %>
+        <div class="field">
+          <%= form.label :content, "Test Content", class: "label" %>
+          <div class="control">
+            <%= form.rich_text_area :content, class: "rich-text-area", placeholder: "Test the rich text editor here..." %>
+          </div>
+          <p class="help">Try typing, formatting, and using the toolbar buttons above.</p>
+        </div>
+        
+        <div class="field">
+          <div class="control">
+            <%= form.submit "Test Submit", class: "button is-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="box">
+      <h2 class="title is-4">Debug Information</h2>
+      <div id="debug-info">
+        <p><strong>Page loaded:</strong> <span id="load-time"></span></p>
+        <p><strong>Trix loaded:</strong> <span id="trix-status">Checking...</span></p>
+        <p><strong>Editor elements:</strong> <span id="editor-count">Checking...</span></p>
+        <p><strong>Rails UJS:</strong> <span id="ujs-status">Checking...</span></p>
+      </div>
+    </div>
+    
+    <div class="mt-4">
+      <%= link_to "Back to Home", root_path, class: "button is-light" %>
+      <%= link_to "New Diary Entry", new_diary_entry_path, class: "button is-primary" %>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Update debug info
+  document.getElementById('load-time').textContent = new Date().toLocaleTimeString();
+  
+  // Check Trix status
+  setTimeout(() => {
+    if (typeof Trix !== 'undefined') {
+      document.getElementById('trix-status').textContent = '✅ Loaded';
+    } else {
+      document.getElementById('trix-status').textContent = '❌ Not loaded';
+    }
+    
+    const editors = document.querySelectorAll('trix-editor');
+    document.getElementById('editor-count').textContent = editors.length;
+    
+    // Check Rails UJS status
+    if (typeof Rails !== 'undefined' && Rails) {
+      document.getElementById('ujs-status').textContent = '✅ Available';
+      console.log("Rails UJS is available");
+    } else {
+      document.getElementById('ujs-status').textContent = '❌ Not available';
+      console.error("Rails UJS is not available");
+    }
+  }, 1000);
+});
+</script>

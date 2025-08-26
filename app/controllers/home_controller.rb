@@ -23,4 +23,9 @@ class HomeController < ApplicationController
       end
     end
   end
+
+  def test_editor
+    @diary_entry = DiaryEntry.new
+    render layout: 'application'
+  end
 end

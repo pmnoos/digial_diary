@@ -38,10 +38,11 @@
     </div>
   </div>
 <% end %>
-
+<div class="container">
 <h1 class="title is-3">Diary entries</h1>
 
 <!-- Search and Filter Section -->
+
 <div class="box mb-4">
   <%= form_with url: diary_entries_path, method: :get, local: true, class: "field is-grouped" do |form| %>
     <div class="control is-expanded">
@@ -69,7 +70,7 @@
       <em>Searching for: "<%= params[:search] %>"</em>
     </p>
   <% end %>
-  
+ </div> 
   <% if params[:year].present? %>
     <p class="has-text-grey mt-2">
       <em>Showing entries from: <%= params[:year] %></em>

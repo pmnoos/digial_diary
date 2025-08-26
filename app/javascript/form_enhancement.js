@@ -1,5 +1,49 @@
 // Form enhancement for better UX
 document.addEventListener('DOMContentLoaded', function() {
+  // Enhanced Trix editor initialization
+  function initializeTrixEditor() {
+    const trixEditors = document.querySelectorAll('trix-editor');
+    
+    trixEditors.forEach(editor => {
+      // Ensure the editor is properly initialized
+      if (editor.editor) {
+        console.log('Trix editor initialized:', editor);
+        
+        // Add placeholder functionality
+        const placeholder = editor.getAttribute('placeholder') || 'Write your diary entry here...';
+        if (!editor.editor.getDocument().toString().trim()) {
+          editor.editor.insertHTML(`<div style="color: #999; font-style: italic;">${placeholder}</div>`);
+        }
+        
+        // Handle focus to remove placeholder
+        editor.addEventListener('focus', function() {
+          const content = editor.editor.getDocument().toString();
+          if (content.trim() === placeholder) {
+            editor.editor.loadHTML('');
+          }
+        });
+        
+        // Handle blur to add placeholder if empty
+        editor.addEventListener('blur', function() {
+          const content = editor.editor.getDocument().toString().trim();
+          if (!content) {
+            editor.editor.insertHTML(`<div style="color: #999; font-style: italic;">${placeholder}</div>`);
+          }
+        });
+      } else {
+        console.warn('Trix editor not properly initialized:', editor);
+      }
+    });
+  }
+  
+  // Initialize Trix editor immediately
+  initializeTrixEditor();
+  
+  // Also initialize on Turbo navigation
+  document.addEventListener('turbo:load', initializeTrixEditor);
+  document.addEventListener('turbo:render', initializeTrixEditor);
+  document.addEventListener('trix-loaded', initializeTrixEditor);
+  
   // Handle form submissions with loading states
   const forms = document.querySelectorAll('form[action*="diary_entries"]');
   

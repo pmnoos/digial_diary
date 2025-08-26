@@ -4,30 +4,11 @@
     <title>Digital Diary</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    
-    <!-- PWA Meta Tags -->
-    <%= tag.link rel: "manifest", href: "/manifest.json" %>
-    <%= tag.meta name: "theme-color", content: "#00d1b2" %>
-    <%= tag.meta name: "apple-mobile-web-app-capable", content: "yes" %>
-    <%= tag.meta name: "apple-mobile-web-app-status-bar-style", content: "default" %>
-    <%= tag.meta name: "apple-mobile-web-app-title", content: "Digital Diary" %>
-    <%= tag.meta name: "mobile-web-app-capable", content: "yes" %>
-    <%= tag.meta name: "viewport", content: "width=device-width, initial-scale=1.0, viewport-fit=cover" %>
-    
-    <!-- Apple Touch Icons -->
-    <%= tag.link rel: "apple-touch-icon", href: "/icon.png" %>
-    <%= tag.link rel: "apple-touch-icon", sizes: "152x152", href: "/icon.png" %>
-    <%= tag.link rel: "apple-touch-icon", sizes: "180x180", href: "/icon.png" %>
-    <%= tag.link rel: "apple-touch-icon", sizes: "167x167", href: "/icon.png" %>
-    
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags "application" %>
-    <%= stylesheet_link_tag "actiontext", media: "all", "data-turbo-track": "reload" %>
-    <link rel="icon" type="image/png" href="/icon.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Bulma CSS via CDN for proper styling -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "actiontext", media: "all", "data-turbo-track": "reload" %>
   </head>
   <body>
     <!-- PWA Install Banner -->
@@ -46,199 +27,76 @@
         </div>
       </div>
     </div>
-
-    <nav class="navbar is-dark  ml-3" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-          📔 Digital Diary
-        </a>
-      </div>
-      <div class="navbar-menu">
-        <div class="navbar-end">
-          <% if user_signed_in? %>
-            <div class="navbar-item">Hello, <%= current_user.username.presence || current_user.email %></div>
-            <div class="navbar-item">
-              <%= link_to "Log out", destroy_user_session_path, method: :delete, class: "button is-light",
-                  data: { 
-                    turbo_method: :delete, 
-                    turbo_confirm: "Are you sure you want to log out?",
-                    csrf: true
-                  } %>
-            </div>
-          <% else %>
-            <div class="navbar-item">
-              <%= link_to "Sign Up", new_user_registration_path, class: "button is-primary" %>
-              <%= link_to "Log in", new_user_session_path, class: "button is-light" %>
-            </div>
-          <% end %>
+    <div class="container">
+      <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="/">📔 Digital Diary</a>
         </div>
+        <div class="navbar-menu">
+          <div class="navbar-end">
+            <% if user_signed_in? %>
+              <div class="navbar-item">Hello, <%= current_user.username.presence || current_user.email %></div>
+              <div class="navbar-item">
+                <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "button is-light", data: { turbo: false } %>
+              </div>
+            <% else %>
+              <div class="navbar-item">
+                <%= link_to "Demo Tour", "#", onclick: "showDemoTour(); return false;", class: "button is-info" %>
+                <%= link_to "Sign Up", new_user_registration_path, class: "button is-primary" %>
+                <%= link_to "Log in", new_user_session_path, class: "button is-light" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </nav>
+      <div class="columns m-0">
+        <% if user_signed_in? && !((controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index')) %>
+          <aside class="column is-2 is-narrow has-background-light p-3">
+            <p class="menu-label ml-3 is-capitalized is-size-6 has-text-weight-bold has-text-info">Navigation</p>
+            <ul class="menu-list">
+              <li><%= link_to diary_entries_path do %>📖 Entries<% end %></li>
+              <li><%= link_to new_diary_entry_path do %>📝 New Entry<% end %></li>
+              <li><a href="<%= archive_path %>" class="has-text-dark" id="archive-toggle">🗄️ Archive</a></li>
+              <li><%= link_to subscriptions_path do %>💎 Subscription<% end %></li>
+            </ul>
+            <% if user_signed_in? && current_user.trial_active? %>
+              <div class="notification is-warning is-small mt-4">
+                <p class="is-size-7 has-text-centered"><strong>Trial:</strong> <%= current_user.days_left_in_trial %> days left</p>
+                <p class="is-size-7 has-text-centered"><strong>Entries:</strong> <%= current_user.remaining_trial_entries %> remaining</p>
+                <%= link_to "Upgrade", pricing_subscriptions_path, class: "button is-warning is-small is-fullwidth mt-2" %>
+              </div>
+            <% elsif user_signed_in? && current_user.trial_expired? %>
+              <div class="notification is-danger is-small mt-4">
+                <p class="is-size-7 has-text-centered has-text-white"><strong>Trial Expired</strong></p>
+                <%= link_to "Upgrade Now", pricing_subscriptions_path, class: "button is-light is-small is-fullwidth mt-2" %>
+              </div>
+            <% elsif user_signed_in? && current_user.subscription_active? %>
+              <div class="notification is-success is-small mt-4">
+                <p class="is-size-7 has-text-centered"><strong><%= current_user.subscription_plan.humanize %></strong> Plan Active</p>
+              </div>
+            <% end %>
+          </aside>
+          <main class="column p-4">
+            <%= yield %>
+          </main>
+        <% else %>
+          <main class="column p-4 is-full">
+            <%= yield %>
+          </main>
+        <% end %>
       </div>
-    </nav>
-    <div class="columns m-0">
-      <% if user_signed_in? && !((controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index')) %>
-        <aside class="column is-2 is-narrow has-background-light p-3" style="margin-left: 1.5rem;">
-          <p class="menu-label ml-3 is-capitalized is-size-6 has-text-weight-bold has-text-info">Navigation</p>
-          <ul class="menu-list">
-            <li>
-              <%= link_to diary_entries_path do %>
-                📖 Entries
-              <% end %>
-            </li>
-            <li>
-              <%= link_to new_diary_entry_path do %>
-                📝 New Entry
-              <% end %>
-            </li>
-            <li>
-              <%= link_to archive_path do %>
-                🗄️ Archive
-              <% end %>
-            </li>
-            <li>
-              <%= link_to subscriptions_path do %>
-                💎 Subscription
-              <% end %>
-            </li>
-          </ul>
-          
-          <% if user_signed_in? && current_user.trial_active? %>
-            <div class="notification is-warning is-small mt-4">
-              <p class="is-size-7 has-text-centered">
-                <strong>Trial:</strong> <%= current_user.days_left_in_trial %> days left
-              </p>
-              <p class="is-size-7 has-text-centered">
-                <strong>Entries:</strong> <%= current_user.remaining_trial_entries %> remaining
-              </p>
-              <%= link_to "Upgrade", pricing_subscriptions_path, 
-                  class: "button is-warning is-small is-fullwidth mt-2" %>
-            </div>
-          <% elsif user_signed_in? && current_user.trial_expired? %>
-            <div class="notification is-danger is-small mt-4">
-              <p class="is-size-7 has-text-centered has-text-white">
-                <strong>Trial Expired</strong>
-              </p>
-              <%= link_to "Upgrade Now", pricing_subscriptions_path, 
-                  class: "button is-light is-small is-fullwidth mt-2" %>
-            </div>
-          <% elsif user_signed_in? && current_user.subscription_active? %>
-            <div class="notification is-success is-small mt-4">
-              <p class="is-size-7 has-text-centered">
-                <strong><%= current_user.subscription_plan.humanize %></strong> Plan Active
-              </p>
-            </div>
-          <% end %>
-        </aside>
-        <main class="column p-4">
-          <%= yield %>
-        </main>
-      <% else %>
-        <main class="column p-4 is-full">
-          <%= yield %>
-        </main>
-      <% end %>
     </div>
-    <footer class="footer has-background-light mt-5">
+    <div class="container">
+    <footer class="footer has-background-light mt-3">
       <div class="content has-text-centered">
-        <p>
-          <strong>Digital Diary</strong><br>
-          <span class="is-size-5 has-text-grey">Created By EasyABC-International &copy; <%= Time.current.year %></span>
-        </p>
-        <p class="mt-2">
-          Made with Ruby on Rails & Bulma.
-        </p>
+        <p><strong>Digital Diary</strong><br><span class="is-size-4 has-text-grey">Created By EasyABC-International &copy; <%= Time.current.year %></span></p>
+        <p class="mt-1">Made with Ruby on Rails & Bulma.</p>
       </div>
     </footer>
-    <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log('✅ Service Worker registered:', reg))
-      .catch(err => console.error('❌ Service Worker registration failed:', err));
-  });
-}
-
-// Image gallery modal functionality
-function openModal(modalId) {
-  console.log('Opening modal:', modalId);
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.classList.add('is-active');
-    // Prevent body scrolling when modal is open
-    document.body.style.overflow = 'hidden';
-    console.log('Modal opened successfully');
-  } else {
-    console.error('Modal not found:', modalId);
-  }
-}
-
-function closeModal(modalId) {
-  console.log('Closing modal:', modalId);
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.classList.remove('is-active');
-    // Restore body scrolling
-    document.body.style.overflow = '';
-    console.log('Modal closed successfully');
-  } else {
-    console.error('Modal not found:', modalId);
-  }
-}
-
-// Add click handlers for gallery images
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Gallery script loaded');
-  
-  // Handle gallery image clicks using data attributes
-  document.addEventListener('click', function(e) {
-    console.log('Click event:', e.target);
-    
-    // Open modal when clicking gallery images
-    if (e.target.classList.contains('gallery-image')) {
-      console.log('Gallery image clicked');
-      const modalTarget = e.target.dataset.modalTarget;
-      console.log('Modal target:', modalTarget);
-      if (modalTarget) {
-        openModal(modalTarget);
-      } else {
-        console.error('No modal target found on image');
-      }
-    }
-    
-    // Close modal when clicking background or close button
-    if (e.target.hasAttribute('data-modal-close')) {
-      const modalId = e.target.getAttribute('data-modal-close');
-      console.log('Close button clicked for modal:', modalId);
-      closeModal(modalId);
-    }
-  });
-  
-  // Close modal with Escape key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      const activeModal = document.querySelector('.modal.is-active');
-      if (activeModal) {
-        console.log('Escape key pressed, closing modal');
-        activeModal.classList.remove('is-active');
-        document.body.style.overflow = '';
-      }
-    }
-  });
-});
-
-// Service Worker Registration for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker')
-      .then((registration) => {
-        console.log('SW registered: ', registration);
-      })
-      .catch((registrationError) => {
-        console.log('SW registration failed: ', registrationError);
-      });
-  });
-}
-
-</script>
+  </div>  
   </body>
+  <script>
+  // Debug script to test if JavaScript is working
+  console.log("Application layout loaded");
+  </script>
 </html>
-

@@ -23,6 +23,7 @@
               <h5 class="title is-5">📖 Browse Entries</h5>
               <p>Explore <strong>300+ sample diary entries</strong> from our demo user with different moods, photos, and dates.</p>
               <p class="has-text-info has-text-weight-semibold">You're already here!</p>
+              <a href="<%= diary_entries_path %>" class="button is-info is-light is-small mt-2">View All Entries</a>
             </div>
           </div>
           
@@ -31,6 +32,7 @@
               <h5 class="title is-5">🔍 Search & Filter</h5>
               <p>Use the <strong>search box</strong> and <strong>year filter</strong> to find specific entries about travel, work, family, etc.</p>
               <p class="has-text-success has-text-weight-semibold">Try searching "vacation"!</p>
+              <a href="<%= diary_entries_path %>" class="button is-success is-light is-small mt-2">Try Search & Filter</a>
             </div>
           </div>
           
@@ -39,6 +41,11 @@
               <h5 class="title is-5">📱 View Individual Entries</h5>
               <p>Click <strong>"Read entry"</strong> on any diary card to see full content, photos, and rich formatting.</p>
               <p class="has-text-warning-dark has-text-weight-semibold">Check out entries with photos!</p>
+              <% if @demo_entries&.first %>
+                <a href="<%= diary_entry_path(@demo_entries.first) %>" class="button is-warning is-light is-small mt-2">View Sample Entry</a>
+              <% else %>
+                <a href="<%= diary_entries_path %>" class="button is-warning is-light is-small mt-2">View Entries</a>
+              <% end %>
             </div>
           </div>
           
@@ -47,6 +54,7 @@
               <h5 class="title is-5">📊 Statistics View</h5>
               <p>See the <strong>statistics section</strong> below showing total entries, years of memories, and photo counts.</p>
               <p class="has-text-primary has-text-weight-semibold">Scroll down to see them!</p>
+              <a href="#demo-stats" class="button is-primary is-light is-small mt-2" onclick="closeDemoTour(); setTimeout(() => { document.querySelector('#demo-stats').scrollIntoView({ behavior: 'smooth' }); }, 300); return false;">View Statistics</a>
             </div>
           </div>
         </div>

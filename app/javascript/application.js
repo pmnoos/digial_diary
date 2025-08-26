@@ -5,10 +5,21 @@ import "controllers"
 // Action Text support
 import "trix"
 import "@rails/actiontext"
+// Add rails-ujs for method: :delete support
+import Rails from "@rails/ujs"
+Rails.start()
 
 // Import form enhancements
 import "./form_enhancement.js"
 import "./image_upload.js"
+import "./debug_trix.js"
+
+// Debug form submissions
+document.addEventListener('submit', function(event) {
+  console.log('Form submission detected:', event.target);
+  console.log('Form action:', event.target.action);
+  console.log('Form method:', event.target.method);
+});
 
 // PWA functionality
 let deferredPrompt;

@@ -2,27 +2,175 @@
 
 <h1 class="title is-3 has-text-centered mb-5">📚 Diary Archive</h1>
 
-<% # Correctly group by year using the first element of the month key %>
-<% grouped_by_year = @archive.group_by { |(year, _), _| year } %>
-
-<% grouped_by_year.sort.reverse.each do |year, months| %>
-  <div class="box mb-5">
-    <h2 class="title is-4 has-text-primary">📁 <%= year %></h2>
-
-    <% months.sort.reverse.each do |(y, month_name), entries| %>
-      <div class="box mb-3 has-background-light">
-        <h3 class="subtitle is-5 has-text-info">🗓️ <%= "#{month_name} #{y}" %></h3>
-        <ul class="ml-4">
-          <% entries.each do |entry| %>
-            <li class="mb-1">
-              <%= link_to entry.title, diary_entry_path(entry), class: "has-text-dark has-text-weight-semibold" %>
-              <% if entry.mood.present? %>
-                <span class="tag is-info is-light ml-2"><%= entry.mood.capitalize %></span>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
+<% # Show current filter if any %>
+<% if @filter_year || @filter_month %>
+  <div class="notification is-info">
+    <p>
+      <% if @filter_year && @filter_month %>
+        Showing entries for <%= Date::MONTHNAMES[@filter_month] %> <%= @filter_year %>
+      <% elsif @filter_year %>
+        Showing entries for <%= @filter_year %>
+      <% end %>
+      <%= link_to "Clear filter", archive_path, class: "has-text-weight-bold" %>
+    </p>
   </div>
+<% end %>
+
+<!-- Archive grouping options -->
+<div class="tabs is-centered mb-5">
+  <ul>
+    <li class="<%= 'is-active' if @grouping == 'week' %>">
+      <%= link_to "Weekly", archive_path(group_by: 'week', year: @filter_year, month: @filter_month) %>
+    </li>
+    <li class="<%= 'is-active' if @grouping == 'month' || @grouping.nil? %>">
+      <%= link_to "Monthly", archive_path(group_by: 'month', year: @filter_year, month: @filter_month) %>
+    </li>
+    <li class="<%= 'is-active' if @grouping == 'year' %>">
+      <%= link_to "Yearly", archive_path(group_by: 'year', year: @filter_year, month: @filter_month) %>
+    </li>
+  </ul>
+</div>
+
+<% if @grouping == 'week' %>
+  <% # Group by year first for weekly view %>
+  <% grouped_by_year = @archive.group_by { |week_start, _| week_start.year } %>
+  
+  <% grouped_by_year.sort.reverse.each do |year, weeks| %>
+    <div class="box mb-5">
+      <h2 class="title is-4 has-text-primary">📁 <%= year %></h2>
+      
+      <% weeks.sort.reverse.each do |week_start, entries| %>
+        <div class="box mb-3 has-background-light">
+          <h3 class="subtitle is-5 has-text-info">🗓️ Week of <%= week_start.strftime("%B %d") %></h3>
+          <ul class="ml-4">
+            <% entries.each do |entry| %>
+              <li class="mb-1">
+                <%= link_to entry.title, diary_entry_path(entry), class: "has-text-dark has-text-weight-semibold" %>
+                <% if entry.mood.present? %>
+                  <span class="tag is-info is-light ml-2"><%= entry.mood.capitalize %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  
+<% elsif @grouping == 'year' %>
+  <% # Yearly summary view %>
+  <% @archive.sort.reverse.each do |year, entries| %>
+    <div class="box mb-5">
+      <h2 class="title is-4 has-text-primary">📁 <%= year %> (<%= entries.count %> entries)</h2>
+      
+      <% # Show some statistics for the year %>
+      <% moods = entries.group_by(&:mood).transform_values(&:count) %>
+      <% if moods.any? %>
+        <div class="tags">
+          <% moods.sort_by { |_, count| -count }.first(5).each do |mood, count| %>
+            <% if mood.present? %>
+              <span class="tag is-info"><%= mood.capitalize %> <span class="has-text-weight-bold">(<%= count %>)</span></span>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+      
+      <% # Show first few entries as a preview %>
+      <h3 class="subtitle is-5 has-text-info mt-3">Recent Entries</h3>
+      <ul class="ml-4">
+        <% entries.first(5).each do |entry| %>
+          <li class="mb-1">
+            <%= link_to entry.title, diary_entry_path(entry), class: "has-text-dark has-text-weight-semibold" %>
+            <span class="has-text-grey is-size-7"><%= entry.entry_date.strftime("%B %d") %></span>
+            <% if entry.mood.present? %>
+              <span class="tag is-info is-light ml-2"><%= entry.mood.capitalize %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+      
+      <% if entries.count > 5 %>
+        <%= link_to "View all #{entries.count} entries from #{year}", archive_path(group_by: 'month', year: year) %>
+      <% end %>
+    </div>
+  <% end %>
+  
+<% else %>
+  <% # Monthly view (default) %>
+  <% # Correctly group by year using the first element of the month key %>
+  <% grouped_by_year = @archive.group_by { |(year, _), _| year } %>
+  
+  <% grouped_by_year.sort.reverse.each do |year, months| %>
+    <div class="box mb-5">
+      <h2 class="title is-4 has-text-primary">📁 <%= year %></h2>
+      
+      <% months.sort.reverse.each do |(y, month_name), entries| %>
+        <div class="box mb-3 has-background-light">
+          <h3 class="subtitle is-5 has-text-info">🗓️ <%= "#{month_name} #{y}" %></h3>
+          <ul class="ml-4">
+            <% entries.each do |entry| %>
+              <li class="mb-1">
+                <%= link_to entry.title, diary_entry_path(entry), class: "has-text-dark has-text-weight-semibold" %>
+                <% if entry.mood.present? %>
+                  <span class="tag is-info is-light ml-2"><%= entry.mood.capitalize %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+<% # End-of-month archiving prompt %>
+<% if user_signed_in? && !@filter_year && !@filter_month %>
+  <% # Check if we're at the end of the month and user has entries this month %>
+  <% current_month_entries = current_user.diary_entries.where(entry_date: Date.current.beginning_of_month..Date.current.end_of_month) %>
+  <% if current_month_entries.any? && Date.current.day >= 25 %>
+    <div class="notification is-warning" id="archive-prompt">
+      <h3 class="title is-5">📅 End of Month Archive</h3>
+      <p>You have <%= current_month_entries.count %> entries this month. Would you like to archive them now?</p>
+      <div class="buttons mt-3">
+        <%= link_to "Archive This Month", "#", class: "button is-primary", id: "archive-month-button" %>
+        <%= link_to "Remind Me Later", "#", class: "button is-light", id: "remind-later-button" %>
+      </div>
+    </div>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const archivePrompt = document.getElementById('archive-prompt');
+        const archiveButton = document.getElementById('archive-month-button');
+        const remindButton = document.getElementById('remind-later-button');
+        
+        // Check if user has dismissed this prompt recently
+        const lastDismissed = localStorage.getItem('archivePromptDismissed');
+        const now = new Date().getTime();
+        const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+        
+        if (lastDismissed && (now - parseInt(lastDismissed)) < oneDay) {
+          archivePrompt.style.display = 'none';
+        }
+        
+        // Archive button functionality
+        if (archiveButton) {
+          archiveButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            // In a real implementation, this would trigger the archiving process
+            alert('In a full implementation, this would archive your current month entries.');
+            archivePrompt.style.display = 'none';
+          });
+        }
+        
+        // Remind later button functionality
+        if (remindButton) {
+          remindButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.setItem('archivePromptDismissed', now.toString());
+            archivePrompt.style.display = 'none';
+          });
+        }
+      });
+    </script>
+  <% end %>
 <% end %>

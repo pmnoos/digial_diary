@@ -160,7 +160,36 @@ class DiaryEntriesController < ApplicationController
 
   def archive
     entries = current_user.diary_entries.published.order(entry_date: :desc)
-    @archive = entries.group_by { |e| e.entry_date.beginning_of_month }
+    
+    # Filter by year and month if specified
+    if params[:year].present?
+      year = params[:year].to_i
+      if params[:month].present?
+        month = params[:month].to_i
+        # Filter by specific month and year
+        entries = entries.where(entry_date: Date.new(year, month, 1)..Date.new(year, month, -1))
+      else
+        # Filter by year only
+        entries = entries.where(entry_date: Date.new(year, 1, 1)..Date.new(year, 12, 31))
+      end
+    end
+    
+    # Determine grouping based on params
+    case params[:group_by]
+    when 'week'
+      @archive = entries.group_by { |e| e.entry_date.beginning_of_week }
+      @grouping = 'week'
+    when 'year'
+      @archive = entries.group_by { |e| e.entry_date.year }
+      @grouping = 'year'
+    else
+      @archive = entries.group_by { |e| e.entry_date.beginning_of_month }
+      @grouping = 'month'
+    end
+    
+    # Store year and month for view
+    @filter_year = params[:year].to_i if params[:year].present?
+    @filter_month = params[:month].to_i if params[:month].present?
   end
 
   # DELETE /diary_entries/:id/remove_image

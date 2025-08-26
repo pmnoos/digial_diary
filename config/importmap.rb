@@ -8,3 +8,4 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 
 pin "@rails/actiontext", to: "@rails--actiontext.js" # @8.0.200
 pin "trix" # @2.1.15
+pin "@rails/ujs", to: "@rails--ujs.js" # @7.1.3

@@ -1,8 +1,8 @@
 {
-  "name": "{{ folder_name }}",
+  "name": "react_express_app",
   "type": "module",
   "version": "0.0.1",
-  "description": "{{ project_name|escape_string}}",
+  "description": "React Express Project",
   "main": "server.js",
   "author": "",
   "license": "UNLICENSED",
@@ -18,10 +18,6 @@
     "dotenv": "*",
     "express": "*",
     "jsonschema": "*",
-{% if options.db_type == 'nosql' %}
-    "mongoose": "*",
-    "validator": "*",
-{% endif %}
     "lucide-react": "^0.395.0",
     "nodemailer": "*",
     "pino": "*",
@@ -50,9 +46,7 @@
     "pino-pretty": "*",
     "postcss": "^8.4.38",
     "prettier": "*",
-{% if options.db_type == 'sql' %}
     "prisma": "*",
-{% endif %}
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "*",

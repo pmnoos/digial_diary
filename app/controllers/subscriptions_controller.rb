@@ -45,19 +45,4 @@ class SubscriptionsController < ApplicationController
       redirect_to root_path, notice: 'Trial extended for demonstration purposes!'
     end
   end
-
-  # Helper method to refresh demo user trial (for development/testing)
-  def refresh_demo_trial
-    demo_user = User.find_by(email: 'demo@digitaldiaryapp.com')
-    if demo_user
-      demo_user.update!(
-        trial_started_at: Time.current,
-        trial_ends_at: 30.days.from_now,
-        subscription_status: 'trial'
-      )
-      redirect_to root_path, notice: 'Demo user trial refreshed!'
-    else
-      redirect_to root_path, alert: 'Demo user not found!'
-    end
-  end
 end

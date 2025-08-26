@@ -4,7 +4,6 @@ Rails.application.routes.draw do
       get :pricing
       post :upgrade
       post :demo_mode
-      post :refresh_demo_trial  # For refreshing demo user trial
     end
   end
   resources :thoughts
@@ -13,7 +12,7 @@ Rails.application.routes.draw do
       delete :remove_image
     end
   end
-  devise_for :users
+  devise_for :users, controllers: { sessions: 'sessions' }
   
   # Demo login route for instant access
   post "demo_login", to: "application#demo_login"
@@ -30,4 +29,7 @@ Rails.application.routes.draw do
 
    # Defines the root path route ("/")
    root "home#index"
+   
+   # Test route for rich text editor
+   get "test_editor", to: "home#test_editor"
 end

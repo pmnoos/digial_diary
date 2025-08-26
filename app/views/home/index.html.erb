@@ -1,7 +1,7 @@
 <section class="section">
   <div class="container">
     <!-- Hero Section -->
-    <div class="hero is-medium has-text-centered mb-6">
+    <div class="hero is-small has-text-centered mb-6">
       <div class="hero-body">
         <h1 class="title is-1 has-text-primary">📔 Digital Diary</h1>
         <h2 class="subtitle is-3">Your thoughts, memories, and experiences - beautifully preserved</h2>
@@ -60,7 +60,7 @@
         </div>
         
         <!-- Demo Stats Preview -->
-        <div class="notification is-primary is-light mt-5">
+        <div id="demo-stats" class="notification is-primary is-light mt-5">
           <div class="content has-text-centered">
             <h4 class="title is-4">🎯 What You'll See in the Demo</h4>
             <p>Explore a real diary with <strong><%= @total_demo_entries %> actual entries</strong> to see exactly how Digital Diary works!</p>
@@ -150,6 +150,7 @@
   </div>
 </section>
     </div>
+  <div class="container">  
     <nav class="navbar is-light mb-5" role="navigation" aria-label="main navigation">
       <div class="navbar-menu is-active">
         <div class="navbar-start">
@@ -159,6 +160,7 @@
         </div>
       </div>
     </nav>
+   </div> 
     <% if user_signed_in? %>
       <div class="has-text-centered  mt-4">
         <%= button_to "Delete My Account", registration_path(:user), method: :delete, data: { confirm: "Are you sure you want to delete your account? This cannot be undone." }, class: "button is-danger is-light" %>
