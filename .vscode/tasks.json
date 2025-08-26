@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Make bin/brakeman executable (for CI)",
+			"type": "shell",
+			"command": "git update-index --chmod=+x bin/brakeman",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Make bin/importmap executable (for CI)",
+			"type": "shell",
+			"command": "git update-index --chmod=+x bin/importmap",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Make bin/rails executable (for CI)",
+			"type": "shell",
+			"command": "git update-index --chmod=+x bin/rails",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
