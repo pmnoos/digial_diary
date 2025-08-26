@@ -1,3 +1,10 @@
+/* Subtle background for Bulma boxes */
+/* Subtle background for Bulma boxes, theme-aware */
+.box {
+  background-color: var(--background, #b7d5f3) !important;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
 /* Fix for Trix editor with Bulma */
 trix-editor {
   min-height: 10em;
