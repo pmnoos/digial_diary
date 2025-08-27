@@ -27,6 +27,15 @@
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "build"
+		},
+		{
+			"label": "Make all bin scripts executable (for CI)",
+			"type": "shell",
+			"command": "git update-index --chmod=+x bin/bundle bin/dev bin/docker-entrypoint bin/importmap bin/rails bin/rake bin/render-build.sh bin/rubocop bin/setup bin/thrust bin/brakeman bin/kamal bin/railway-start",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
 		}
 	]
 }
