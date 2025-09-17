@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[8.0].define(version: 2025_08_04_042806) do
+=======
+ActiveRecord::Schema[8.0].define(version: 2025_09_16_003836) do
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -61,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_04_042806) do
     t.bigint "user_id", null: false
     t.string "moods"
     t.string "mood"
+    t.integer "thought_id"
     t.index ["user_id"], name: "index_diary_entries_on_user_id"
   end
 
@@ -71,6 +76,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_04_042806) do
     t.datetime "updated_at", null: false
     t.index ["diary_entry_id"], name: "index_diary_entry_tags_on_diary_entry_id"
     t.index ["tag_id"], name: "index_diary_entry_tags_on_tag_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "event_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tags", force: :cascade do |t|
@@ -95,11 +108,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_04_042806) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
+<<<<<<< HEAD
     t.datetime "trial_started_at"
     t.datetime "trial_ends_at"
     t.string "subscription_status", default: "trial"
     t.string "subscription_plan", default: "free_trial"
     t.string "payment_id"
+=======
+    t.datetime "trial_ends_at"
+    t.integer "entry_limit"
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["subscription_status"], name: "index_users_on_subscription_status"

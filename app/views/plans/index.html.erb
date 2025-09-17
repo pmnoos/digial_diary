@@ -1,0 +1,165 @@
+<!-- filepath: app/views/plans/index.html.erb -->
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-centered">Plans & Pricing</h1>
+    <p class="subtitle has-text-centered">
+      Start for free, then unlock advanced features like reminders, images, and insights to make your diary truly yours.
+    </p>
+
+    <!-- Pricing Cards -->
+    <div class="columns is-centered mt-5">
+      
+      <!-- Free Plan -->
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <h2 class="title is-4">🌱 Free</h2>
+          <p class="subtitle is-6">Perfect to get started</p>
+          <ul class="has-text-left">
+            <li>✔ Unlimited text entries</li>
+            <li>✔ Add moods & thoughts</li>
+            <li>✔ Basic archive access</li>
+            <li>✔ Basic reminders (text-only)</li>
+          </ul>
+          <p class="title is-5 mt-4">$0 / month</p>
+          <%= link_to "Get Started", new_user_registration_path, class: "button is-link is-light is-fullwidth" %>
+        </div>
+      </div>
+
+      <!-- Pro Plan -->
+      <div class="column is-3">
+        <div class="box has-text-centered"
+             style="position: relative; background-color: #e0f7ff; border: 2px solid #33aaff; border-radius: 12px; box-shadow: 0 0 12px rgba(51, 170, 255, 0.4);">
+
+          <!-- Most Popular Badge -->
+          <span class="tag is-link is-medium"
+                style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%);">
+            ⭐ Most Popular
+          </span>
+
+          <h2 class="title is-4">🚀 Pro</h2>
+          <p class="subtitle is-6">Best for active journalers</p>
+          <ul class="has-text-left">
+            <li>✔ Everything in Free</li>
+            <li>✔ Upload images with entries</li>
+            <li>✔ Advanced search & filters</li>
+            <li>✔ Calendar view of reminders</li>
+            <li>✔ Email notifications</li>
+            <li>✔ Priority support</li>
+          </ul>
+          <p class="title is-5 mt-4">$5 / month</p>
+          <%= button_to "Upgrade to Pro",
+                checkout_index_path(price_id: "price_pro_123"),  # Replace with Stripe Price ID
+                method: :post,
+                class: "button is-link is-fullwidth is-medium" %>
+        </div>
+      </div>
+
+      <!-- Premium Plan -->
+      <div class="column is-3">
+        <div class="box has-text-centered"
+             style="background: linear-gradient(135deg, #fff7e6, #fff3cd); border: 2px solid #ffcc00; border-radius: 12px; box-shadow: 0 0 12px rgba(255, 204, 0, 0.4);">
+
+          <h2 class="title is-4">💎 Premium</h2>
+          <p class="subtitle is-6">For diary lovers & power users</p>
+          <ul class="has-text-left">
+            <li>✔ Everything in Pro</li>
+            <li>✔ Encrypted backup & sync</li>
+            <li>✔ Export entries (PDF/Word)</li>
+            <li>✔ Smart reminders with suggestions</li>
+            <li>✔ Calendar sync (Google/Outlook)</li>
+            <li>✔ Mood tracking insights</li>
+            <li>✔ Premium support</li>
+          </ul>
+          <p class="title is-5 mt-4">$10 / month</p>
+          <%= button_to "Go Premium",
+                checkout_index_path(price_id: "price_premium_456"),  # Replace with Stripe Price ID
+                method: :post,
+                class: "button is-warning is-fullwidth is-medium" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="table-container mt-6">
+      <h2 class="title is-4 has-text-centered">Compare Plans</h2>
+      <table class="table is-fullwidth is-bordered is-hoverable">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>🌱 Free</th>
+            <th>🚀 Pro</th>
+            <th>💎 Premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Unlimited text entries</td>
+            <td>✔</td>
+            <td>✔</td>
+            <td>✔</td>
+          </tr>
+          <tr>
+            <td>Moods & thoughts</td>
+            <td>✔</td>
+            <td>✔</td>
+            <td>✔</td>
+          </tr>
+          <tr>
+            <td>Archive access</td>
+            <td>Basic</td>
+            <td>Advanced filters</td>
+            <td>Advanced + insights</td>
+          </tr>
+          <tr>
+            <td>Upload images</td>
+            <td>—</td>
+            <td>✔</td>
+            <td>✔</td>
+          </tr>
+          <tr>
+            <td>Reminders</td>
+            <td>✔ (basic text)</td>
+            <td>✔ (calendar + email)</td>
+            <td>✔ (smart + calendar sync)</td>
+          </tr>
+          <tr>
+            <td>Search & filters</td>
+            <td>Basic</td>
+            <td>Advanced</td>
+            <td>Advanced + stats</td>
+          </tr>
+          <tr>
+            <td>Support</td>
+            <td>Community</td>
+            <td>Priority</td>
+            <td>Premium</td>
+          </tr>
+          <tr>
+            <td>Backup & sync</td>
+            <td>—</td>
+            <td>—</td>
+            <td>✔ Encrypted</td>
+          </tr>
+          <tr>
+            <td>Export (PDF/Word)</td>
+            <td>—</td>
+            <td>—</td>
+            <td>✔</td>
+          </tr>
+          <tr>
+            <td>Mood tracking insights</td>
+            <td>—</td>
+            <td>—</td>
+            <td>✔</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><%= link_to "Choose Free", new_user_registration_path, class: "button is-link is-light is-small" %></td>
+            <td><%= button_to "Upgrade to Pro", checkout_index_path(price_id: "price_pro_123"), method: :post, class: "button is-link is-small" %></td>
+            <td><%= button_to "Go Premium", checkout_index_path(price_id: "price_premium_456"), method: :post, class: "button is-warning is-small" %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

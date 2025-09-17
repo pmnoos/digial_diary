@@ -26,7 +26,7 @@ class ThoughtsController < ApplicationController
 
     respond_to do |format|
       if @thought.save
-        format.html { redirect_to @thought, notice: "Thought was successfully created." }
+        format.html { redirect_to new_diary_entry_path, notice: "Thought was successfully created." }
         format.json { render :show, status: :created, location: @thought }
       else
         format.html { render :new, status: :unprocessable_entity }

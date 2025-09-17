@@ -26,6 +26,7 @@
           </button>
         </div>
       </div>
+<<<<<<< HEAD
     </div>
     <div class="container">
       <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
@@ -87,6 +88,59 @@
       </div>
     </div>
     <div class="container">
+=======
+    </nav>
+    <div class="columns m-0">
+      <% unless (controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index') %>
+        <aside class="column is-2 is-narrow has-background-light p-3" style="margin-left: 1.5rem;">
+  <p class="menu-label ml-3 is-capitalized is-size-6 has-text-weight-bold has-text-info">Navigation</p>
+  <ul class="menu-list">
+    <li>
+      <%= link_to diary_entries_path do %>
+        📖 Entries
+      <% end %>
+    </li>
+    <li>
+      <%= link_to new_diary_entry_path do %>
+        📝 New Entry
+      <% end %>
+    </li>
+    <li>
+    <%= link_to "🗓️ Events/Reminders", events_path %>
+    </li>
+    <li>
+      <%= link_to archive_path do %>
+        🗄️ Archive
+      <% end %>
+    </li>
+    <li>
+      <%= link_to thoughts_path do %>
+        💡 Thoughts/Moods
+      <% end %>
+    </li>
+    <li>
+      <%= link_to new_thought_path do %>
+        ➕ Add Thought/Mood
+      <% end %>
+    </li>
+    <li>
+      <%= link_to plans_path do %>
+        📝 Plans & Pricing
+      <% end %>
+    </li>  
+  </ul>
+</aside>
+
+        <main class="column p-2">
+          <%= yield %>
+        </main>
+      <% else %>
+        <main class="column p-3 is-full">
+          <%= yield %>
+        </main>
+      <% end %>
+    </div>
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
     <footer class="footer has-background-light mt-3">
       <div class="content has-text-centered">
         <p><strong>Digital Diary</strong><br><span class="is-size-4 has-text-grey">Created By EasyABC-International &copy; <%= Time.current.year %></span></p>

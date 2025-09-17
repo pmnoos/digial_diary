@@ -2,6 +2,11 @@
 
 <h1>Editing diary entry</h1>
 
+<!-- ✅ Turbo Frame for inline Saved message -->
+<%= turbo_frame_tag "autosave-status" do %>
+  <!-- Empty initially, replaced when you save -->
+<% end %>
+
 <%= render "form", diary_entry: @diary_entry %>
 
 <br>

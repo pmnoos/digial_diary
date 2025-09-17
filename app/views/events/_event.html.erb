@@ -1,0 +1,23 @@
+<% if Event.where(event_date: Time.current..3.days.from_now).any? %>
+  <div class="box has-background-warning-light mt-5">
+    <h2 class="subtitle is-5 mb-2">Upcoming Events & Reminders (Next 3 Days)</h2>
+    <ul>
+      <% Event.where(event_date: Time.current..3.days.from_now).order(:event_date).each do |event| %>
+        <li>
+          <strong><%= event.title %></strong>
+          <span class="has-text-grey"> - <%= event.event_date.strftime("%b %d, %Y %H:%M") %></span>
+          <% if event.description.present? %>
+            <div class="has-text-grey is-size-7"><%= event.description %></div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <%= link_to "Add Event/Reminder", new_event_path, class: "button is-warning is-light mt-2" %>
+  </div>
+<% else %>
+  <div class="box has-background-warning-light mt-5">
+    <h2 class="subtitle is-5 mb-2">Upcoming Events & Reminders (Next 3 Days)</h2>
+    <p>No upcoming events in the next 3 days.</p>
+    <%= link_to "Add Event/Reminder", new_event_path, class: "button is-warning is-light mt-2" %>
+  </div>
+<% end %>

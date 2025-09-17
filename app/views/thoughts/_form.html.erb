@@ -1,8 +1,8 @@
-<%= form_with(model: thought) do |form| %>
-  <% if thought.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(thought.errors.count, "error") %> prohibited this thought from being saved:</h2>
 
+<%= form_with(model: thought, html: { class: "box" }) do |form| %>
+  <% if thought.errors.any? %>
+    <div class="notification is-danger">
+      <h2 class="title is-6"><%= pluralize(thought.errors.count, "error") %> prohibited this thought from being saved:</h2>
       <ul>
         <% thought.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,17 +11,23 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :content, style: "display: block" %>
-    <%= form.textarea :content %>
+  <div class="field">
+    <%= form.label :content, class: "label" %>
+    <div class="control">
+      <%= form.text_area :content, class: "textarea", rows: 3 %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :mood, style: "display: block" %>
-    <%= form.text_field :mood %>
+  <div class="field">
+    <%= form.label :mood, class: "label" %>
+    <div class="control">
+      <%= form.text_field :mood, class: "input" %>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="field mt-4">
+    <div class="control">
+      <%= form.submit class: "button is-primary" %>
+    </div>
   </div>
 <% end %>

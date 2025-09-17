@@ -6,6 +6,7 @@ class DiaryEntry < ApplicationRecord
   end
   
   belongs_to :user
+  belongs_to :thought, optional: true
   has_rich_text :content
 
   has_many :diary_entry_tags, dependent: :destroy

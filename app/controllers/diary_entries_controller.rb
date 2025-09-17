@@ -1,4 +1,5 @@
 class DiaryEntriesController < ApplicationController
+<<<<<<< HEAD
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_diary_entry, only: %i[show edit update destroy]
   before_action :check_subscription_access, except: [:show, :index]
@@ -157,6 +158,12 @@ class DiaryEntriesController < ApplicationController
       format.json { head :no_content }
     end
   end
+=======
+  before_action :set_diary_entry, only: %i[show edit update destroy purge_image]
+  before_action :check_trial_limit, only: [:new, :create]
+
+  # ... your existing actions ...
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
 
   def archive
     entries = current_user.diary_entries.published.order(entry_date: :desc)
@@ -207,7 +214,45 @@ class DiaryEntriesController < ApplicationController
     # Redirect back to where they came from, or show page as fallback
     redirect_back(fallback_location: diary_entry_path(@diary_entry))
   end
-
+def update
+  @diary_entry = current_user.diary_entries.find(params[:id])
+  if @diary_entry.update(diary_entry_params)
+    redirect_to @diary_entry, notice: "Diary entry was successfully updated."
+  else
+    render :edit, status: :unprocessable_entity
+  end
+end
+def destroy
+  @diary_entry.destroy!
+  respond_to do |format|
+    format.html { redirect_to diary_entries_path, status: :see_other, notice: "Diary entry was successfully destroyed." }
+    format.json { head :no_content }
+  end
+end
+def purge_image
+  image = @diary_entry.images.find(params[:image_id])
+  image.purge
+  respond_to do |format|
+    format.html { redirect_to @diary_entry, notice: "Image deleted." }
+    format.json { head :no_content }
+  end
+end
+def create
+  @diary_entry = current_user.diary_entries.new(diary_entry_params)
+  if @diary_entry.save
+    redirect_to @diary_entry, notice: "Entry created!"
+  else
+    render :new, status: :unprocessable_entity
+  end
+end
+def new
+  @diary_entry = current_user.diary_entries.new
+  @thought_of_the_day = Thought.where(mood: %w[calm encouraging motivational positive hopeful reflective peaceful joyful])
+                               .order(Arel.sql("RANDOM()")).first || Thought.order(Arel.sql("RANDOM()")).first
+end
+def index
+  @diary_entries = current_user.diary_entries.order(entry_date: :desc).page(params[:page]).per(10)
+end
   private
 
   def set_diary_entry
@@ -247,9 +292,20 @@ class DiaryEntriesController < ApplicationController
       :entry_date,
       :status,
       :mood,
+      :thought_id,
       images: [],
       tag_list: [],
       tag_ids: []
     )
+  end
+
+  def check_trial_limit
+    if current_user.trial_ends_at.present?
+      if Time.current > current_user.trial_ends_at
+        redirect_to plans_path, alert: "Your trial has expired. Please subscribe to continue."
+      elsif current_user.diary_entries.count >= current_user.entry_limit
+        redirect_to plans_path, alert: "You have reached your trial entry limit. Please subscribe to continue."
+      end
+    end
   end
 end

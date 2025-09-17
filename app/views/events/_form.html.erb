@@ -1,0 +1,32 @@
+<!-- filepath: c:\Users\Test\projects\ruby\diary\diary_app\app\views\events\_form.html.erb -->
+<%= form_with(model: event, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :title, class: "label" %>
+    <div class="control">
+      <%= form.text_field :title, class: "input", required: true, placeholder: "Event Title" %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :event_date, "Date & Time", class: "label" %>
+    <div class="control">
+      <%= form.datetime_select :event_date, class: "input", required: true %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :description, class: "label" %>
+    <div class="control">
+      <%= form.text_area :description, class: "textarea", placeholder: "Details (optional)" %>
+    </div>
+  </div>
+
+  <div class="field is-grouped mt-4">
+    <div class="control">
+      <%= form.submit class: "button is-primary" %>
+    </div>
+    <div class="control">
+      <%= link_to "Cancel", events_path, class: "button is-light" %>
+    </div>
+  </div>
+<% end %>

@@ -1,14 +1,17 @@
+<<<<<<< HEAD
 <%= form_with(model: @diary_entry, local: true, multipart: true) do |form| %>
+=======
 
-  <% if @diary_entry.errors.any? %>
-    <div class="notification is-danger">
-      <ul>
-        <% @diary_entry.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
+<%= form_with(model: @diary_entry, local: true) do |form| %>
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
+
+  <% if @thought_of_the_day %>
+    <div class="notification is-info is-light mb-4">
+      <strong>Thought of the Day:</strong><br>
+      <em><%= @thought_of_the_day.content %></em>
     </div>
   <% end %>
+
 
   <div class="field">
     <%= form.label :title, class: "label" %>
@@ -22,8 +25,18 @@
     <div class="control">
       <%= form.date_field :entry_date, class: "input", value: (@diary_entry.entry_date || Date.current) %>
     </div>
+<<<<<<< HEAD
     <p class="help has-text-info">Select the date for your diary entry</p>
+=======
+    <div class="mt-2">
+      <span class="is-size-7 has-text-grey">Quick date:</span>
+      <%= link_to "Yesterday", "#", class: "button is-small is-light mx-1", onclick: "document.getElementById('diary_entry_entry_date').value = '#{(Date.today - 1).strftime('%Y-%m-%d')}'" %>
+      <%= link_to "2 days ago", "#", class: "button is-small is-light mx-1", onclick: "document.getElementById('diary_entry_entry_date').value = '#{(Date.today - 2).strftime('%Y-%m-%d')}'" %>
+      <%= link_to "3 days ago", "#", class: "button is-small is-light mx-1", onclick: "document.getElementById('diary_entry_entry_date').value = '#{(Date.today - 3).strftime('%Y-%m-%d')}'" %>
+    </div>
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
   </div>
+
 
   <div class="field">
     <%= form.label :content, "Diary Entry Content", class: "label" %>
@@ -33,6 +46,7 @@
     <p class="help">Write your diary entry here...</p>
   </div>
 
+<<<<<<< HEAD
   <!-- Existing Images Display -->
   <% if @diary_entry.persisted? && @diary_entry.images.attached? %>
     <div class="field">
@@ -87,10 +101,18 @@
       <%= form.file_field :images, multiple: true, accept: "image/jpeg,image/jpg,image/png,image/gif,image/webp", 
           class: "file-input", id: "image-upload" %>
       <label for="image-upload" class="file-label">
+=======
+  <div class="field">
+    <%= form.label :images, "Attach Images", class: "label" %>
+    <div class="file has-name is-boxed">
+      <label class="file-label">
+        <%= form.file_field :images, multiple: true, direct_upload: true, class: "file-input" %>
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
         <span class="file-cta">
           <span class="file-icon">
             <i class="fas fa-upload"></i>
           </span>
+<<<<<<< HEAD
           <span class="file-label">
             Choose photos…
           </span>
@@ -107,7 +129,32 @@
     </div>
   </div>
 
+=======
+          <span class="file-label">Choose files…</span>
+        </span>
+      </label>
+    </div>
+    <p class="help">You can select multiple images.</p>
+  </div>
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
 
+  <div class="field">
+    <%= form.label :thought_id, "Thought of the Day", class: "label" %>
+    <div class="control">
+      <%= form.collection_select :thought_id, Thought.all, :id, ->(t) { "#{t.content} (#{t.mood})" }, { include_blank: true }, class: "input" %>
+    </div>
+    <div class="mt-2">
+      <%= link_to "Add a new Thought/Mood", new_thought_path, class: "button is-link is-small" %>
+    </div>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :status, class: "label" %>
+    <div class="control">
+      <%= form.select :status, options_for_select([['Draft', 'draft'], ['Published', 'published']], @diary_entry.status), {}, class: "input" %>
+    </div>
+  </div>
 
   <div class="field">
     <div class="control">

@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :diary_entries, dependent: :destroy
+<<<<<<< HEAD
 
   # Subscription statuses
   SUBSCRIPTION_STATUSES = %w[trial active expired cancelled].freeze
@@ -71,3 +72,10 @@ class User < ApplicationRecord
     )
   end
 end
+=======
+ 
+  # ...existing code...
+  has_many :events, dependent: :destroy
+end
+ 
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)

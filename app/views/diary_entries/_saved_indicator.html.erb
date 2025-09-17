@@ -1,3 +1,18 @@
 <div id="autosave-status" class="notification is-success is-light">
   Saved!
 </div>
+<div id="saved-message" class="notice">
+  ✅ Saved!
+</div>
+
+<script>
+  // Auto-hide after 3 seconds
+  setTimeout(() => {
+    const msg = document.getElementById("saved-message");
+    if (msg) {
+      msg.style.transition = "opacity 1s ease";
+      msg.style.opacity = "0";
+      setTimeout(() => msg.remove(), 1000); // remove after fade
+    }
+  }, 3000);
+</script>

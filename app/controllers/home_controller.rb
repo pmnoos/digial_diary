@@ -1,5 +1,9 @@
 class HomeController < ApplicationController
+<<<<<<< HEAD
   
+=======
+  skip_before_action :authenticate_user!
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
   def index
     # Show demo content for visitors
     if user_signed_in?

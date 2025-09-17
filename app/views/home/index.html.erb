@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <section class="section">
   <div class="container">
     <!-- Hero Section -->
@@ -164,7 +165,187 @@
     <% if user_signed_in? %>
       <div class="has-text-centered  mt-4">
         <%= button_to "Delete My Account", registration_path(:user), method: :delete, data: { confirm: "Are you sure you want to delete your account? This cannot be undone." }, class: "button is-danger is-light" %>
-      </div>
+=======
+<!-- filepath: app/views/home/index.html.erb -->
+<section class="section hero is-fullheight-with-navbar" style="position: relative; overflow: hidden; background: linear-gradient(to bottom right, #fefefe, #d1f0ff);">
+  <div class="container has-text-centered">
+    <h1 class="title is-2 mb-1">
+      📔
+      <% if current_user %>
+        <%= current_user.username.presence || current_user.email %>'s Digital Diary
+      <% else %>
+        Welcome to Digital Diary
+      <% end %>
+    </h1>
+<!-- Tip of the Day -->
+<div id="tip-of-day" class="box has-background-info-light has-text-centered mb-5" style="opacity: 0; transition: opacity 1s;">
+  <strong>💡 Tip of the Day:</strong>
+  <span id="tip-text"></span>
+</div>
+<% if current_user %>
+  <% upcoming_events = Event.where(event_date: Time.current..3.days.from_now).order(:event_date) %>
+  <div class="columns is-centered">
+  <div class="column is-9">
+  <div class="box has-background-warning-light mt-3">
+    <h2 class="subtitle is-5 mb-2">Upcoming Events & Reminders (Next 3 Days)</h2>
+    <% if upcoming_events.any? %>
+      <ul>
+        <% upcoming_events.each do |event| %>
+          <li>
+            <strong><%= event.title %></strong>
+            <span class="has-text-grey"> - <%= event.event_date.strftime("%b %d, %Y %H:%M") %></span>
+            <% if event.description.present? %>
+              <div class="has-text-grey is-size-7"><%= event.description %></div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No upcoming events in the next 3 days.</p>
     <% end %>
+    <%= link_to "Add Event/Reminder", new_event_path, class: "button is-warning is-light mt-2" %>
   </div>
+<% end %>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const tips = [
+      "Write honestly; your diary is your safe space.",
+      "Even a few lines a day can help you reflect.",
+      "Add an emoji to capture your mood instantly!",
+      "Remember, consistency beats length; short entries are fine.",
+      "Use tags to easily find related entries later.",
+      "Reflect on a happy moment to brighten your day.",
+      "Try writing as if you’re talking to your future self.",
+      "Mix text and images to make your diary more vivid.",
+      "Set aside a quiet moment for your entry today."
+    ];
+
+    function showTip() {
+      const tipText = document.getElementById("tip-text");
+      const tipBox = document.getElementById("tip-of-day");
+
+      // Pick a random tip
+      tipText.textContent = tips[Math.floor(Math.random() * tips.length)];
+
+      // Fade in
+      tipBox.style.opacity = 1;
+
+      // Fade out after 8 seconds
+      setTimeout(() => {
+        tipBox.style.opacity = 0;
+      }, 8000);
+    }
+
+    showTip(); // Show once on page load
+  });
+</script>
+<div class="content">
+    <h2 class="subtitle is-4 mb-5 has-text-grey-dark">
+      A private, secure place to capture your thoughts and moments
+    </h2>
+
+    <!-- Feature boxes -->
+     <div class="columns is-centered is-multiline mb-6">
+     
+    <div class="columns is-centered is-multiline mb-4">
+      <div class="column is-4">
+        <div class="box has-text-centered feature-box">
+          📝 <strong>Write Entries</strong>
+          <p>Record your thoughts with text, images, and emojis.</p>
+        </div>
+      </div>
+      <div class="column is-4">
+        <div class="box has-text-centered feature-box">
+          🔍 <strong>Search & Browse</strong>
+          <p>Find past entries quickly with search and archive.</p>
+        </div>
+>>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
+      </div>
+      <div class="column is-4">
+        <div class="box has-text-centered feature-box">
+          📂 <strong>Archive</strong>
+          <p>Organize your diary by year and month for easy reference.</p>
+        </div>
+      </div>
+    </div>
+</div>
+    <!-- Call to action -->
+    <%= link_to "Create Your First Entry ➕", new_diary_entry_path, class: 
+    "button is-primary is-large is-rounded pulse-button" %>
+  </div>
+
+  <!-- Floating emojis container -->
+  <div id="floating-emojis"></div>
 </section>
+
+<style>
+  /* Feature box hover effect */
+  .feature-box {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  /* Pulse button */
+  .pulse-button {
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Floating emojis */
+  #floating-emojis {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .floating-emoji {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.8;
+    user-select: none;
+    animation-name: floatUp;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); }
+    100% { transform: translateY(-50px) rotate(360deg); }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const emojis = ["😊","😢","🎉","💡","❤️","⚡","☀️","🌙","🌈"];
+    const container = document.getElementById("floating-emojis");
+
+    function createEmoji() {
+      const emoji = document.createElement("div");
+      emoji.className = "floating-emoji";
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+      // Random position and animation speed
+      const size = Math.random() * 24 + 16; // font size 16-40px
+      emoji.style.fontSize = `${size}px`;
+      emoji.style.left = Math.random() * 100 + "vw";
+      emoji.style.animationDuration = Math.random() * 8 + 6 + "s";
+      emoji.style.opacity = Math.random() * 0.5 + 0.5;
+
+      container.appendChild(emoji);
+
+      // Remove after animation
+      setTimeout(() => { container.removeChild(emoji); }, (parseFloat(emoji.style.animationDuration) * 1000));
+    }
+
+    // Generate emojis every 0.5 seconds
+    setInterval(createEmoji, 500);
+  });
+</script>
