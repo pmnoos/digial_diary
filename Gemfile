@@ -18,7 +18,7 @@ gem "image_processing", "~> 1.2"
 gem "mini_magick"
 gem "devise", "~> 4.9"
 gem "kaminari"
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.6"
 
 group :development, :test do
 gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
