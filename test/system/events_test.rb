@@ -15,7 +15,7 @@ class EventsTest < ApplicationSystemTestCase
     click_on "New event"
 
     fill_in "Description", with: @event.description
-    fill_in "Event date", with: @event.event_date
+    fill_in "Event date", with: @event.start_time
     fill_in "Title", with: @event.title
     fill_in "User", with: @event.user_id
     click_on "Create Event"
@@ -29,7 +29,7 @@ class EventsTest < ApplicationSystemTestCase
     click_on "Edit this event", match: :first
 
     fill_in "Description", with: @event.description
-    fill_in "Event date", with: @event.event_date.to_s
+    fill_in "Event date", with: @event.start_time.to_s
     fill_in "Title", with: @event.title
     fill_in "User", with: @event.user_id
     click_on "Update Event"

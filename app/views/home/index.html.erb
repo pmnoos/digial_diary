@@ -1,172 +1,4 @@
-<<<<<<< HEAD
-<section class="section">
-  <div class="container">
-    <!-- Hero Section -->
-    <div class="hero is-small has-text-centered mb-6">
-      <div class="hero-body">
-        <h1 class="title is-1 has-text-primary">📔 Digital Diary</h1>
-        <h2 class="subtitle is-3">Your thoughts, memories, and experiences - beautifully preserved</h2>
-        <div class="buttons is-centered mt-5">
-          <%= form_with url: demo_login_path, method: :post, local: true do |form| %>
-            <%= form.submit "🚀 Try Demo Now", class: "button is-success is-large", 
-                style: "animation: pulse 2s infinite;" %>
-          <% end %>
-          <%= link_to "Start Free Trial", new_user_registration_path, class: "button is-primary is-large" %>
-          <%= link_to "See Pricing", pricing_subscriptions_path, class: "button is-link is-large" %>
-        </div>
-        
-        <!-- Demo Features Preview -->
-        <div class="notification is-info is-light mt-5">
-          <div class="content has-text-centered">
-            <h4 class="title is-4">✨ Instant Demo Access</h4>
-            <p class="subtitle is-5">No signup required! Experience all features immediately with sample data.</p>
-            <div class="columns is-multiline is-centered">
-              <div class="column is-3">
-                <div class="box has-text-centered">
-                  <span class="icon is-large has-text-success">
-                    <i class="fas fa-book-open fa-2x"></i>
-                  </span>
-                  <p class="has-text-weight-bold">150+ Sample Entries</p>
-                </div>
-              </div>
-              <div class="column is-3">
-                <div class="box has-text-centered">
-                  <span class="icon is-large has-text-info">
-                    <i class="fas fa-images fa-2x"></i>
-                  </span>
-                  <p class="has-text-weight-bold">Photo Galleries</p>
-                </div>
-              </div>
-              <div class="column is-3">
-                <div class="box has-text-centered">
-                  <span class="icon is-large has-text-warning">
-                    <i class="fas fa-smile fa-2x"></i>
-                  </span>
-                  <p class="has-text-weight-bold">Mood Tracking</p>
-                </div>
-              </div>
-              <div class="column is-3">
-                <div class="box has-text-centered">
-                  <span class="icon is-large has-text-danger">
-                    <i class="fas fa-search fa-2x"></i>
-                  </span>
-                  <p class="has-text-weight-bold">Search & Filter</p>
-                </div>
-              </div>
-            </div>
-            <p class="help has-text-grey">
-              🔄 Demo resets daily • 💡 Create your own account to keep your data
-            </p>
-          </div>
-        </div>
-        
-        <!-- Demo Stats Preview -->
-        <div id="demo-stats" class="notification is-primary is-light mt-5">
-          <div class="content has-text-centered">
-            <h4 class="title is-4">🎯 What You'll See in the Demo</h4>
-            <p>Explore a real diary with <strong><%= @total_demo_entries %> actual entries</strong> to see exactly how Digital Diary works!</p>
-            <div class="columns is-mobile has-text-centered mt-3">
-              <div class="column">
-                <p class="title is-5 has-text-primary"><%= @total_demo_entries %></p>
-                <p class="subtitle is-6">Demo Entries</p>
-              </div>
-              <div class="column">
-                <p class="title is-5 has-text-info">
-                  <%= @demo_entries&.joins(:images_attachments)&.distinct&.count || 0 %>
-                </p>
-                <p class="subtitle is-6">With Photos</p>
-              </div>
-              <div class="column">
-                <p class="title is-5 has-text-success">Real Data</p>
-                <p class="subtitle is-6">Not Fake!</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Features Section -->
-    <div class="columns is-multiline mb-6">
-      <div class="column is-4">
-        <div class="box has-text-centered">
-          <span class="icon is-large has-text-primary">
-            <i class="fas fa-pen-fancy fa-2x"></i>
-          </span>
-          <h3 class="title is-4 mt-3">Rich Text Editor</h3>
-          <p>Write with style using our advanced rich text editor with formatting, images, and more.</p>
-        </div>
-      </div>
-      <div class="column is-4">
-        <div class="box has-text-centered">
-          <span class="icon is-large has-text-primary">
-            <i class="fas fa-images fa-2x"></i>
-          </span>
-          <h3 class="title is-4 mt-3">Photo Galleries</h3>
-          <p>Attach multiple images to your entries and view them in beautiful gallery layouts.</p>
-        </div>
-      </div>
-      <div class="column is-4">
-        <div class="box has-text-centered">
-          <span class="icon is-large has-text-primary">
-            <i class="fas fa-search fa-2x"></i>
-          </span>
-          <h3 class="title is-4 mt-3">Search & Archive</h3>
-          <p>Find any memory instantly with powerful search and organize by year, mood, and tags.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Demo Entries Preview -->
-    <% if @demo_entries&.any? %>
-      <div class="block">
-        <h2 class="title is-3 has-text-centered mb-5">Sample Diary Entries</h2>
-        <div class="columns is-multiline">
-          <% @demo_entries.first(3).each do |entry| %>
-            <div class="column is-4">
-              <div class="card">
-                <div class="card-content">
-                  <div class="media">
-                    <div class="media-content">
-                      <p class="title is-5"><%= link_to entry.title, diary_entry_path(entry), class: "has-text-dark" %></p>
-                      <p class="subtitle is-6 has-text-grey"><%= entry.entry_date.strftime("%A, %d %B %Y") %></p>
-                    </div>
-                  </div>
-                  <div class="content">
-                    <%= truncate(strip_tags(entry.content.body.to_s), length: 100) %>
-                    <% if entry.images.attached? %>
-                      <br><span class="tag is-light"><i class="fas fa-images"></i> <%= pluralize(entry.images.count, 'photo') %></span>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-        <div class="has-text-centered mt-4">
-          <%= link_to "View All #{@total_demo_entries} Demo Entries", diary_entries_path, class: "button is-primary" %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</section>
-    </div>
-  <div class="container">  
-    <nav class="navbar is-light mb-5" role="navigation" aria-label="main navigation">
-      <div class="navbar-menu is-active">
-        <div class="navbar-start">
-          <a class="navbar-item" href="<%= diary_entries_path %>">Entries</a>
-          <a class="navbar-item" href="<%= new_diary_entry_path %>">New Entry</a>
-          <a class="navbar-item" href="<%= archive_path %>">Archive</a>
-        </div>
-      </div>
-    </nav>
-   </div> 
-    <% if user_signed_in? %>
-      <div class="has-text-centered  mt-4">
-        <%= button_to "Delete My Account", registration_path(:user), method: :delete, data: { confirm: "Are you sure you want to delete your account? This cannot be undone." }, class: "button is-danger is-light" %>
-=======
-<!-- filepath: app/views/home/index.html.erb -->
+<!-- filepath: c:\Users\Test\projects\ruby\diary\diary_app\app\views\home\index.html.erb -->
 <section class="section hero is-fullheight-with-navbar" style="position: relative; overflow: hidden; background: linear-gradient(to bottom right, #fefefe, #d1f0ff);">
   <div class="container has-text-centered">
     <h1 class="title is-2 mb-1">
@@ -177,105 +9,101 @@
         Welcome to Digital Diary
       <% end %>
     </h1>
-<!-- Tip of the Day -->
-<div id="tip-of-day" class="box has-background-info-light has-text-centered mb-5" style="opacity: 0; transition: opacity 1s;">
-  <strong>💡 Tip of the Day:</strong>
-  <span id="tip-text"></span>
-</div>
-<% if current_user %>
-  <% upcoming_events = Event.where(event_date: Time.current..3.days.from_now).order(:event_date) %>
-  <div class="columns is-centered">
-  <div class="column is-9">
-  <div class="box has-background-warning-light mt-3">
-    <h2 class="subtitle is-5 mb-2">Upcoming Events & Reminders (Next 3 Days)</h2>
-    <% if upcoming_events.any? %>
-      <ul>
-        <% upcoming_events.each do |event| %>
-          <li>
-            <strong><%= event.title %></strong>
-            <span class="has-text-grey"> - <%= event.event_date.strftime("%b %d, %Y %H:%M") %></span>
-            <% if event.description.present? %>
-              <div class="has-text-grey is-size-7"><%= event.description %></div>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p>No upcoming events in the next 3 days.</p>
-    <% end %>
-    <%= link_to "Add Event/Reminder", new_event_path, class: "button is-warning is-light mt-2" %>
-  </div>
-<% end %>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const tips = [
-      "Write honestly; your diary is your safe space.",
-      "Even a few lines a day can help you reflect.",
-      "Add an emoji to capture your mood instantly!",
-      "Remember, consistency beats length; short entries are fine.",
-      "Use tags to easily find related entries later.",
-      "Reflect on a happy moment to brighten your day.",
-      "Try writing as if you’re talking to your future self.",
-      "Mix text and images to make your diary more vivid.",
-      "Set aside a quiet moment for your entry today."
-    ];
-
-    function showTip() {
-      const tipText = document.getElementById("tip-text");
-      const tipBox = document.getElementById("tip-of-day");
-
-      // Pick a random tip
-      tipText.textContent = tips[Math.floor(Math.random() * tips.length)];
-
-      // Fade in
-      tipBox.style.opacity = 1;
-
-      // Fade out after 8 seconds
-      setTimeout(() => {
-        tipBox.style.opacity = 0;
-      }, 8000);
-    }
-
-    showTip(); // Show once on page load
-  });
-</script>
-<div class="content">
-    <h2 class="subtitle is-4 mb-5 has-text-grey-dark">
-      A private, secure place to capture your thoughts and moments
-    </h2>
-
-    <!-- Feature boxes -->
-     <div class="columns is-centered is-multiline mb-6">
-     
-    <div class="columns is-centered is-multiline mb-4">
-      <div class="column is-4">
-        <div class="box has-text-centered feature-box">
-          📝 <strong>Write Entries</strong>
-          <p>Record your thoughts with text, images, and emojis.</p>
-        </div>
-      </div>
-      <div class="column is-4">
-        <div class="box has-text-centered feature-box">
-          🔍 <strong>Search & Browse</strong>
-          <p>Find past entries quickly with search and archive.</p>
-        </div>
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
-      </div>
-      <div class="column is-4">
-        <div class="box has-text-centered feature-box">
-          📂 <strong>Archive</strong>
-          <p>Organize your diary by year and month for easy reference.</p>
-        </div>
-      </div>
+    <!-- Tip of the Day -->
+    <div id="tip-of-day" class="box has-background-info-light has-text-centered mb-5" style="opacity: 0; transition: opacity 1s;">
+      <strong>💡 Tip of the Day:</strong>
+      <span id="tip-text"></span>
     </div>
-</div>
-    <!-- Call to action -->
-    <%= link_to "Create Your First Entry ➕", new_diary_entry_path, class: 
-    "button is-primary is-large is-rounded pulse-button" %>
-  </div>
+    <% if current_user %>
+      <% upcoming_events = Event.where(start_time: Time.current..3.days.from_now).order(:start_time) %>
+      <div class="columns is-centered">
+        <div class="column is-9">
+          <div class="box has-background-warning-light mt-3">
+            <h2 class="subtitle is-5 mb-2">Upcoming Events & Reminders (Next 3 Days)</h2>
+            <% if upcoming_events.any? %>
+              <ul>
+                <% upcoming_events.each do |event| %>
+                  <li>
+                    <strong><%= event.title %></strong>
+                    <span class="has-text-grey"> - <%= event.start_time.strftime("%b %d, %Y %H:%M") %></span>
+                    <% if event.description.present? %>
+                      <div class="has-text-grey is-size-7"><%= event.description %></div>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p>No upcoming events in the next 3 days.</p>
+            <% end %>
+            <%= link_to "Add Event/Reminder", new_event_path, class: "button is-warning is-light mt-2" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const tips = [
+          "Write honestly; your diary is your safe space.",
+          "Even a few lines a day can help you reflect.",
+          "Add an emoji to capture your mood instantly!",
+          "Remember, consistency beats length; short entries are fine.",
+          "Use tags to easily find related entries later.",
+          "Reflect on a happy moment to brighten your day.",
+          "Try writing as if you’re talking to your future self.",
+          "Mix text and images to make your diary more vivid.",
+          "Set aside a quiet moment for your entry today."
+        ];
 
-  <!-- Floating emojis container -->
-  <div id="floating-emojis"></div>
+        function showTip() {
+          const tipText = document.getElementById("tip-text");
+          const tipBox = document.getElementById("tip-of-day");
+
+          // Pick a random tip
+          tipText.textContent = tips[Math.floor(Math.random() * tips.length)];
+
+          // Fade in
+          tipBox.style.opacity = 1;
+
+          // Fade out after 8 seconds
+          setTimeout(() => {
+            tipBox.style.opacity = 0;
+          }, 8000);
+        }
+
+        showTip(); // Show once on page load
+      });
+    </script>
+    <div class="content">
+      <h2 class="subtitle is-4 mb-5 has-text-grey-dark">
+        A private, secure place to capture your thoughts and moments
+      </h2>
+      <!-- Feature boxes -->
+      <div class="columns is-centered is-multiline mb-6">
+        <div class="column is-4">
+          <div class="box has-text-centered feature-box">
+            📝 <strong>Write Entries</strong>
+            <p>Record your thoughts with text, images, and emojis.</p>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="box has-text-centered feature-box">
+            🔍 <strong>Search & Browse</strong>
+            <p>Find past entries quickly with search and archive.</p>
+          </div>
+        </div>
+        <div class="column is-4">
+          <div class="box has-text-centered feature-box">
+            📂 <strong>Archive</strong>
+            <p>Organize your diary by year and month for easy reference.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Call to action -->
+      <%= link_to "Create Your First Entry ➕", new_diary_entry_path, class: "button is-primary is-large is-rounded pulse-button" %>
+    </div>
+    <!-- Floating emojis container -->
+    <div id="floating-emojis"></div>
+  </div>
 </section>
 
 <style>

@@ -1,0 +1,17 @@
+<!-- filepath: app/views/demo_tour/show.html.erb -->
+<div class="container">
+  <h1 class="title">Welcome to the Digital Diary Demo Tour!</h1>
+  <p>
+    This tour will guide you through the main features of Digital Diary:
+  </p>
+  <ul>
+    <li>📝 Create and manage diary entries</li>
+    <li>📅 Add and view events/appointments</li>
+    <li>🔍 Search and browse your archive</li>
+    <li>💡 See tips and thoughts of the day</li>
+    <li>📂 Organize your memories securely</li>
+  </ul>
+  <p class="mt-4">
+    <%= link_to "Try it now!", new_diary_entry_path, class: "button is-primary" %>
+  </p>
+</div>

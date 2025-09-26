@@ -1,12 +1,15 @@
-class CreateEvents < ActiveRecord::Migration[8.0]
+class CreateEvents < ActiveRecord::Migration[7.1]
   def change
-    create_table :events do |t|
-      t.string :title
-      t.text :description
-      t.datetime :event_date
-      t.references :user, null: false, foreign_key: true
-
-      t.timestamps
-    end
+    # Table already exists, so skip creation to avoid error
+    # create_table :events do |t|
+    #   t.string :title
+    #   t.text :description
+    #   t.datetime :start_time
+    #   t.datetime :end_time
+    #   t.string :location
+    #   t.datetime :reminder_time
+    #   t.string :recurring_pattern
+    #   t.timestamps
+    # end
   end
 end

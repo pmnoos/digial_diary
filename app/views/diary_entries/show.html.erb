@@ -1,158 +1,110 @@
-<!-- filepath: c:\Users\Test\projects\ruby\diary\diary_app\app\views\diary_entries\show.html.erb -->
-<p style="color: green"><%= notice %></p>
+<% if flash[:notice] %>
+  <p style="color: green"><%= flash[:notice] %></p>
+<% end %>
 
 <% unless user_signed_in? %>
   <!-- Demo Mode Banner -->
   <div class="notification is-warning is-light mb-4">
     <strong>👀 You're viewing demo content!</strong><br>
-    This is a sample diary entry to show you what Digital Diary looks like. 
+    This is a sample diary entry to show you what Digital Diary looks like.
     <%= link_to "Sign up free", new_user_registration_path, class: "has-text-weight-bold" %> to start your own personal diary!
   </div>
 <% end %>
 
 <% if @thought_of_the_day %>
-  <!-- Thought of the Day block -->
   <div class="notification is-info is-light mb-4">
     <strong>Thought of the Day:</strong><br>
     <em><%= @thought_of_the_day.content %></em>
   </div>
 <% end %>
 
-<%= render partial: "diary_entries/diary_entry", locals: { diary_entry: @diary_entry } %>
+<h1><%= @diary_entry.title %></h1>
+<p><strong>Date:</strong> <%= @diary_entry.entry_date %></p>
+<p><strong>Mood:</strong> <%= @diary_entry.mood %></p>
 
-<% if @diary_entry.content.present? %>
-  <div class="box mb-4">
-    <h2 class="subtitle">Content</h2>
-  <%= @diary_entry.content.body.to_html %>
-  </div>
-<% end %>
+<div class="content">
+  <%= @diary_entry.content %>
+</div>
 
 <% if @diary_entry.images.attached? %>
-<<<<<<< HEAD
-  <div class="mb-6">
-    <h2 class="subtitle has-text-weight-semibold">
+  <div class="mt-4">
+    <h3 class="title is-5">
       <span class="icon-text">
-        <span class="icon has-text-primary">
+        <span class="icon">
           <i class="fas fa-images"></i>
         </span>
-        <span>Photo Gallery</span>
+        <span>Images (<%= @diary_entry.images.count %>)</span>
       </span>
-    </h2>
-    
-    <!-- Simple Image Gallery with Bulma styling (no variants) -->
-    <div class="columns is-multiline is-mobile">
+    </h3>
+    <div class="columns is-multiline">
       <% @diary_entry.images.each_with_index do |image, index| %>
-        <div class="column is-one-quarter-desktop is-one-third-tablet is-half-mobile">
-          <div class="card image-card" style="transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative;">
+        <div class="column is-3">
+          <div class="card">
             <div class="card-image">
-              <figure class="image is-square">
+              <figure class="image is-4by3">
                 <% begin %>
-                  <%= image_tag image.variant(:thumb), 
-                      alt: "Photo #{index + 1} from #{@diary_entry.title}",
-                      class: "gallery-image",
-                      style: "width: 100%; height: 200px; object-fit: cover; cursor: pointer; border-radius: 6px;",
-                      data: { modal_target: "modal-image-#{index}" },
-                      loading: "lazy",
-                      onerror: "this.style.display='none'; this.nextElementSibling.style.display='block';" %>
-                  <div style="display: none; padding: 1rem; background: #f5f5f5; text-align: center; height: 200px; display: none; justify-content: center; align-items: center; flex-direction: column;">
-                    <i class="fas fa-exclamation-triangle has-text-warning"></i>
-                    <p class="is-size-7 mt-2">Image failed to load</p>
-                  </div>
+                  <%= image_tag image, 
+                      class: "is-rounded", 
+                      style: "width: 100%; height: 100%; object-fit: cover; cursor: pointer;",
+                      onclick: "openImageModal('modal-#{index}')",
+                      loading: "lazy" %>
                 <% rescue => e %>
-                  <div style="padding: 1rem; background: #ffebee; text-align: center; height: 200px; display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                    <i class="fas fa-exclamation-triangle has-text-danger"></i>
-                    <p class="is-size-7 mt-2">Processing error</p>
+                  <div class="has-background-light has-text-centered" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                    <div>
+                      <i class="fas fa-exclamation-triangle has-text-warning"></i>
+                      <p class="is-size-7">Image Error</p>
+                    </div>
                   </div>
                 <% end %>
               </figure>
-              
-              <!-- Delete button for authenticated users -->
-              <% if user_signed_in? %>
-                <div style="position: absolute; top: 8px; right: 8px;">
-                  <%= link_to remove_image_diary_entry_path(@diary_entry, image_id: image.id), 
-                      method: :delete,
-                      data: { 
-                        turbo_method: :delete,
-                        turbo_confirm: "Are you sure you want to delete this image? This action cannot be undone." 
-                      },
-                      class: "button is-danger is-small is-rounded",
-                      style: "opacity: 0.9; box-shadow: 0 2px 4px rgba(0,0,0,0.3);" do %>
-                    <span class="icon is-small">
-                      <i class="fas fa-trash"></i>
-                    </span>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <p class="is-size-7 has-text-grey">
+                  <%= image.blob.filename %>
+                </p>
+                <p class="is-size-7 has-text-grey">
+                  <%= number_to_human_size(image.blob.byte_size) %>
+                </p>
+                <% if user_signed_in? && current_user == @diary_entry.user %>
+                  <%= form_with url: diary_entry_image_path(@diary_entry.id, image.id), method: :delete, local: true, class: "is-inline-block" do |form| %>
+                    <%= form.submit "Delete", 
+                        class: "button is-small is-danger is-outlined",
+                        data: { confirm: "Are you sure you want to delete this image?" } %>
                   <% end %>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>
-        
-        <!-- Modal for enlarged image -->
-        <div id="modal-image-<%= index %>" class="modal">
-          <div class="modal-background" data-modal-close="modal-image-<%= index %>"></div>
+
+        <!-- Modal for full-size image -->
+        <div id="modal-<%= index %>" class="modal">
+          <div class="modal-background" onclick="closeImageModal('modal-<%= index %>')"></div>
           <div class="modal-content">
             <p class="image">
-              <% begin %>
-                <%= image_tag image.variant(:large), 
-                    alt: "Photo #{index + 1} from #{@diary_entry.title}",
-                    style: "max-width: 90vw; max-height: 90vh; object-fit: contain;",
-                    loading: "lazy" %>
-              <% rescue => e %>
-                <div style="padding: 2rem; background: #f5f5f5; text-align: center; border-radius: 4px;">
-                  <i class="fas fa-exclamation-triangle has-text-warning fa-2x"></i>
-                  <p class="mt-3">Unable to display full-size image</p>
-                  <p class="is-size-7 has-text-grey">Error: <%= e.message %></p>
-                </div>
-              <% end %>
+              <%= image_tag image, style: "max-width: 90vw; max-height: 90vh; object-fit: contain;" %>
             </p>
           </div>
-          <button class="modal-close is-large" data-modal-close="modal-image-<%= index %>" aria-label="close"></button>
-=======
-  <div class="mb-4">
-    <h2 class="subtitle">Images</h2>
-    <div class="thumbnails">
-      <% @diary_entry.images.each do |image| %>
-        <div class="is-inline-block mr-3 mb-3" style="position: relative;">
-          <%= link_to url_for(image), target: "_blank" do %>
-            <%= image_tag image.variant(resize_to_fill: [300, 300]).processed, class: "image", style: "width: 300px; height: 300px; object-fit: cover; border-radius: 6px;" %>
-          <% end %>
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
+          <button class="modal-close is-large" onclick="closeImageModal('modal-<%= index %>')" aria-label="close"></button>
         </div>
       <% end %>
     </div>
   </div>
 <% end %>
 
-<<<<<<< HEAD
-<!-- Action Buttons -->
-<div class="field is-grouped mt-5">
-  <% if user_signed_in? %>
-    <div class="control">
-      <%= link_to "Edit Entry", edit_diary_entry_path(@diary_entry), 
-          class: "button is-primary is-medium" %>
-    </div>
-    <div class="control">
-      <%= link_to "Delete Entry", diary_entry_path(@diary_entry), 
-          class: "button is-danger is-medium",
-          data: { 
-            turbo_method: :delete,
-            turbo_confirm: "Are you sure you want to delete this diary entry? This action cannot be undone." 
-          } %>
-    </div>
-  <% else %>
-    <!-- Demo mode - show sign up encouragement -->
-    <div class="control">
-      <%= link_to "Start Your Own Diary - Sign Up Free!", new_user_registration_path, 
-          class: "button is-primary is-medium" %>
-    </div>
-  <% end %>
-  <div class="control">
-    <%= link_to "Back to All Entries", diary_entries_path, 
-        class: "button is-light is-medium" %>
-  </div>
-</div>
-=======
 <div class="mt-4">
-  <%= link_to "← Back to Entries", diary_entries_path, class: "button is-link is-light" %>
+  <%= link_to "Edit", edit_diary_entry_path(@diary_entry), class: "button is-info" %>
+  <%= link_to "Back", diary_entries_path, class: "button is-light" %>
+  <%= button_to "Delete", @diary_entry, method: :delete, data: { confirm: "Are you sure?" }, class: "button is-danger" %>
 </div>
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
+
+<script>
+function openImageModal(modalId) {
+  document.getElementById(modalId).classList.add('is-active');
+}
+
+function closeImageModal(modalId) {
+  document.getElementById(modalId).classList.remove('is-active');
+}
+</script>

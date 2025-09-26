@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[8.0].define(version: 2025_08_04_042806) do
-=======
-ActiveRecord::Schema[8.0].define(version: 2025_09_16_003836) do
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
+ActiveRecord::Schema[8.0].define(version: 2025_09_22_061944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,6 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_003836) do
     t.string "moods"
     t.string "mood"
     t.integer "thought_id"
+    t.text "content"
     t.index ["user_id"], name: "index_diary_entries_on_user_id"
   end
 
@@ -81,9 +78,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_003836) do
   create_table "events", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.datetime "event_date"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "location"
+    t.datetime "reminder_time"
+    t.string "recurring_pattern"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -108,16 +111,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_003836) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
-<<<<<<< HEAD
     t.datetime "trial_started_at"
     t.datetime "trial_ends_at"
     t.string "subscription_status", default: "trial"
     t.string "subscription_plan", default: "free_trial"
     t.string "payment_id"
-=======
-    t.datetime "trial_ends_at"
-    t.integer "entry_limit"
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["subscription_status"], name: "index_users_on_subscription_status"
@@ -130,4 +128,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_003836) do
   add_foreign_key "diary_entries", "users"
   add_foreign_key "diary_entry_tags", "diary_entries"
   add_foreign_key "diary_entry_tags", "tags"
+  add_foreign_key "events", "users"
 end

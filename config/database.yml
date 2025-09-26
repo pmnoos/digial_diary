@@ -1,22 +1,19 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-<<<<<<< HEAD
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: 127.0.0.1
   port: 5432
+  username: postgres
+  password: peter284
 
 development:
   <<: *default
   database: my_diary_development
-  username: postgres
-  password: peter284
 
 test:
   <<: *default
   database: my_diary_test
-  username: postgres
-  password: peter284
 
 production:
   <<: *default
@@ -25,24 +22,3 @@ production:
   password: <%= ENV.fetch("PGPASSWORD", "") %>
   host: <%= ENV.fetch("PGHOST", "localhost") %>
   port: <%= ENV.fetch("PGPORT", "5432") %>
-=======
-  pool: 5
-  username: postgres
-  password: peter284
-  host: localhost
-
-development:
-  <<: *default
-  database: diary_app_development
-
-test:
-  <<: *default
-  database: diary_app_test
-
-production:
-  <<: *default
-  database: diary_app_production
-  username: <%= ENV['postres'] %>
-  password: <%= ENV['peter284'] %>
-  host: <%= ENV['PG_HOST'] || 'localhost' %>
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)

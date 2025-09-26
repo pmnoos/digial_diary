@@ -1,4 +1,6 @@
-<p style="color: green"><%= notice %></p>
+<% if flash[:notice] %>
+  <p style="color: green"><%= flash[:notice] %></p>
+<% end %>
 
 <%= render @event %>
 

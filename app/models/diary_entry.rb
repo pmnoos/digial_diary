@@ -1,13 +1,10 @@
 class DiaryEntry < ApplicationRecord
-  has_many_attached :images do |attachable|
-    attachable.variant :thumb, resize_to_limit: [200, 200]
-    attachable.variant :medium, resize_to_limit: [600, 600]
-    attachable.variant :large, resize_to_limit: [1200, 1200]
-  end
   
+  has_rich_text :content  # This line is CRITICAL
   belongs_to :user
+  has_many_attached :images
   belongs_to :thought, optional: true
-  has_rich_text :content
+  # Using simple text field instead of rich text for better reliability
 
   has_many :diary_entry_tags, dependent: :destroy
   has_many :tags, through: :diary_entry_tags
@@ -20,8 +17,7 @@ class DiaryEntry < ApplicationRecord
   # Set default status
   after_initialize :set_defaults
   
-  # Process images after saving
-  after_create :process_images_async
+  # Images are processed directly by Active Storage
 
   scope :published, -> { where(status: "published") }
   scope :by_month_year, -> {
@@ -49,11 +45,4 @@ class DiaryEntry < ApplicationRecord
     end
   end
 
-  def process_images_async
-    return unless images.attached?
-    
-    images.each do |image|
-      ImageProcessingJob.perform_later(image.id) if image.blob.image?
-    end
-  end
 end

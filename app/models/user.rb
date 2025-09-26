@@ -5,7 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :diary_entries, dependent: :destroy
-<<<<<<< HEAD
+  has_many :events, dependent: :destroy
 
   # Subscription statuses
   SUBSCRIPTION_STATUSES = %w[trial active expired cancelled].freeze
@@ -41,10 +41,10 @@ class User < ApplicationRecord
 
   def trial_percentage_used
     return 100 unless trial_started_at && trial_ends_at
-    
+
     total_days = (trial_ends_at - trial_started_at) / 1.day
     used_days = (Time.current - trial_started_at) / 1.day
-    
+
     [(used_days / total_days * 100).round, 100].min
   end
 
@@ -52,7 +52,7 @@ class User < ApplicationRecord
   def can_create_entry?
     return true if subscription_active?
     return false unless trial_active?
-    
+
     # Limit trial users to 50 entries
     diary_entries.count < 50
   end
@@ -72,10 +72,3 @@ class User < ApplicationRecord
     )
   end
 end
-=======
- 
-  # ...existing code...
-  has_many :events, dependent: :destroy
-end
- 
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)

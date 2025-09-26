@@ -7,14 +7,15 @@ class ImageProcessingJob < ApplicationJob
     return unless attachment.blob.image?
 
     begin
-      # Pre-generate common variants
-      attachment.variant(:thumb)
-      attachment.variant(:medium) 
-      attachment.variant(:large)
+      # Just validate the image can be processed
+      attachment.blob.open do |file|
+        # This will raise an error if the image is corrupted
+        MiniMagick::Image.open(file.path)
+      end
       
-      Rails.logger.info "Successfully processed variants for image: #{attachment.blob.filename}"
+      Rails.logger.info "Successfully validated image: #{attachment.blob.filename}"
     rescue => e
-      Rails.logger.error "Failed to process image variants for #{attachment.blob.filename}: #{e.message}"
+      Rails.logger.error "Failed to validate image #{attachment.blob.filename}: #{e.message}"
       # Don't re-raise - let the image display with fallbacks
     end
   end

@@ -21,16 +21,15 @@ gem "kaminari"
 gem "pg", "~> 1.1"
 
 group :development, :test do
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
-  gem "brakeman", require: false
-  gem "rubocop-rails-omakase", require: false
-  gem "sqlite3", '>= 2.1'
+gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+gem "brakeman", require: false
+  
 end
 
 group :development do
-  gem "web-console"
+gem "web-console"
 end
-
+gem "stripe"
 group :test do
-  gem "selenium-webdriver"
+gem "selenium-webdriver"
 end

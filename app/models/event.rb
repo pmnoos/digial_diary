@@ -1,4 +1,4 @@
 class Event < ApplicationRecord
-  validates :title, :event_date, presence: true
-  scope :upcoming, -> { where("event_date >= ?", Time.current).order(:event_date) }
+  validates :title, :start_time, presence: true
+ scope :upcoming, -> { where("start_time >= ?", Time.current).order(:start_time) }
 end

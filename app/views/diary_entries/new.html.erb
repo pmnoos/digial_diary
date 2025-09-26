@@ -1,25 +1,20 @@
-<<<<<<< HEAD
-<div class"container"></div>
-<% if @thought_of_the_day %>
-  <div class="notification is-info is-light">
-    <strong>Thought of the Day:</strong><br>
-    <em><%= @thought_of_the_day.content %></em>
-   
-  </div>
-<% end %>
-=======
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
+<div class="container">
+  <% if @thought_of_the_day %>
+    <div class="notification is-info is-light">
+      <strong>Thought of the Day:</strong><br>
+      <em><%= @thought_of_the_day.content %></em>
+    </div>
+  <% end %>
 
+  <% content_for :title, "New diary entry" %>
 
-<% content_for :title, "New diary entry" %>
+  <h1>New diary entry</h1>
 
-<h1>New diary entry</h1>
+  <%= render "form", diary_entry: @diary_entry %>
 
-<%= render "form", diary_entry: @diary_entry %>
-
-<br>
+  <br>
 
   <div>
-  <%= link_to "Back to diary entries", diary_entries_path %>
+    <%= link_to "Back to diary entries", diary_entries_path %>
   </div>
 </div>

@@ -1,12 +1,13 @@
+<!-- filepath: c:\Users\Test\projects\ruby\diary\diary_app\app\views\layouts\application.html.erb -->
 <!DOCTYPE html>
 <html>
   <head>
     <title>Digital Diary</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-  <!-- Bulma CSS via CDN for proper styling -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <!-- Bulma CSS via CDN for proper styling -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "actiontext", media: "all", "data-turbo-track": "reload" %>
   </head>
@@ -26,12 +27,12 @@
           </button>
         </div>
       </div>
-<<<<<<< HEAD
     </div>
     <div class="container">
       <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
           <a class="navbar-item" href="/">📔 Digital Diary</a>
+          
         </div>
         <div class="navbar-menu">
           <div class="navbar-end">
@@ -42,7 +43,7 @@
               </div>
             <% else %>
               <div class="navbar-item">
-                <%= link_to "Demo Tour", "#", onclick: "showDemoTour(); return false;", class: "button is-info" %>
+                <%= link_to "Demo Tour", demo_tour_path, class: "button is-info" %>
                 <%= link_to "Sign Up", new_user_registration_path, class: "button is-primary" %>
                 <%= link_to "Log in", new_user_session_path, class: "button is-light" %>
               </div>
@@ -54,24 +55,27 @@
         <% if user_signed_in? && !((controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index')) %>
           <aside class="column is-2 is-narrow has-background-light p-3">
             <p class="menu-label ml-3 is-capitalized is-size-6 has-text-weight-bold has-text-info">Navigation</p>
-            <ul class="menu-list">
+              <ul class="menu-list">
               <li><%= link_to diary_entries_path do %>📖 Entries<% end %></li>
               <li><%= link_to new_diary_entry_path do %>📝 New Entry<% end %></li>
+              <li>
+                <%= link_to new_event_path do %>➕ New Event/Appointment<% end %>
+              </li>
               <li><a href="<%= archive_path %>" class="has-text-dark" id="archive-toggle">🗄️ Archive</a></li>
               <li><%= link_to subscriptions_path do %>💎 Subscription<% end %></li>
             </ul>
-            <% if user_signed_in? && current_user.trial_active? %>
+            <% if current_user.trial_active? %>
               <div class="notification is-warning is-small mt-4">
                 <p class="is-size-7 has-text-centered"><strong>Trial:</strong> <%= current_user.days_left_in_trial %> days left</p>
                 <p class="is-size-7 has-text-centered"><strong>Entries:</strong> <%= current_user.remaining_trial_entries %> remaining</p>
                 <%= link_to "Upgrade", pricing_subscriptions_path, class: "button is-warning is-small is-fullwidth mt-2" %>
               </div>
-            <% elsif user_signed_in? && current_user.trial_expired? %>
+            <% elsif current_user.trial_expired? %>
               <div class="notification is-danger is-small mt-4">
                 <p class="is-size-7 has-text-centered has-text-white"><strong>Trial Expired</strong></p>
                 <%= link_to "Upgrade Now", pricing_subscriptions_path, class: "button is-light is-small is-fullwidth mt-2" %>
               </div>
-            <% elsif user_signed_in? && current_user.subscription_active? %>
+            <% elsif current_user.subscription_active? %>
               <div class="notification is-success is-small mt-4">
                 <p class="is-size-7 has-text-centered"><strong><%= current_user.subscription_plan.humanize %></strong> Plan Active</p>
               </div>
@@ -87,70 +91,50 @@
         <% end %>
       </div>
     </div>
-    <div class="container">
-=======
-    </nav>
-    <div class="columns m-0">
-      <% unless (controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index') %>
-        <aside class="column is-2 is-narrow has-background-light p-3" style="margin-left: 1.5rem;">
-  <p class="menu-label ml-3 is-capitalized is-size-6 has-text-weight-bold has-text-info">Navigation</p>
-  <ul class="menu-list">
-    <li>
-      <%= link_to diary_entries_path do %>
-        📖 Entries
-      <% end %>
-    </li>
-    <li>
-      <%= link_to new_diary_entry_path do %>
-        📝 New Entry
-      <% end %>
-    </li>
-    <li>
-    <%= link_to "🗓️ Events/Reminders", events_path %>
-    </li>
-    <li>
-      <%= link_to archive_path do %>
-        🗄️ Archive
-      <% end %>
-    </li>
-    <li>
-      <%= link_to thoughts_path do %>
-        💡 Thoughts/Moods
-      <% end %>
-    </li>
-    <li>
-      <%= link_to new_thought_path do %>
-        ➕ Add Thought/Mood
-      <% end %>
-    </li>
-    <li>
-      <%= link_to plans_path do %>
-        📝 Plans & Pricing
-      <% end %>
-    </li>  
-  </ul>
-</aside>
-
-        <main class="column p-2">
-          <%= yield %>
-        </main>
-      <% else %>
-        <main class="column p-3 is-full">
-          <%= yield %>
-        </main>
-      <% end %>
-    </div>
->>>>>>> 0ee28b8 (feat: add event reminders, plans, and Stripe integration scaffolding)
     <footer class="footer has-background-light mt-3">
       <div class="content has-text-centered">
         <p><strong>Digital Diary</strong><br><span class="is-size-4 has-text-grey">Created By EasyABC-International &copy; <%= Time.current.year %></span></p>
         <p class="mt-1">Made with Ruby on Rails & Bulma.</p>
       </div>
     </footer>
-  </div>  
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+      <div class="modal-background" onclick="closeImageModal()"></div>
+      <div class="modal-content">
+        <div class="box">
+          <div class="has-text-centered">
+            <img id="modalImage" src="" alt="" style="max-width: 100%; max-height: 80vh; object-fit: contain;">
+            <p id="modalImageName" class="mt-3 has-text-grey"></p>
+          </div>
+        </div>
+      </div>
+      <button class="modal-close is-large" onclick="closeImageModal()"></button>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   </body>
   <script>
-  // Debug script to test if JavaScript is working
-  console.log("Application layout loaded");
+    // Debug script to test if JavaScript is working
+    console.log("Application layout loaded");
+
+    // Image modal functions
+    function openImageModal(imageUrl, imageName) {
+      document.getElementById('modalImage').src = imageUrl;
+      document.getElementById('modalImageName').textContent = imageName;
+      document.getElementById('imageModal').classList.add('is-active');
+    }
+
+    function closeImageModal() {
+      document.getElementById('imageModal').classList.remove('is-active');
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeImageModal();
+      }
+    });
   </script>
 </html>
