@@ -1,6 +1,5 @@
 class DiaryEntry < ApplicationRecord
   
-  has_rich_text :content  # This line is CRITICAL
   belongs_to :user
   has_many_attached :images
   belongs_to :thought, optional: true

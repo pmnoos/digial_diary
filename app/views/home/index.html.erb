@@ -1,6 +1,11 @@
 <!-- filepath: c:\Users\Test\projects\ruby\diary\diary_app\app\views\home\index.html.erb -->
 <section class="section hero is-fullheight-with-navbar" style="position: relative; overflow: hidden; background: linear-gradient(to bottom right, #fefefe, #d1f0ff);">
   <div class="container has-text-centered">
+    // In your homepage hero section
+<div class="buttons is-centered">
+  <%= link_to "Learn More", landing_path, class: "button is-primary is-large mr-3" %>
+  <%= link_to "Try Demo", diary_entries_path, class: "button is-light is-large" %>
+</div>
     <h1 class="title is-2 mb-1">
       📔
       <% if current_user %>

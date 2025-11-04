@@ -1,16 +1,329 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "My Events" %>
 
-<% content_for :title, "Events" %>
+<div class="container">
+  <div class="level mb-5">
+    <div class="level-left">
+      <div class="level-item">
+        <h1 class="title is-3">
+          <span class="icon-text">
+            <span class="icon has-text-primary">
+              <i class="fas fa-calendar-alt"></i>
+            </span>
+            <span>My Events</span>
+          </span>
+        </h1>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <div class="buttons">
+          <%= link_to "New Event", new_event_path, class: "button is-primary" %>
+          <%= link_to "Reminders", reminders_path, class: "button is-info" %>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<h1>Events</h1>
+  <!-- Quick Stats -->
+  <div class="columns mb-5">
+    <div class="column">
+      <div class="box has-text-centered">
+        <p class="heading">Today</p>
+        <p class="title is-4 has-text-primary">
+          <%= @events.where(start_time: Date.current.beginning_of_day..Date.current.end_of_day).count %>
+        </p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="box has-text-centered">
+        <p class="heading">This Week</p>
+        <p class="title is-4 has-text-info">
+          <%= @events.where(start_time: Date.current.beginning_of_week..Date.current.end_of_week).count %>
+        </p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="box has-text-centered">
+        <p class="heading">This Month</p>
+        <p class="title is-4 has-text-success">
+          <%= @events.where(start_time: Date.current.beginning_of_month..Date.current.end_of_month).count %>
+        </p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="box has-text-centered">
+        <p class="heading">Total</p>
+        <p class="title is-4 has-text-warning">
+          <%= @events.count %>
+        </p>
+      </div>
+    </div>
+  </div>
 
-<div id="events">
-  <% @events.each do |event| %>
-    <%= render event %>
-    <p>
-      <%= link_to "Show this event", event %>
-    </p>
-  <% end %>
+  <!-- Event Sections -->
+  <div class="tabs is-boxed">
+    <ul>
+      <li class="is-active" data-tab="upcoming">
+        <a>
+          <span class="icon is-small"><i class="fas fa-calendar-plus" aria-hidden="true"></i></span>
+          <span>Upcoming</span>
+        </a>
+      </li>
+      <li data-tab="today">
+        <a>
+          <span class="icon is-small"><i class="fas fa-calendar-day" aria-hidden="true"></i></span>
+          <span>Today</span>
+        </a>
+      </li>
+      <li data-tab="past">
+        <a>
+          <span class="icon is-small"><i class="fas fa-history" aria-hidden="true"></i></span>
+          <span>Past</span>
+        </a>
+      </li>
+      <li data-tab="all">
+        <a>
+          <span class="icon is-small"><i class="fas fa-list" aria-hidden="true"></i></span>
+          <span>All Events</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Upcoming Events Tab -->
+  <div id="upcoming-tab" class="tab-content is-active">
+    <% upcoming_events = @events.where('start_time > ?', Time.current).order(:start_time) %>
+    <% if upcoming_events.any? %>
+      <% upcoming_events.group_by { |event| event.start_time.to_date }.each do |date, events| %>
+        <div class="box mb-4">
+          <h2 class="title is-5 mb-4">
+            <span class="icon-text">
+              <span class="icon has-text-info">
+                <i class="fas fa-calendar"></i>
+              </span>
+              <span>
+                <%= date == Date.current ? "Today" : 
+                    date == Date.tomorrow ? "Tomorrow" : 
+                    date.strftime("%A, %B %d, %Y") %>
+              </span>
+            </span>
+          </h2>
+          
+          <% events.each do |event| %>
+            <div class="card mb-3" style="min-height: 280px;">
+              <div class="card-content" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="media" style="flex-grow: 1;">
+                  <div class="media-left">
+                    <figure class="image is-48x48">
+                      <div class="has-background-primary-light has-text-primary has-text-centered" 
+                           style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+                        <strong><%= event.start_time.strftime("%d") %></strong>
+                      </div>
+                    </figure>
+                  </div>
+                  <div class="media-content">
+                    <p class="title is-5 mb-3"><%= event.title %></p>
+                    <p class="subtitle is-6 mb-2">
+                      <span class="icon-text">
+                        <span class="icon has-text-info">
+                          <i class="fas fa-clock"></i>
+                        </span>
+                        <span>
+                          <%= event.start_time.strftime("%I:%M %p") %>
+                          <% if event.end_time.present? %>
+                            - <%= event.end_time.strftime("%I:%M %p") %>
+                          <% end %>
+                        </span>
+                      </span>
+                    </p>
+                    
+                    <% if event.location.present? %>
+                      <p class="has-text-grey mb-2">
+                        <span class="icon-text">
+                          <span class="icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                          </span>
+                          <span><%= event.location %></span>
+                        </span>
+                      </p>
+                    <% end %>
+                    
+                    <% if event.description.present? %>
+                      <div class="content">
+                        <% description_limit = 80 %>
+                        <% if event.description.length > description_limit %>
+                          <p id="description-short-<%= event.id %>">
+                            <%= truncate(event.description, length: description_limit) %>
+                            <a href="#" class="has-text-primary" onclick="showFullDescription(<%= event.id %>); return false;">Read more</a>
+                          </p>
+                          <p id="description-full-<%= event.id %>" style="display: none;">
+                            <%= simple_format(event.description) %>
+                            <a href="#" class="has-text-primary" onclick="showShortDescription(<%= event.id %>); return false;">Show less</a>
+                          </p>
+                        <% else %>
+                          <p><%= simple_format(event.description) %></p>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="media-right">
+                    <div class="dropdown is-hoverable is-right">
+                      <div class="dropdown-trigger">
+                        <button class="button is-small" aria-haspopup="true" aria-controls="dropdown-menu">
+                          <span class="icon is-small">
+                            <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+                          </span>
+                        </button>
+                      </div>
+                      <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                          <%= link_to "View", event_path(event), class: "dropdown-item" %>
+                          <%= link_to "Edit", edit_event_path(event), class: "dropdown-item" %>
+                          <hr class="dropdown-divider">
+                          <%= link_to "Delete", event_path(event), 
+                              method: :delete, 
+                              class: "dropdown-item has-text-danger", 
+                              data: { confirm: "Are you sure?" } %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Tags always at bottom -->
+                <div class="tags mt-auto" style="margin-top: auto;">
+                  <% if event.reminder_time.present? %>
+                    <span class="tag is-warning">
+                      <i class="fas fa-bell mr-1"></i>
+                      Reminder set
+                    </span>
+                  <% end %>
+                  <% if event.recurring_pattern.present? %>
+                    <span class="tag is-info">
+                      <i class="fas fa-repeat mr-1"></i>
+                      <%= event.recurring_pattern.humanize %>
+                    </span>
+                  <% end %>
+                  <% if event.start_time > Time.current %>
+                    <% time_until = distance_of_time_in_words(Time.current, event.start_time) %>
+                    <span class="tag is-light">
+                      <i class="fas fa-hourglass-half mr-1"></i>
+                      In <%= time_until %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="box has-text-centered">
+        <span class="icon is-large has-text-grey-light">
+          <i class="fas fa-calendar-plus fa-3x"></i>
+        </span>
+        <p class="title is-4 has-text-grey">No upcoming events</p>
+        <p class="subtitle has-text-grey">Create your first event to get started!</p>
+        <%= link_to "Create Event", new_event_path, class: "button is-primary is-large" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Today's Events Tab -->
+  <div id="today-tab" class="tab-content" style="display: none;">
+    <% today_events = @events.where(start_time: Date.current.beginning_of_day..Date.current.end_of_day).order(:start_time) %>
+    <% if today_events.any? %>
+      <div class="box">
+        <h2 class="title is-5 mb-4">Today's Schedule</h2>
+        <% today_events.each do |event| %>
+          <%= render 'event_card', event: event %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="box has-text-centered">
+        <p class="title is-5 has-text-grey">No events today</p>
+        <p class="subtitle has-text-grey">Enjoy your free day!</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Past Events Tab -->
+  <div id="past-tab" class="tab-content" style="display: none;">
+    <% past_events = @events.where('start_time < ?', Time.current).order(start_time: :desc).limit(20) %>
+    <% if past_events.any? %>
+      <% past_events.group_by { |event| event.start_time.to_date }.each do |date, events| %>
+        <div class="box mb-4">
+          <h3 class="title is-6 has-text-grey">
+            <%= date.strftime("%A, %B %d, %Y") %>
+          </h3>
+          <% events.each do |event| %>
+            <%= render 'event_card', event: event %>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="box has-text-centered">
+        <p class="title is-5 has-text-grey">No past events</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- All Events Tab -->
+  <div id="all-tab" class="tab-content" style="display: none;">
+    <% if @events.any? %>
+      <% @events.group_by { |event| event.start_time.to_date }.each do |date, events| %>
+        <div class="box mb-4">
+          <h3 class="title is-6">
+            <%= date.strftime("%A, %B %d, %Y") %>
+            <span class="tag is-light ml-2"><%= events.count %> events</span>
+          </h3>
+          <% events.each do |event| %>
+            <%= render 'event_card', event: event %>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="box has-text-centered">
+        <p class="title is-5 has-text-grey">No events yet</p>
+        <%= link_to "Create your first event", new_event_path, class: "button is-primary" %>
+      </div>
+    <% end %>
+  </div>
 </div>
 
-<%= link_to "New event", new_event_path %>
+<script>
+// Tab functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('[data-tab]');
+  const tabContents = document.querySelectorAll('.tab-content');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('is-active'));
+      // Add active class to clicked tab
+      this.classList.add('is-active');
+      
+      // Hide all tab contents
+      tabContents.forEach(content => content.style.display = 'none');
+      
+      // Show selected tab content
+      const targetTab = this.getAttribute('data-tab');
+      document.getElementById(targetTab + '-tab').style.display = 'block';
+    });
+  });
+});
+
+// Read more/less functionality
+function showFullDescription(eventId) {
+  document.getElementById('description-short-' + eventId).style.display = 'none';
+  document.getElementById('description-full-' + eventId).style.display = 'block';
+}
+
+function showShortDescription(eventId) {
+  document.getElementById('description-short-' + eventId).style.display = 'block';
+  document.getElementById('description-full-' + eventId).style.display = 'none';
+}
+</script>

@@ -1,4 +1,15 @@
 <%= form_with(model: event, local: true) do |form| %>
+  <% if event.errors.any? %>
+    <div class="notification is-danger">
+      <h4><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h4>
+      <ul>
+        <% event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="field">
     <%= form.label :title, class: "label" %>
     <div class="control">
@@ -6,23 +17,73 @@
     </div>
   </div>
 
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <%= form.label :start_time, "Start Date & Time", class: "label" %>
+        <div class="control">
+          <%= form.datetime_local_field :start_time, class: "input", required: true %>
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <%= form.label :end_time, "End Date & Time", class: "label" %>
+        <div class="control">
+          <%= form.datetime_local_field :end_time, class: "input" %>
+        </div>
+        <p class="help">Optional - leave blank for all-day event</p>
+      </div>
+    </div>
+  </div>
+
   <div class="field">
-    <%= form.label :start_time, "Date & Time", class: "label" %>
+    <%= form.label :location, class: "label" %>
     <div class="control">
-      <%= form.datetime_select :start_time, class: "input", required: true %>
+      <%= form.text_field :location, class: "input", placeholder: "Location (optional)" %>
     </div>
   </div>
 
   <div class="field">
     <%= form.label :description, class: "label" %>
     <div class="control">
-      <%= form.text_area :description, class: "textarea", placeholder: "Details (optional)" %>
+      <%= form.text_area :description, class: "textarea", rows: 3, placeholder: "Event details, notes, etc. (optional)" %>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column">
+      <div class="field">
+        <%= form.label :reminder_time, "Reminder", class: "label" %>
+        <div class="control">
+          <%= form.datetime_local_field :reminder_time, class: "input" %>
+        </div>
+        <p class="help">When to remind you about this event</p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <%= form.label :recurring_pattern, "Recurring", class: "label" %>
+        <div class="control">
+          <%= form.select :recurring_pattern, 
+              options_for_select([
+                ['None', ''],
+                ['Daily', 'daily'],
+                ['Weekly', 'weekly'],
+                ['Monthly', 'monthly'],
+                ['Yearly', 'yearly']
+              ], event.recurring_pattern), 
+              { include_blank: false }, 
+              { class: "input" } %>
+        </div>
+        <p class="help">Does this event repeat?</p>
+      </div>
     </div>
   </div>
 
   <div class="field is-grouped mt-4">
     <div class="control">
-      <%= form.submit class: "button is-primary" %>
+      <%= form.submit event.persisted? ? "Update Event" : "Create Event", class: "button is-primary" %>
     </div>
     <div class="control">
       <%= link_to "Cancel", events_path, class: "button is-light" %>

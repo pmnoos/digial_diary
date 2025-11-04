@@ -1,0 +1,152 @@
+<% content_for :title, "My Reminders" %>
+
+<div class="container">
+  <div class="level mb-5">
+    <div class="level-left">
+      <div class="level-item">
+        <h1 class="title is-3">
+          <span class="icon-text">
+            <span class="icon has-text-warning">
+              <i class="fas fa-bell"></i>
+            </span>
+            <span>Reminders</span>
+          </span>
+        </h1>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <%= link_to "Add New Event", new_event_path, class: "button is-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Reminders -->
+  <% if @today_reminders.any? %>
+    <div class="box mb-5" style="border-left: 4px solid #ff3860;">
+      <h2 class="title is-5 has-text-danger">
+        <span class="icon-text">
+          <span class="icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </span>
+          <span>Today's Reminders</span>
+        </span>
+      </h2>
+      <% @today_reminders.each do |event| %>
+        <div class="notification is-danger is-light mb-3">
+          <div class="columns is-vcentered">
+            <div class="column">
+              <strong><%= event.title %></strong><br>
+              <small class="has-text-grey">
+                Reminder: <%= event.reminder_time.strftime("%I:%M %p") %> | 
+                Event: <%= event.start_time.strftime("%I:%M %p") %>
+              </small>
+              <% if event.location.present? %>
+                <br><small class="has-text-grey">📍 <%= event.location %></small>
+              <% end %>
+            </div>
+            <div class="column is-narrow">
+              <div class="buttons">
+                <%= link_to "View", event_path(event), class: "button is-small is-info" %>
+                <%= link_to "Snooze 15m", snooze_reminder_path(event, minutes: 15), 
+                    method: :patch, class: "button is-small is-warning" %>
+                <%= link_to "Dismiss", dismiss_reminder_path(event), 
+                    method: :patch, class: "button is-small is-light" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Overdue Reminders -->
+  <% if @overdue_reminders.any? %>
+    <div class="box mb-5" style="border-left: 4px solid #ff3860;">
+      <h2 class="title is-5 has-text-danger">
+        <span class="icon-text">
+          <span class="icon">
+            <i class="fas fa-clock"></i>
+          </span>
+          <span>Overdue Reminders</span>
+        </span>
+      </h2>
+      <% @overdue_reminders.each do |event| %>
+        <div class="notification is-warning is-light mb-3">
+          <div class="columns is-vcentered">
+            <div class="column">
+              <strong><%= event.title %></strong><br>
+              <small class="has-text-grey">
+                Reminder was: <%= event.reminder_time.strftime("%b %d at %I:%M %p") %> | 
+                Event: <%= event.start_time.strftime("%b %d at %I:%M %p") %>
+              </small>
+              <% if event.location.present? %>
+                <br><small class="has-text-grey">📍 <%= event.location %></small>
+              <% end %>
+            </div>
+            <div class="column is-narrow">
+              <div class="buttons">
+                <%= link_to "View", event_path(event), class: "button is-small is-info" %>
+                <%= link_to "Dismiss", dismiss_reminder_path(event), 
+                    method: :patch, class: "button is-small is-light" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Upcoming Reminders (Next 7 Days) -->
+  <div class="box">
+    <h2 class="title is-5">
+      <span class="icon-text">
+        <span class="icon has-text-info">
+          <i class="fas fa-calendar-alt"></i>
+        </span>
+        <span>Upcoming Reminders (Next 7 Days)</span>
+      </span>
+    </h2>
+    
+    <% if @upcoming_reminders.any? %>
+      <% @upcoming_reminders.group_by { |event| event.reminder_time.to_date }.each do |date, events| %>
+        <div class="mb-4">
+          <h3 class="subtitle is-6 has-text-weight-bold">
+            <%= date == Date.current ? "Today" : date.strftime("%A, %B %d") %>
+          </h3>
+          <% events.each do |event| %>
+            <div class="box is-shadowless has-background-light mb-2">
+              <div class="columns is-vcentered">
+                <div class="column">
+                  <strong><%= event.title %></strong><br>
+                  <small class="has-text-grey">
+                    Reminder: <%= event.reminder_time.strftime("%I:%M %p") %> | 
+                    Event: <%= event.start_time.strftime("%I:%M %p") %>
+                  </small>
+                  <% if event.location.present? %>
+                    <br><small class="has-text-grey">📍 <%= event.location %></small>
+                  <% end %>
+                </div>
+                <div class="column is-narrow">
+                  <div class="buttons">
+                    <%= link_to "View", event_path(event), class: "button is-small is-info" %>
+                    <%= link_to "Edit", edit_event_path(event), class: "button is-small is-light" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="has-text-centered py-6">
+        <span class="icon is-large has-text-grey-light">
+          <i class="fas fa-bell-slash fa-3x"></i>
+        </span>
+        <p class="title is-5 has-text-grey">No upcoming reminders</p>
+        <p class="subtitle has-text-grey">Create an event with a reminder to get started!</p>
+        <%= link_to "Add Event", new_event_path, class: "button is-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

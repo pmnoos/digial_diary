@@ -3,12 +3,15 @@ Rails.application.routes.draw do
   
   get "demo_tour", to: "demo_tour#show"
   resources :subscriptions, only: [:index] do
-    collection do
-      get :pricing
-      post :upgrade
-      post :demo_mode
-    end
+   collection do
+    get   :pricing
+    patch :change_plan
+    post  :cancel
+    post  :resume
+    post  :demo_mode
+    post  :upgrade 
   end
+end
 
   resources :thoughts
   resources :events
@@ -17,10 +20,23 @@ Rails.application.routes.draw do
   resources :diary_entries do
     member do
       delete :remove_image
+      delete 'image/:image_id', to: 'diary_entries#destroy_image', as: :image
     end
-    delete "image/:image_id", to: "diary_entries#purge_image", as: :image
+  end
+ resources :reminders, only: [:index] do
+    member do
+      patch :dismiss
+      patch :snooze
+    end
   end
 
+   resources :subscriptions, only: [:index] do
+    collection do
+      patch :change_plan     # change_plan_subscriptions_path(plan: 'monthly'|'yearly')
+      post  :cancel          # cancel_subscriptions_path
+      post  :resume          # resume_subscriptions_path (optional)
+    end
+  end 
   devise_for :users, controllers: { sessions: 'sessions' }
 
   # Demo login route for instant access
@@ -53,5 +69,10 @@ Rails.application.routes.draw do
   get "image_proxy/:id/:variant", to: "image_proxy#show", as: :image_proxy_variant
 
   # Root path
-  root "home#index"
-end
+  root "diary_entries#index"
+  get "home", to: "home#index"
+  get "features", to: "pages#landing"
+
+ end
+  
+

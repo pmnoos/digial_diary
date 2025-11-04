@@ -1,0 +1,38 @@
+<div class="card mb-3">
+  <div class="card-content">
+    <div class="columns is-vcentered">
+      <div class="column">
+        <p class="subtitle is-7 mb-5 has-text-grey">
+          <span class="icon-text">
+            <span class="icon has-text-info">
+              <i class="fas fa-clock"></i>
+            </span>
+            <span>
+              <%= event.start_time.strftime("%I:%M %p") %>
+              <% if event.end_time.present? %>
+                - <%= event.end_time.strftime("%I:%M %p") %>
+              <% end %>
+            </span>
+          </span>
+        </p>
+        <p class="title is-6 mb-2"><%= event.title %></p>
+        <% if event.location.present? %>
+          <p class="is-size-7 has-text-grey">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </span>
+              <span><%= event.location %></span>
+            </span>
+          </p>
+        <% end %>
+      </div>
+      <div class="column is-narrow">
+        <div class="buttons are-small">
+          <%= link_to "View", event_path(event), class: "button is-small is-info" %>
+          <%= link_to "Edit", edit_event_path(event), class: "button is-small is-light" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

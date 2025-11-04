@@ -1,0 +1,193 @@
+<% content_for :title, "Digital Diary - Your Personal Space for Thoughts & Memories" %>
+
+<!-- Hero Section -->
+<section class="hero is-primary is-medium">
+  <div class="hero-body py-5">
+    <div class="container has-text-centered">
+      <h1 class="title is-2">
+        <span class="icon-text">
+          <span class="icon">
+            <i class="fas fa-book-open"></i>
+          </span>
+          <span>Digital Diary</span>
+        </span>
+      </h1>
+      <h2 class="subtitle is-4">
+        Your personal space for thoughts, memories, and daily reflections
+      </h2>
+      <p class="is-size-5 mb-4">
+        Capture life's moments with rich text, photos, and mood tracking. 
+        Private, secure, and beautifully organized.
+      </p>
+      <div class="buttons is-centered">
+        <%= link_to "Start Free Trial", new_user_registration_path, 
+            class: "button is-white is-medium" %>
+        <%= link_to "View Demo", diary_entries_path, 
+            class: "button is-light is-medium is-outlined" %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="section">
+  <div class="container">
+    <div class="has-text-centered mb-4">
+      <h2 class="title is-3">Everything You Need for Digital Journaling</h2>
+      <p class="subtitle is-5">Powerful features to make writing a joy</p>
+    </div>
+    
+    <div class="columns is-multiline">
+      <% @features.each do |feature| %>
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="box has-text-centered" style="height: 100%;">
+            <span class="icon is-large has-text-primary mb-2">
+              <i class="<%= feature[:icon] %> fa-2x"></i>
+            </span>
+            <h3 class="title is-6 mb-2"><%= feature[:title] %></h3>
+            <p class="is-size-7"><%= feature[:description] %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section has-background-light">
+  <div class="container">
+    <div class="has-text-centered mb-4">
+      <h2 class="title is-3">How It Works</h2>
+      <p class="subtitle is-5">Simple, intuitive, and powerful</p>
+    </div>
+    
+    <div class="columns is-vcentered">
+      <div class="column is-4">
+        <div class="box has-text-centered">
+          <span class="icon is-large has-text-info mb-2">
+            <i class="fas fa-user-plus fa-2x"></i>
+          </span>
+          <h3 class="title is-6">1. Sign Up Free</h3>
+          <p class="is-size-7">Create your account in seconds. No credit card required.</p>
+        </div>
+      </div>
+      
+      <div class="column is-4">
+        <div class="box has-text-centered">
+          <span class="icon is-large has-text-success mb-2">
+            <i class="fas fa-edit fa-2x"></i>
+          </span>
+          <h3 class="title is-6">2. Start Writing</h3>
+          <p class="is-size-7">Use our simple text editor to write your thoughts and add photos.</p>
+        </div>
+      </div>
+      
+      <div class="column is-4">
+        <div class="box has-text-centered">
+          <span class="icon is-large has-text-warning mb-2">
+            <i class="fas fa-chart-line fa-2x"></i>
+          </span>
+          <h3 class="title is-6">3. Track & Reflect</h3>
+          <p class="is-size-7">Monitor your moods and revisit your memories anytime.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Events & Calendar Section -->
+<section class="section">
+  <div class="container">
+    <div class="columns is-vcentered">
+      <div class="column is-6">
+        <figure class="image">
+          <div class="box has-background-info-light has-text-centered" style="padding: 2rem;">
+            <span class="icon is-large has-text-info mb-3">
+              <i class="fas fa-calendar-plus fa-3x"></i>
+            </span>
+            <p class="title is-5">Never Miss Important Moments</p>
+            <p class="subtitle is-6">Track appointments, events, and special dates</p>
+          </div>
+        </figure>
+      </div>
+      <div class="column is-6">
+        <h2 class="title is-3">Events & Appointments</h2>
+        <div class="content">
+          <p class="mb-3">
+            Keep track of life's important moments alongside your diary entries:
+          </p>
+          <ul class="is-size-7">
+            <li><strong>Upcoming Events Display</strong> - See your next 3 days at a glance</li>
+            <li><strong>Smart Reminders</strong> - Never forget important appointments</li>
+            <li><strong>Event Details</strong> - Add descriptions and notes to any event</li>
+            <li><strong>Calendar Integration</strong> - Seamlessly blend events with diary entries</li>
+            <li><strong>Quick Add</strong> - Create events and reminders in seconds</li>
+          </ul>
+          <div class="box has-background-warning-light mt-3">
+            <p class="has-text-weight-semibold mb-2 is-size-7">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-lightbulb"></i>
+                </span>
+                <span>Perfect For:</span>
+              </span>
+            </p>
+            <p class="is-size-7">Doctor appointments • Family gatherings • Work meetings • Birthdays • Special occasions • Daily reminders</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits Section -->
+<section class="section has-background-light">
+  <div class="container">
+    <div class="columns is-vcentered">
+      <div class="column is-6">
+        <h2 class="title is-3">Why Choose Digital Diary?</h2>
+        <div class="content">
+          <ul class="is-size-7">
+            <li><strong>Never Lose Your Memories</strong> - Cloud storage keeps your entries safe</li>
+            <li><strong>Photo Support</strong> - Add multiple photos to your diary entries</li>
+            <li><strong>Mood Insights</strong> - Track patterns in your emotional wellbeing</li>
+            <li><strong>Easy Organization</strong> - Find any entry with powerful search</li>
+            <li><strong>Complete Privacy</strong> - Your thoughts remain yours alone</li>
+            <li><strong>Mobile & Desktop</strong> - Write anywhere, anytime</li>
+          </ul>
+        </div>
+      </div>
+      <div class="column is-6">
+        <figure class="image">
+          <div class="box has-background-primary-light has-text-centered" style="padding: 2rem;">
+            <span class="icon is-large has-text-primary mb-3">
+              <i class="fas fa-laptop fa-3x"></i>
+            </span>
+            <p class="title is-5">Beautiful Interface</p>
+            <p class="subtitle is-6">Clean, distraction-free writing environment</p>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section has-background-primary">
+  <div class="container has-text-centered">
+    <h2 class="title is-3 has-text-white">Ready to Start Your Digital Diary?</h2>
+    <p class="subtitle is-5 has-text-white mb-4">
+      Join thousands of users who trust Digital Diary with their memories
+    </p>
+    <div class="buttons is-centered">
+      <%= link_to "Start Free Trial", new_user_registration_path, 
+          class: "button is-white is-medium" %>
+      <%= link_to "View Live Demo", diary_entries_path, 
+          class: "button is-light is-medium is-outlined" %>
+    </div>
+    <p class="has-text-white mt-3">
+      <small>No credit card required • Free forever plan available</small>
+    </p>
+  </div>
+</section>

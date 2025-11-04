@@ -1,4 +1,3 @@
-<!-- filepath: c:\Users\Test\projects\ruby\diary\diary_app\app\views\layouts\application.html.erb -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,6 +6,8 @@
     <%= csp_meta_tag %>
     <!-- Bulma CSS via CDN for proper styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+     <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "actiontext", media: "all", "data-turbo-track": "reload" %>
@@ -28,42 +29,74 @@
         </div>
       </div>
     </div>
+    
     <div class="container">
       <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <a class="navbar-item" href="/">📔 Digital Diary</a>
+          <%= link_to root_path, class: "navbar-item" do %>
+            <strong>📔 Digital Diary</strong>
+          <% end %>
           
+          <!-- Mobile hamburger menu -->
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
         </div>
-        <div class="navbar-menu">
+        
+        <div class="navbar-menu" id="navbar-menu">
+          <div class="navbar-start">
+            <%= link_to "Home", root_path, class: "navbar-item" %>
+            <%= link_to "Features", features_path, class: "navbar-item" %>
+            <%= link_to "Demo Tour", demo_tour_path, class: "navbar-item" %>
+            
+            <% if user_signed_in? %>
+              <%= link_to "My Entries", diary_entries_path, class: "navbar-item" %>
+              <%= link_to "Events", events_path, class: "navbar-item" %>
+            <% end %>
+          </div>
+          
           <div class="navbar-end">
             <% if user_signed_in? %>
-              <div class="navbar-item">Hello, <%= current_user.username.presence || current_user.email %></div>
               <div class="navbar-item">
-                <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "button is-light", data: { turbo: false } %>
+                <span class="tag is-light">
+                  Hello, <%= current_user.username.presence || current_user.email.split('@').first %>
+                </span>
+              </div>
+              <div class="navbar-item">
+                <%= button_to "Log out", destroy_user_session_path, 
+                    method: :delete, 
+                    class: "button is-light is-small", 
+                    data: { turbo: false } %>
               </div>
             <% else %>
               <div class="navbar-item">
-                <%= link_to "Demo Tour", demo_tour_path, class: "button is-info" %>
-                <%= link_to "Sign Up", new_user_registration_path, class: "button is-primary" %>
-                <%= link_to "Log in", new_user_session_path, class: "button is-light" %>
+                <div class="buttons">
+                  <%= link_to "Sign Up", new_user_registration_path, class: "button is-primary is-small" %>
+                  <%= link_to "Log in", new_user_session_path, class: "button is-light is-small" %>
+                </div>
               </div>
             <% end %>
           </div>
         </div>
       </nav>
+      
       <div class="columns m-0">
-        <% if user_signed_in? && !((controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index')) %>
+        <% if user_signed_in? && !((controller_name == 'sessions' && action_name == 'new') || (controller_name == 'registrations' && action_name == 'new') || (controller_name == 'home' && action_name == 'index') || (controller_name == 'pages' && action_name == 'landing')) %>
           <aside class="column is-2 is-narrow has-background-light p-3">
             <p class="menu-label ml-3 is-capitalized is-size-6 has-text-weight-bold has-text-info">Navigation</p>
-              <ul class="menu-list">
+            <ul class="menu-list">
               <li><%= link_to diary_entries_path do %>📖 Entries<% end %></li>
               <li><%= link_to new_diary_entry_path do %>📝 New Entry<% end %></li>
-              <li>
-                <%= link_to new_event_path do %>➕ New Event/Appointment<% end %>
-              </li>
+              <li><%= link_to events_path do %>📅 Events<% end %></li>
+              <li><%= link_to new_event_path do %>➕ New Event/Appointment<% end %></li>
+              <li><%= link_to reminders_path do %>🔔 Reminders<% end %></li>
               <li><a href="<%= archive_path %>" class="has-text-dark" id="archive-toggle">🗄️ Archive</a></li>
               <li><%= link_to subscriptions_path do %>💎 Subscription<% end %></li>
             </ul>
+            
+            <!-- Trial/Subscription Status -->
             <% if current_user.trial_active? %>
               <div class="notification is-warning is-small mt-4">
                 <p class="is-size-7 has-text-centered"><strong>Trial:</strong> <%= current_user.days_left_in_trial %> days left</p>
@@ -91,6 +124,7 @@
         <% end %>
       </div>
     </div>
+    
     <footer class="footer has-background-light mt-3">
       <div class="content has-text-centered">
         <p><strong>Digital Diary</strong><br><span class="is-size-4 has-text-grey">Created By EasyABC-International &copy; <%= Time.current.year %></span></p>
@@ -114,27 +148,50 @@
 
     <!-- Font Awesome for icons -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  </body>
-  <script>
-    // Debug script to test if JavaScript is working
-    console.log("Application layout loaded");
+    
+    <script>
+      // Debug script to test if JavaScript is working
+      console.log("Application layout loaded");
 
-    // Image modal functions
-    function openImageModal(imageUrl, imageName) {
-      document.getElementById('modalImage').src = imageUrl;
-      document.getElementById('modalImageName').textContent = imageName;
-      document.getElementById('imageModal').classList.add('is-active');
-    }
+      // Mobile navbar toggle
+      document.addEventListener('DOMContentLoaded', () => {
+        // Get all "navbar-burger" elements
+        const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-    function closeImageModal() {
-      document.getElementById('imageModal').classList.remove('is-active');
-    }
+        // Check if there are any navbar burgers
+        if (navbarBurgers.length > 0) {
+          // Add a click event on each of them
+          navbarBurgers.forEach(el => {
+            el.addEventListener('click', () => {
+              // Get the target from the "data-target" attribute
+              const target = el.dataset.target;
+              const targetElement = document.getElementById(target);
 
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        closeImageModal();
+              // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+              el.classList.toggle('is-active');
+              targetElement.classList.toggle('is-active');
+            });
+          });
+        }
+      });
+
+      // Image modal functions
+      function openImageModal(imageUrl, imageName) {
+        document.getElementById('modalImage').src = imageUrl;
+        document.getElementById('modalImageName').textContent = imageName;
+        document.getElementById('imageModal').classList.add('is-active');
       }
-    });
-  </script>
+
+      function closeImageModal() {
+        document.getElementById('imageModal').classList.remove('is-active');
+      }
+
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeImageModal();
+        }
+      });
+    </script>
+  </body>
 </html>

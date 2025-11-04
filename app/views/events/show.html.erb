@@ -1,12 +1,196 @@
-<% if flash[:notice] %>
-  <p style="color: green"><%= flash[:notice] %></p>
-<% end %>
+<% content_for :title, @event.title %>
 
-<%= render @event %>
+<div class="container">
+  <% if flash[:notice] %>
+    <div class="notification is-success">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
 
-<div>
-  <%= link_to "Edit this event", edit_event_path(@event) %> |
-  <%= link_to "Back to events", events_path %>
+  <div class="level mb-5">
+    <div class="level-left">
+      <div class="level-item">
+        <div>
+          <h1 class="title is-3">
+            <span class="icon-text">
+              <span class="icon has-text-primary">
+                <i class="fas fa-calendar-alt"></i>
+              </span>
+              <span><%= @event.title %></span>
+            </span>
+          </h1>
+          <p class="subtitle is-5 has-text-grey">
+            Event Details
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <div class="buttons">
+          <%= link_to "Edit Event", edit_event_path(@event), class: "button is-info" %>
+          <%= link_to "Back to Events", events_path, class: "button is-light" %>
+          <%= button_to "Delete", event_path(@event), 
+              method: :delete, 
+              class: "button is-danger", 
+              data: { confirm: "Are you sure you want to delete this event?" } %>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <%= button_to "Destroy this event", @event, method: :delete %>
+  <div class="columns">
+    <div class="column is-8">
+      <div class="box">
+        <h2 class="title is-5 mb-4">Event Information</h2>
+        
+        <div class="field">
+          <label class="label">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-clock"></i>
+              </span>
+              <span>Start Time</span>
+            </span>
+          </label>
+          <div class="content">
+            <p class="is-size-5">
+              <%= @event.start_time.strftime("%A, %B %d, %Y at %I:%M %p") %>
+            </p>
+          </div>
+        </div>
+
+        <% if @event.end_time.present? %>
+          <div class="field">
+            <label class="label">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-clock"></i>
+                </span>
+                <span>End Time</span>
+              </span>
+            </label>
+            <div class="content">
+              <p class="is-size-5">
+                <%= @event.end_time.strftime("%A, %B %d, %Y at %I:%M %p") %>
+              </p>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @event.location.present? %>
+          <div class="field">
+            <label class="label">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+                <span>Location</span>
+              </span>
+            </label>
+            <div class="content">
+              <p class="is-size-5"><%= @event.location %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @event.description.present? %>
+          <div class="field">
+            <label class="label">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-align-left"></i>
+                </span>
+                <span>Description</span>
+              </span>
+            </label>
+            <div class="content">
+              <div class="box has-background-light">
+                <%= simple_format(@event.description) %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="column is-4">
+      <div class="box">
+        <h3 class="title is-6 mb-4">Additional Details</h3>
+        
+        <div class="field">
+          <label class="label is-size-7">Status</label>
+          <div class="content">
+            <% if @event.start_time > Time.current %>
+              <span class="tag is-success">
+                <i class="fas fa-calendar-plus mr-1"></i>
+                Upcoming
+              </span>
+            <% elsif @event.end_time.present? && @event.end_time > Time.current %>
+              <span class="tag is-warning">
+                <i class="fas fa-play mr-1"></i>
+                In Progress
+              </span>
+            <% else %>
+              <span class="tag is-light">
+                <i class="fas fa-check mr-1"></i>
+                Past Event
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+        <% if @event.recurring_pattern.present? %>
+          <div class="field">
+            <label class="label is-size-7">Recurring</label>
+            <div class="content">
+              <span class="tag is-info">
+                <i class="fas fa-repeat mr-1"></i>
+                <%= @event.recurring_pattern.humanize %>
+              </span>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @event.reminder_time.present? %>
+          <div class="field">
+            <label class="label is-size-7">Reminder Set</label>
+            <div class="content">
+              <p class="is-size-7">
+                <%= @event.reminder_time.strftime("%b %d, %Y at %I:%M %p") %>
+              </p>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="field">
+          <label class="label is-size-7">Created</label>
+          <div class="content">
+            <p class="is-size-7 has-text-grey">
+              <%= @event.created_at.strftime("%b %d, %Y at %I:%M %p") %>
+            </p>
+          </div>
+        </div>
+
+        <% if @event.updated_at != @event.created_at %>
+          <div class="field">
+            <label class="label is-size-7">Last Updated</label>
+            <div class="content">
+              <p class="is-size-7 has-text-grey">
+                <%= @event.updated_at.strftime("%b %d, %Y at %I:%M %p") %>
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="box">
+        <h3 class="title is-6 mb-4">Quick Actions</h3>
+        <%= link_to "Edit Event", edit_event_path(@event), class: "button is-info is-fullwidth mb-2" %>
+        <%= link_to "Duplicate Event", new_event_path(duplicate: @event.id), class: "button is-light is-fullwidth mb-2" %>
+        <%= link_to "All Events", events_path, class: "button is-light is-fullwidth" %>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,17 +1,12 @@
 <% content_for :title, "Editing diary entry" %>
 
-<h1>Editing diary entry</h1>
+<div class="container">
+  <h1 class="title is-3">Editing diary entry</h1>
 
-<!-- ✅ Turbo Frame for inline Saved message -->
-<%= turbo_frame_tag "autosave-status" do %>
-  <!-- Empty initially, replaced when you save -->
-<% end %>
+  <%= render 'form', diary_entry: @diary_entry %>
 
-<%= render "form", diary_entry: @diary_entry %>
-
-<br>
-
-<div>
-  <%= link_to "Show this diary entry", @diary_entry %> |
-  <%= link_to "Back to diary entries", diary_entries_path %>
+  <div class="mt-4">
+    <%= link_to 'Show', @diary_entry, class: "button is-info" %> |
+    <%= link_to 'Back', diary_entries_path, class: "button is-light" %>
+  </div>
 </div>

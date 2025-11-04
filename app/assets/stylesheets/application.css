@@ -1,7 +1,7 @@
 /* Subtle background for Bulma boxes */
 /* Subtle background for Bulma boxes, theme-aware */
 .box {
-  background-color: var(--background, #b7d5f3) !important;
+  background-color: var(--background, #d5dce4) !important;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
@@ -269,7 +269,30 @@ trix-toolbar .trix-button.trix-active {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
-
+   /* Fix icon spacing and layout */
+    .icon-text {
+      align-items: center;
+      display: inline-flex;
+      flex-wrap: wrap;
+    }
+    
+    .icon-text .icon {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+    
+    .icon-text .icon:not(:last-child) {
+      margin-right: 0.25rem;
+    }
+    
+    /* Ensure proper spacing between time and title */
+    .media-content p.subtitle {
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .media-content p.title {
+      margin-top: 0.25rem !important;
+    }
 /*
  * This is a manifest file that'll be compiled into application.css.
  *
