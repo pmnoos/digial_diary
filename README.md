@@ -1,34 +1,75 @@
-# Digital Diary App
+# DailyThoughts Journal
 
-A beautiful, feature-rich digital diary application with subscription management.
+> Capture your days. Reflect your moods. Own your story.
 
-Live at: https://digital-diary-app.fly.dev/
+Welcome to **DailyThoughts Journal**, a simple, elegant journaling app designed for writers, thinkers, and anyone who wants to keep a daily log of life. Perfect for personal reflection, gratitude logging, or creative storytelling.
 
-## Latest Update
-- ✅ Subscription system with free trial (50 entries)
-- ✅ Professional pricing page 
-- ✅ Demo data with 150+ realistic entries
-- ✅ Automatic deployment via GitHub Actions
+---
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## ✨ Features
 
-Things you may want to cover:
+- 📝 **Write Daily**: Clean and distraction-free editor for your thoughts.
+- 📸 **Attach Images**: Add photos to enrich your entries.
+- 📅 **Smart Archive**: Entries are automatically sorted by month and year.
+- 🔐 **Private by Default**: Run it locally, and your stories stay yours.
+- 🚀 **Fast Setup**: Get journaling in minutes with our one-click install.
 
-* Ruby version
+---
 
-* System dependencies
+## 🔧 Installation
 
-* Configuration
+### Requirements
+- Ruby (>= 3.1)
+- Rails (>= 7.1)
+- PostgreSQL (optional for production)
 
-* Database creation
+### Quick Start
 
-* Database initialization
+```bash
+# Clone the project
+git clone https://github.com/YOUR_USERNAME/diary_app.git
+cd diary_app
 
-* How to run the test suite
+# Install dependencies
+bundle install
 
-* Services (job queues, cache servers, search engines, etc.)
+# Setup the database
+rails db:setup
 
-* Deployment instructions
+# Run the server
+rails server
 
-* ...
+# Open in your browser:
+http://localhost:3000
+```
+
+---
+
+## 🖼️ Screenshots
+
+Coming soon! Or launch it and experience the simplicity firsthand.
+
+---
+
+## 📦 Packaging for Users
+- One-click installers and desktop wrappers (e.g. Electron or Tauri) can be explored for non-technical users.
+- Easy deployment instructions for Render, Railway, or Fly.io.
+
+---
+
+## 💬 About
+Created with ❤️ by **Peter Magner** to bring beauty and simplicity to journaling.
+
+---
+
+## 📣 License
+MIT — Feel free to clone, tweak, and use for your own projects.
+
+---
+
+## 🙋‍♀️ Questions? Feedback?
+Visit the [GitHub repo](https://github.com/YOUR_USERNAME/diary_app) or raise an issue.
+
+---
+
+Happy journaling ✨

@@ -1,17 +1,18 @@
-Rails.application.routes.draw do
-  # Active Storage routes for file uploads
-  
+  Rails.application.routes.draw do
+    get 'terms', to: 'pages#terms', as: :terms
+    get 'privacy', to: 'pages#privacy', as: :privacy
   get "demo_tour", to: "demo_tour#show"
+
   resources :subscriptions, only: [:index] do
-   collection do
-    get   :pricing
-    patch :change_plan
-    post  :cancel
-    post  :resume
-    post  :demo_mode
-    post  :upgrade 
+    collection do
+      get  :pricing
+      patch :change_plan
+      post  :cancel
+      post  :resume
+      post  :demo_mode
+      post  :upgrade
+    end
   end
-end
 
   resources :thoughts
   resources :events
@@ -20,26 +21,20 @@ end
   resources :diary_entries do
     member do
       delete :remove_image
-      delete 'image/:image_id', to: 'diary_entries#destroy_image', as: :image
+      delete "image/:image_id", to: "diary_entries#destroy_image", as: :image
     end
   end
- resources :reminders, only: [:index] do
+
+  resources :reminders, only: [:index] do
     member do
       patch :dismiss
       patch :snooze
     end
   end
 
-   resources :subscriptions, only: [:index] do
-    collection do
-      patch :change_plan     # change_plan_subscriptions_path(plan: 'monthly'|'yearly')
-      post  :cancel          # cancel_subscriptions_path
-      post  :resume          # resume_subscriptions_path (optional)
-    end
-  end 
-  devise_for :users, controllers: { sessions: 'sessions' }
+  devise_for :users, controllers: { sessions: "sessions", registrations: "devise/registrations" }
 
-  # Demo login route for instant access
+  # Demo login
   post "demo_login", to: "application#demo_login"
 
   # Plans and trial
@@ -57,22 +52,17 @@ end
   # Archive
   get "archive", to: "diary_entries#archive"
 
-  # Test routes removed - using simple textarea instead of Trix editor
-
   # Stripe webhook
   namespace :webhooks do
     post "stripe", to: "stripe#create"
   end
 
-  # Image proxy for Trix editor
+  # Image proxy
   get "image_proxy/:id", to: "image_proxy#show", as: :image_proxy
   get "image_proxy/:id/:variant", to: "image_proxy#show", as: :image_proxy_variant
 
-  # Root path
+  # Root
   root "diary_entries#index"
   get "home", to: "home#index"
   get "features", to: "pages#landing"
-
- end
-  
-
+end

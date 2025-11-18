@@ -1,6 +1,6 @@
 class AddTrialFieldsToUsers < ActiveRecord::Migration[8.0]
   def change
- #   add_column :users, :trial_ends_at, :datetime
+ # Duplicate add_column for :trial_ends_at removed; already exists from previous migration
 #  add_column :users, :entry_limit, :integer
   end
 end

@@ -1,9 +1,17 @@
+  # GET /diary_entries/archive
+  def archive
+    @archive = ... # your logic here
+    @archive ||= []
+  end
 class DiaryEntriesController < ApplicationController
+  before_action :authenticate_user!
   before_action :authenticate_user!, except: [:index, :show]
   before_action :check_subscription_access, except: [:show, :index]
   before_action :check_entry_limit, only: [:new, :create]
   before_action :set_diary_entry, only: %i[show edit update destroy destroy_image]
-
+   # Only gate creating new content; allow index/show/edit/update/destroy
+  skip_before_action :check_subscription_access, raise: false
+  before_action :check_subscription_access, only: [:new, :create]
   # GET /diary_entries
   def index
     if user_signed_in?
@@ -69,6 +77,11 @@ class DiaryEntriesController < ApplicationController
     @thought_of_the_day = Thought.where(mood: @diary_entry.mood).order(Arel.sql("RANDOM()")).first ||
                           Thought.order(Arel.sql("RANDOM()")).first
   end
+    # GET /diary_entries/archive
+    def archive
+      @archive ||= []
+      # Add your logic here to populate @archive
+    end
 
   # GET /diary_entries/new
   def new
@@ -122,6 +135,12 @@ class DiaryEntriesController < ApplicationController
 
   private
 
+
+  def check_subscription_access
+    return if current_user&.can_access_app?
+    redirect_to pricing_subscriptions_path, alert: "Your trial has expired. Please upgrade to continue."
+  end
+end
   def set_diary_entry
     if current_user
       @diary_entry = current_user.diary_entries.find(params[:id])
@@ -155,4 +174,3 @@ class DiaryEntriesController < ApplicationController
       images: [], tag_list: [], tag_ids: []
     )
   end
-end

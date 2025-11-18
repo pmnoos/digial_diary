@@ -2,23 +2,19 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: 127.0.0.1
-  port: 5432
   username: postgres
   password: peter284
+  host: localhost
+  port: 5432
 
 development:
   <<: *default
-  database: my_diary_development
+  database: diary_app_development
 
 test:
   <<: *default
-  database: my_diary_test
+  database: diary_app_test
 
 production:
   <<: *default
-  database: <%= ENV.fetch("PGDATABASE", "my_diary_production") %>
-  username: <%= ENV.fetch("PGUSER", "postgres") %>
-  password: <%= ENV.fetch("PGPASSWORD", "") %>
-  host: <%= ENV.fetch("PGHOST", "localhost") %>
-  port: <%= ENV.fetch("PGPORT", "5432") %>
+  database: diary_app_production

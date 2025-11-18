@@ -1,3 +1,4 @@
+ 
 class User < ApplicationRecord
   # Devise
   devise :database_authenticatable, :registerable,
@@ -11,19 +12,19 @@ class User < ApplicationRecord
   SUBSCRIPTION_STATUSES = %w[trial active expired cancelled].freeze
   SUBSCRIPTION_PLANS    = %w[monthly yearly].freeze
 
+  # Ensure defaults exist before validations on create
+  before_validation :set_initial_trial, on: :create
+
   validates :subscription_status, inclusion: { in: SUBSCRIPTION_STATUSES }
   validates :subscription_plan, inclusion: { in: SUBSCRIPTION_PLANS }, allow_nil: true
 
-  # Trial start after sign-up
-  after_create :start_trial_period
-
-  # Public helpers (used by views)
+  # Public helpers (used by views/controllers)
   def subscription_active?
     subscription_status == "active"
   end
 
   def trial_active?
-    subscription_status == "trial" && trial_ends_at.present? && trial_ends_at.future?
+    subscription_status == "trial" && (trial_ends_at.blank? || trial_ends_at.future?)
   end
 
   def trial_expired?
@@ -43,25 +44,23 @@ class User < ApplicationRecord
     [(used_days / total_days * 100).round, 100].min
   end
 
-  # Trial entry limits
-  def can_create_entry?
-    return true if subscription_active?
-    return false unless trial_active?
-    diary_entries.count < 50
-  end
-
   def remaining_trial_entries
     return 0 unless trial_active?
     [50 - diary_entries.count, 0].max
   end
 
+  def can_access_app?
+    subscription_active? || trial_active?
+  end
+   def can_create_entry?
+    subscription_status == 'active'
+  end
+  
   private
 
-  def start_trial_period
-    update_columns(
-      trial_started_at: Time.current,
-      trial_ends_at: 30.days.from_now,
-      subscription_status: "trial"
-    )
+  def set_initial_trial
+    self.subscription_status ||= "trial"
+    self.trial_started_at   ||= Time.current
+    self.trial_ends_at      ||= 30.days.from_now
   end
 end
