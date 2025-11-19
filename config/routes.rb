@@ -32,6 +32,9 @@
     end
   end
 
+  # Stripe Payments
+  resources :payments, only: [:new, :create]
+
   devise_for :users, controllers: { sessions: "sessions", registrations: "devise/registrations" }
 
   # Demo login

@@ -1,0 +1,42 @@
+<h1>Subscribe to Diary App</h1>
+
+<form id="payment-form" action="/payments" method="post">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <label for="email">Email</label>
+  <input type="email" name="email" id="email" required>
+
+  <label for="card-element">Credit or debit card</label>
+  <div id="card-element"><!-- Stripe.js injects the Card Element here --></div>
+
+  <input type="hidden" name="plan" value="basic_monthly">
+  <button type="submit">Subscribe</button>
+
+  <div id="card-errors" role="alert"></div>
+</form>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var stripe = Stripe('<%= ENV["STRIPE_PUBLISHABLE_KEY"] %>');
+    var elements = stripe.elements();
+    var card = elements.create('card');
+    card.mount('#card-element');
+
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          document.getElementById('card-errors').textContent = result.error.message;
+        } else {
+          var hiddenInput = document.createElement('input');
+          hiddenInput.setAttribute('type', 'hidden');
+          hiddenInput.setAttribute('name', 'stripeToken');
+          hiddenInput.setAttribute('value', result.token.id);
+          form.appendChild(hiddenInput);
+          form.submit();
+        }
+      });
+    });
+  });
+</script>
