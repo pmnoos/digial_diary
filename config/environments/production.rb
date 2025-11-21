@@ -57,6 +57,8 @@ Rails.application.configure do
   # Replace the default in-process memory cache store with a durable alternative.
   # config.cache_store = :mem_cache_store
  
+  config.hosts << ENV["RAILS_ALLOWED_HOST"] if ENV["RAILS_ALLOWED_HOST"]
+
 
   config.hosts << /.*\.onrender\.com/
   # Replace the default in-process and non-durable queuing backend for Active Job.
