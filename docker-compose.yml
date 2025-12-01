@@ -1,4 +1,4 @@
-
+version: "3.9"
 
 services:
   db:
@@ -30,7 +30,11 @@ services:
       - "3000:3000"
     volumes:
       - storage_data:/rails/storage
-    command: ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    command: >
+      bash -c "
+      bin/rails db:migrate &&
+      bin/rails server -b 0.0.0.0 -p 3000
+      "
 
 volumes:
   postgres_data:
