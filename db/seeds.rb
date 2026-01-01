@@ -100,3 +100,4 @@ DiaryEntry.create!([
 
 puts "Created #{DiaryEntry.count} diary entries for demo user"
 puts "Demo user has #{demo_user.remaining_trial_entries} entries remaining in trial"
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

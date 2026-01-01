@@ -1,4 +1,3 @@
- 
 class User < ApplicationRecord
   # Devise
   devise :database_authenticatable, :registerable,
@@ -16,7 +15,7 @@ class User < ApplicationRecord
   before_validation :set_initial_trial, on: :create
 
   validates :subscription_status, inclusion: { in: SUBSCRIPTION_STATUSES }
-  validates :subscription_plan, inclusion: { in: SUBSCRIPTION_PLANS }, allow_nil: true
+  validates :subscription_plan, inclusion: { in: SUBSCRIPTION_PLANS }
 
   # Public helpers (used by views/controllers)
   def subscription_active?
@@ -52,14 +51,15 @@ class User < ApplicationRecord
   def can_access_app?
     subscription_active? || trial_active?
   end
-   def can_create_entry?
-    subscription_status == 'active'
+  def can_create_entry?
+    subscription_status == 'active' || (trial_active? && remaining_trial_entries > 0)
   end
   
   private
 
   def set_initial_trial
     self.subscription_status ||= "trial"
+    self.subscription_plan   ||= "monthly" # default plan for new users
     self.trial_started_at   ||= Time.current
     self.trial_ends_at      ||= 30.days.from_now
   end

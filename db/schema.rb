@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_16_105540) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_01_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -58,7 +58,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_105540) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.string "moods"
     t.string "mood"
     t.integer "thought_id"
@@ -67,8 +67,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_105540) do
   end
 
   create_table "diary_entry_tags", force: :cascade do |t|
-    t.integer "diary_entry_id", null: false
-    t.integer "tag_id", null: false
+    t.bigint "diary_entry_id", null: false
+    t.bigint "tag_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["diary_entry_id"], name: "index_diary_entry_tags_on_diary_entry_id"
@@ -78,13 +78,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_105540) do
   create_table "events", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.datetime "event_date"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "location"
+    t.datetime "reminder_time"
+    t.string "recurring_pattern"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
-    t.string "recurring_pattern"
-    t.datetime "reminder_time"
-    t.datetime "start_time"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -109,11 +110,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_105540) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
-    t.datetime "trial_ends_at"
-    t.integer "entry_limit"
     t.datetime "trial_started_at"
+    t.datetime "trial_ends_at"
     t.string "subscription_status", default: "trial"
-    t.string "subscription_plan", default: "free_trial"
+    t.string "subscription_plan", default: "monthly"
     t.string "payment_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
