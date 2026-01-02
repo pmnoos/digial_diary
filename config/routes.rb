@@ -65,7 +65,7 @@
   get "image_proxy/:id/:variant", to: "image_proxy#show", as: :image_proxy_variant
 
   # Root
-  root "diary_entries#index"
+  root "pages#landing"
   get "home", to: "home#index"
   get "features", to: "pages#landing"
 end
