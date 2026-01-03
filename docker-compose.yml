@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: peter284
+      POSTGRES_DB: diary_app_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      RAILS_ENV: development
+      PORT: 3000
+      # Override development DB host to the containerized Postgres
+      DATABASE_URL: postgres://postgres:peter284@db:5432/diary_app_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: peter284
+      POSTGRES_DB: diary_app_development
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command: bash -lc "bundle exec rails server -b 0.0.0.0 -p 3000"
+
+volumes:
+  postgres_data:
+  bundle_cache:

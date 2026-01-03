@@ -1,3 +1,33 @@
+# VCS
+.git
+.github
+
+# Editor/IDE
+.vscode
+
+# Bundler
+vendor/bundle
+.bundle
+
+# Node
+node_modules
+
+# Rails runtime
+log/*
+tmp/*
+storage/*
+
+# Cache/temp
+.cache
+*.swp
+
+# Tests (not needed in image context)
+test/
+spec/
+
+# OS/others
+*.bak
+*.tmp
 # See https://docs.docker.com/engine/reference/builder/#dockerignore-file for more about ignoring files.
 
 # Ignore git directory.
