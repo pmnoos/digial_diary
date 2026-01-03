@@ -1,129 +1,255 @@
-# My Diary App - Installation Guide
+# My Diary App – Docker Installation Guide
 
-This guide will help you install and run the My Diary App on your local machine.
+This guide explains how to install and run **My Diary App** using **Docker**. It is written for **both non‑technical (inexperienced) users** and **technical (experienced) users**.
 
-## Prerequisites
+> ✅ **Important:** You do **not** need to install Ruby, Rails, PostgreSQL, or any other dependencies manually. Everything runs inside Docker.
 
-Before installing the app, you need to have Docker Desktop installed on your system:
+---
 
-### Windows
-1. Download Docker Desktop from: https://www.docker.com/products/docker-desktop/
-2. Install Docker Desktop
+## Who Is This Guide For?
+
+* **Inexperienced users**: Follow the **Quick Start** section. Minimal commands, step‑by‑step.
+* **Experienced users**: Skip to **Docker Commands & Advanced Usage**.
+
+---
+
+## What Docker Does (Plain English)
+
+Docker runs the Diary App in an isolated container on your computer. This means:
+
+* No complicated setup
+* No system configuration issues
+* The app runs the same on Windows, macOS, and Linux
+* Your data stays on your machine
+
+Think of Docker as a **self‑contained box** that already includes everything the app needs.
+
+---
+
+## Prerequisites (Required Once)
+
+You must install **Docker Desktop** before running the app.
+
+### Windows & macOS
+
+1. Download Docker Desktop:
+   [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+2. Install it using the default options
 3. Start Docker Desktop
-4. Ensure Docker is running (you should see the Docker icon in your system tray)
+4. Confirm Docker is running (Docker icon is visible)
 
-### macOS
-1. Download Docker Desktop from: https://www.docker.com/products/docker-desktop/
-2. Install Docker Desktop
-3. Start Docker Desktop
+> ⚠️ Docker must be running before starting the Diary App.
 
-### Linux
+### Linux (Ubuntu / Debian)
+
 ```bash
-# Ubuntu/Debian
-sudo apt-get update
-sudo apt-get install docker.io docker-compose
+sudo apt update
+sudo apt install docker.io docker-compose -y
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo usermod -aG docker $USER
 ```
 
-## Quick Installation (Windows)
+Log out and back in to apply permissions.
 
-1. Download all the files from this distribution
-2. Double-click `install.bat`
-3. Follow the prompts
-4. Open your browser and go to: http://localhost:3000
+---
 
-## Manual Installation
+## Getting the Diary App Files
 
-### Step 1: Extract Files
-Extract all the application files to a folder on your computer.
+You can obtain the app in **one of two ways**:
 
-### Step 2: Open Terminal/Command Prompt
-Navigate to the folder containing the application files.
+### Option 1: Download (Recommended for Beginners)
 
-### Step 3: Build and Start
-Run the following command:
+* Download the ZIP/TAR file from the official release page
+* Extract it to a folder on your computer
+
+### Option 2: Clone from GitHub (Experienced Users)
+
+```bash
+git clone https://github.com/pmnoos/digial_diary.git
+cd digial_diary
+```
+
+---
+
+# 🚀 QUICK START (Beginner Friendly)
+
+### Windows Users
+
+1. Make sure **Docker Desktop is running**
+2. Extract the Diary App files
+3. Double‑click:
+
+   ```
+   install.bat
+   ```
+4. Wait while Docker builds and starts the app
+5. Open your browser and visit:
+
+   👉 **[http://localhost:3000](http://localhost:3000)**
+
+That’s it. 🎉
+
+---
+
+# 🛠 MANUAL INSTALLATION (All Platforms)
+
+### Step 1: Open a Terminal or Command Prompt
+
+Navigate to the folder containing the Diary App files.
+
+### Step 2: Build and Start the App
+
 ```bash
 docker-compose up --build -d
 ```
 
-### Step 4: Access the Application
-Open your web browser and navigate to: http://localhost:3000
+This command:
 
-## Managing the Application
+* Builds the app container
+* Starts the web server and database
+* Runs everything in the background
 
-### Start the Application
+### Step 3: Open the App
+
+Visit:
+
+👉 **[http://localhost:3000](http://localhost:3000)**
+
+---
+
+# ▶️ Managing the Application
+
+### Start the App
+
 ```bash
 docker-compose up -d
 ```
 
-### Stop the Application
+### Stop the App
+
 ```bash
 docker-compose down
 ```
 
-### View Logs
-```bash
-docker-compose logs -f
-```
+### Restart the App
 
-### Restart the Application
 ```bash
 docker-compose restart
 ```
 
-### Update the Application
+### View Logs (Useful for Debugging)
+
+```bash
+docker-compose logs -f
+```
+
+### Update the App
+
 ```bash
 docker-compose down
 docker-compose up --build -d
 ```
 
-## Data Persistence
+---
 
-Your diary entries and user data are stored in Docker volumes, which means:
-- Data persists between application restarts
-- Data is stored locally on your machine
-- Data is not lost when you stop the application
+## 💾 Data Persistence (Your Entries Are Safe)
 
-## Troubleshooting
+Your diary entries and user data are stored in **Docker volumes**, which means:
 
-### Port Already in Use
-If you get an error about port 3000 being in use:
-1. Stop the application: `docker-compose down`
-2. Edit `docker-compose.yml` and change the port mapping from `"3000:80"` to `"3001:80"`
-3. Restart: `docker-compose up -d`
-4. Access at: http://localhost:3001
+* Data survives restarts
+* Data remains on your computer
+* Data is not deleted unless you explicitly remove volumes
 
-### Database Connection Issues
-If the application fails to start due to database issues:
-1. Stop the application: `docker-compose down`
-2. Remove volumes: `docker-compose down -v`
-3. Restart: `docker-compose up --build -d`
+> ⚠️ Do **not** run `docker-compose down -v` unless you want to delete all data.
 
-### Docker Not Running
-Make sure Docker Desktop is running before starting the application.
+---
 
-## System Requirements
+## 🧯 Troubleshooting
 
-- **Operating System**: Windows 10/11, macOS 10.15+, or Linux
-- **RAM**: Minimum 4GB (8GB recommended)
-- **Storage**: At least 2GB free space
-- **Docker**: Docker Desktop or Docker Engine
+### Port 3000 Already in Use
 
-## Security Notes
+If you see a port conflict error:
 
-- The application runs locally on your machine
-- Data is stored in local Docker volumes
-- No data is sent to external servers
-- Default database credentials are used for local development only
+1. Stop the app:
 
-## Support
+   ```bash
+   docker-compose down
+   ```
+2. Open `docker-compose.yml`
+3. Change:
 
-If you encounter any issues:
-1. Check that Docker Desktop is running
-2. Ensure you have sufficient disk space
-3. Try restarting the application
-4. Check the logs using `docker-compose logs -f`
+   ```yaml
+   "3000:80"
+   ```
 
-For additional help, please refer to the application documentation or contact support.
+   to:
+
+   ```yaml
+   "3001:80"
+   ```
+4. Restart:
+
+   ```bash
+   docker-compose up -d
+   ```
+5. Open:
+   👉 [http://localhost:3001](http://localhost:3001)
+
+---
+
+### Database Startup Issues
+
+```bash
+docker-compose down -v
+docker-compose up --build -d
+```
+
+⚠️ This removes stored data.
+
+---
+
+### Docker Is Not Running
+
+* Start Docker Desktop
+* Wait until Docker reports it is ready
+* Try again
+
+---
+
+## 🖥 System Requirements
+
+* **OS**: Windows 10/11, macOS 10.15+, Linux
+* **RAM**: 4 GB minimum (8 GB recommended)
+* **Disk Space**: 2 GB minimum
+* **Docker**: Docker Desktop or Docker Engine
+
+---
+
+## 🔐 Security Notes
+
+* App runs locally only
+* No data is sent externally
+* Local development credentials only
+* Suitable for personal use and private hosting
+
+---
+
+## 🆘 Support
+
+If something goes wrong:
+
+1. Confirm Docker is running
+2. Restart Docker Desktop
+3. Restart the Diary App
+4. Check logs:
+
+   ```bash
+   docker-compose logs -f
+   ```
+
+For further help, see the documentation or project repository.
+
+---
+
+✅ **You are now ready to use My Diary App. Enjoy writing.** ✍️
