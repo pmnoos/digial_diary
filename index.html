@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DailyThoughts Journal | Capture Your Story</title>
+  <meta name="description" content="DailyThoughts Journal is a clean, private diary app to capture your thoughts, photos, plans, and memories.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --surface: #fffdf8;
+      --ink: #1f2a2f;
+      --muted: #55666d;
+      --teal: #0f7c82;
+      --teal-deep: #0a575b;
+      --sand: #f0e4cd;
+      --accent: #d35d2e;
+      --line: #dccdb5;
+      --shadow: 0 14px 35px rgba(25, 38, 44, 0.12);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 10% 10%, #ffffff 0%, #f8f4ed 35%, #f2ebe0 100%);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .page-wrap {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+    }
+
+    .shape {
+      position: fixed;
+      z-index: -1;
+      filter: blur(2px);
+      pointer-events: none;
+      opacity: 0.65;
+    }
+
+    .shape-one {
+      top: -120px;
+      right: -80px;
+      width: 340px;
+      height: 340px;
+      border-radius: 70% 30% 60% 40%;
+      background: linear-gradient(140deg, #f9d393, #f7b089);
+      animation: drift 18s ease-in-out infinite;
+    }
+
+    .shape-two {
+      left: -140px;
+      bottom: 10%;
+      width: 320px;
+      height: 320px;
+      border-radius: 41% 59% 65% 35%;
+      background: linear-gradient(120deg, #8ec5c7, #5ea7ab);
+      animation: drift 22s ease-in-out infinite reverse;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(12px) rotate(6deg); }
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 2.2rem));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 1.1rem 0;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 253, 248, 0.82);
+      border: 1px solid rgba(220, 205, 181, 0.7);
+      border-radius: 999px;
+      padding: 0.6rem 1rem;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 6px 24px rgba(20, 40, 50, 0.08);
+    }
+
+    .brand {
+      font-family: "Fraunces", serif;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      font-size: 1.1rem;
+      color: var(--teal-deep);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      background: var(--sand);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 1.4rem;
+      align-items: center;
+      padding: 3.3rem 0 2rem;
+    }
+
+    .hero h1 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.2rem, 6vw, 4.2rem);
+      line-height: 1.08;
+      margin-bottom: 0.9rem;
+      color: #132228;
+      letter-spacing: 0.3px;
+    }
+
+    .hero p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.3vw, 1.2rem);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      text-decoration: none;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.75rem 1.1rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-main {
+      background: linear-gradient(130deg, var(--teal), var(--teal-deep));
+      color: #fefefe;
+      box-shadow: 0 10px 26px rgba(9, 102, 108, 0.25);
+    }
+
+    .btn-main:hover {
+      box-shadow: 0 14px 28px rgba(9, 102, 108, 0.35);
+    }
+
+    .btn-ghost {
+      border-color: #b3a485;
+      color: #203139;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .btn-ghost:hover {
+      background: #fff8ea;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+
+    .badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid #ccbca1;
+      background: #fffaf0;
+      color: #36545d;
+      border-radius: 999px;
+      padding: 0.3rem 0.6rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(160deg, #fffefb, #f6ebd8);
+      border: 1px solid #e1d2b7;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 1.2rem;
+      transform: rotate(-1.2deg);
+      opacity: 0;
+      animation: cardIn 900ms ease-out 0.25s forwards;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: rotate(-2.2deg) translateY(10px); }
+      to { opacity: 1; transform: rotate(-1.2deg) translateY(0); }
+    }
+
+    .entry-preview {
+      border-radius: 16px;
+      padding: 0.9rem;
+      background: #fff;
+      border: 1px solid #eadfc9;
+      margin-bottom: 0.8rem;
+    }
+
+    .entry-preview h3 {
+      font-size: 0.92rem;
+      margin-bottom: 0.38rem;
+      color: #3a525c;
+    }
+
+    .entry-preview p {
+      font-size: 0.92rem;
+      color: #56666d;
+    }
+
+    section {
+      padding: 2.4rem 0;
+    }
+
+    .section-title {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+      color: #182a31;
+    }
+
+    .section-lead {
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .feature-grid {
+      margin-top: 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .feature-card {
+      padding: 1rem;
+      border: 1px solid #dfd3bc;
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 8px 20px rgba(16, 33, 42, 0.06);
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeRise 850ms ease forwards;
+    }
+
+    .feature-card:nth-child(2) { animation-delay: 120ms; }
+    .feature-card:nth-child(3) { animation-delay: 220ms; }
+    .feature-card:nth-child(4) { animation-delay: 320ms; }
+    .feature-card:nth-child(5) { animation-delay: 420ms; }
+    .feature-card:nth-child(6) { animation-delay: 520ms; }
+
+    @keyframes fadeRise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feature-card h3 {
+      margin-bottom: 0.45rem;
+      font-size: 1.03rem;
+      color: #20363f;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: #596c74;
+    }
+
+    .install {
+      background: linear-gradient(120deg, #fff8ec 0%, #f7ebd6 100%);
+      border: 1px solid #dfd2b8;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 1.3rem;
+    }
+
+    .install-list {
+      margin-top: 0.8rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .install-step {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 0.7rem;
+      align-items: start;
+    }
+
+    .install-step .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      box-shadow: 0 8px 14px rgba(186, 85, 44, 0.28);
+    }
+
+    .code-block {
+      margin-top: 1rem;
+      background: #17303a;
+      color: #e8f0f2;
+      border-radius: 16px;
+      padding: 0.95rem;
+      overflow: auto;
+      border: 1px solid #28444f;
+      font-size: 0.92rem;
+    }
+
+    .cta {
+      margin: 2rem 0 2.6rem;
+      padding: 1.5rem;
+      border-radius: 22px;
+      border: 1px solid #d8cab1;
+      background: linear-gradient(120deg, #0e6469, #0a4d52);
+      color: #f4fbfd;
+      display: grid;
+      gap: 0.7rem;
+      justify-items: start;
+      box-shadow: var(--shadow);
+    }
+
+    .cta h2 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      line-height: 1.15;
+    }
+
+    .cta p {
+      color: #d9f1f4;
+      max-width: 640px;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 1.2rem 0 2rem;
+      color: #51666f;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 920px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        transform: none;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav {
+        border-radius: 22px;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 2.3rem;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .install-step {
+        grid-template-columns: 30px 1fr;
+      }
+
+      .install-step .num {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="shape shape-one" aria-hidden="true"></div>
+    <div class="shape shape-two" aria-hidden="true"></div>
+
+    <header class="container">
+      <nav class="nav">
+        <a class="brand" href="#top">DailyThoughts Journal</a>
+        <div class="nav-links">
+          <a href="#features">Features</a>
+          <a href="#setup">Setup</a>
+          <a href="https://github.com/pmnoos/digial_diary" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top" class="container">
+      <section class="hero" aria-label="App intro">
+        <div>
+          <h1>Capture your day while the feeling is still fresh.</h1>
+          <p>DailyThoughts Journal helps you write quickly, organize memories, attach images, and build a private timeline of your life without a cluttered interface.</p>
+          <div class="hero-actions">
+            <a class="btn btn-main" href="https://github.com/pmnoos/digial_diary" target="_blank" rel="noopener noreferrer">View Repository</a>
+            <a class="btn btn-ghost" href="#setup">How to Install</a>
+          </div>
+          <div class="badge-row" aria-label="Tech badges">
+            <span class="badge">Ruby on Rails</span>
+            <span class="badge">Image Attachments</span>
+            <span class="badge">Personal Archive</span>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Journal preview card">
+          <div class="entry-preview">
+            <h3>Saturday, March 14</h3>
+            <p>I finally watched the rain from the cafe window and wrote for 20 calm minutes. Added two photos from the walk home.</p>
+          </div>
+          <div class="entry-preview">
+            <h3>Tags Used</h3>
+            <p>gratitude, travel, ideas</p>
+          </div>
+          <div class="entry-preview">
+            <h3>Monthly View</h3>
+            <p>12 entries this month. Your consistency streak is building.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section id="features">
+        <h2 class="section-title">Built for reflection, not distraction.</h2>
+        <p class="section-lead">The app focuses on thoughtful writing and simple organization, so your journal stays meaningful and easy to revisit over time.</p>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Fast daily writing</h3>
+            <p>A straightforward editor for thoughts, gratitude notes, and personal logs without unnecessary friction.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Photo attachments</h3>
+            <p>Add image memories to each entry and keep moments alongside your written reflections.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Timeline and archive</h3>
+            <p>Entries are grouped by date and easy to browse so old thoughts are never lost.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Tags and structure</h3>
+            <p>Use tags to find recurring themes, moods, and ideas across weeks and months.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Private by design</h3>
+            <p>Run it locally or host it yourself to keep your journal under your control.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Simple setup</h3>
+            <p>Install dependencies, initialize the database, and start writing within minutes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="setup">
+        <div class="install">
+          <h2 class="section-title">Setup in minutes</h2>
+          <p class="section-lead">Use the steps below to run the app locally. This page is static and ideal for GitHub Pages deployment.</p>
+
+          <div class="install-list">
+            <div class="install-step">
+              <span class="num">1</span>
+              <p>Clone the repository and open the project folder.</p>
+            </div>
+            <div class="install-step">
+              <span class="num">2</span>
+              <p>Install dependencies with Bundler.</p>
+            </div>
+            <div class="install-step">
+              <span class="num">3</span>
+              <p>Set up the database and run the Rails server.</p>
+            </div>
+          </div>
+
+          <pre class="code-block"><code>git clone https://github.com/pmnoos/digial_diary.git
+cd digial_diary
+bundle install
+rails db:setup
+rails server</code></pre>
+
+          <div class="hero-actions" style="margin-top: 1rem;">
+            <a class="btn btn-main" href="https://github.com/pmnoos/digial_diary/blob/main/INSTALLATION.md" target="_blank" rel="noopener noreferrer">Installation Guide</a>
+            <a class="btn btn-ghost" href="https://github.com/pmnoos/digial_diary/blob/main/README.md" target="_blank" rel="noopener noreferrer">Readme</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" aria-label="Call to action">
+        <h2>Turn everyday notes into a story you can revisit.</h2>
+        <p>Deploy this app, write daily, and grow a personal archive that reflects your ideas, progress, and memories over time.</p>
+        <a class="btn btn-ghost" href="https://github.com/pmnoos/digial_diary" target="_blank" rel="noopener noreferrer">Star the Project on GitHub</a>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>DailyThoughts Journal by Peter Magner. Crafted for calm writing and long-term reflection.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
