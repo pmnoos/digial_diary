@@ -1,75 +1,82 @@
-# DailyThoughts Journal
+# Digital Diary — A Personal Journal for Life's Journey
 
-> Capture your days. Reflect your moods. Own your story.
+**Capture your thoughts, preserve your memories, and keep your personal story in one place.**
 
-Welcome to **DailyThoughts Journal**, a simple, elegant journaling app designed for writers, thinkers, and anyone who wants to keep a daily log of life. Perfect for personal reflection, gratitude logging, or creative storytelling.
+Digital Diary is a personal journaling application designed to help you record everyday experiences, organise your thoughts, and build a lasting collection of memories.
+
+Whether you want to write about your day, save a special moment, or look back over earlier entries, Digital Diary provides a dedicated space for your personal story.
+
+## About the Project
+
+Digital Diary was developed to make keeping a personal journal straightforward and accessible. It brings together daily writing, organisation, and the ability to preserve memories over time.
+
+The project is built with Ruby on Rails and is packaged for Docker-based deployment, making it suitable for people who want to run their own diary application.
+
+## Features
+
+- **Personal diary entries** — Write, edit, and manage your journal entries.
+- **Rich-text editing** — Format your writing to suit your needs.
+- **Photographs and memories** — Keep images alongside your personal experiences.
+- **Tags and moods** — Organise entries and record how you felt.
+- **Date-based archives** — Browse earlier entries and revisit past memories.
+- **Drafts and autosave** — Support your writing workflow and help preserve work in progress.
+- **Thought of the Day** — Add a little inspiration to your daily journaling.
+- **Progressive Web App support** — Includes features designed to support an app-like experience.
+- **Help and privacy information** — Provides guidance and information about using the application.
+
+## Technology
+
+Digital Diary is built using:
+
+- Ruby
+- Ruby on Rails
+- PostgreSQL
+- Docker and Docker Compose
+- Bulma CSS
+
+The application is intended to be run using its documented setup instructions. Please consult the installation guide for the requirements and configuration applicable to your environment.
+
+## Getting Started
+
+### Installation
+
+For installation instructions, Docker setup, environment configuration, and database preparation, see:
+
+**[Read the Installation Guide](INSTALLATION.md)**
+
+The guide should be your starting point before attempting to run the application.
+
+### Explore the Source Code
+
+You can browse the source code, review the project files, and follow future development here:
+
+**[View Digital Diary on GitHub](https://github.com/pmnoos/digial_diary)**
+
+## Who Is It For?
+
+Digital Diary is intended for anyone who wants to keep a personal journal, record meaningful experiences, and build a collection of memories they can revisit in the years ahead.
+
+It may be particularly useful for people who value recording their life story and preserving personal memories for themselves and future generations.
+
+## Privacy and Personal Data
+
+A personal diary can contain sensitive information. How your data is stored and protected depends on how the application is installed, hosted, configured, and secured.
+
+Before storing personal or sensitive information, review your deployment configuration and ensure that your database, photographs, backups, and access credentials are appropriately protected.
+
+## About the Developer
+
+Digital Diary is one of Peter Magner's personal projects, developed from an interest in recording life's experiences and preserving memories.
+
+The project reflects a simple idea: our everyday thoughts and experiences are part of our story, and they are worth keeping.
+
+## Project Information
+
+- **Project:** Digital Diary
+- **Version:** 0.9.0
+- **Repository:** [pmnoos/digial_diary](https://github.com/pmnoos/digial_diary)
+- **Installation guide:** [INSTALLATION.md](INSTALLATION.md)
 
 ---
 
-## ✨ Features
-
-- 📝 **Write Daily**: Clean and distraction-free editor for your thoughts.
-- 📸 **Attach Images**: Add photos to enrich your entries.
-- 📅 **Smart Archive**: Entries are automatically sorted by month and year.
-- 🔐 **Private by Default**: Run it locally, and your stories stay yours.
-- 🚀 **Fast Setup**: Get journaling in minutes with our one-click install.
-
----
-
-## 🔧 Installation
-
-### Requirements
-- Ruby (>= 3.1)
-- Rails (>= 7.1)
-- PostgreSQL (optional for production)
-
-### Quick Start
-
-```bash
-# Clone the project
-git clone https://github.com/YOUR_USERNAME/diary_app.git
-cd diary_app
-
-# Install dependencies
-bundle install
-
-# Setup the database
-rails db:setup
-
-# Run the server
-rails server
-
-# Open in your browser:
-http://localhost:3000
-```
-
----
-
-## 🖼️ Screenshots
-
-Coming soon! Or launch it and experience the simplicity firsthand.
-
----
-
-## 📦 Packaging for Users
-- One-click installers and desktop wrappers (e.g. Electron or Tauri) can be explored for non-technical users.
-- Easy deployment instructions for Render, Railway, or Fly.io.
-
----
-
-## 💬 About
-Created with ❤️ by **Peter Magner** to bring beauty and simplicity to journaling.
-
----
-
-## 📣 License
-MIT — Feel free to clone, tweak, and use for your own projects.
-
----
-
-## 🙋‍♀️ Questions? Feedback?
-Visit the [GitHub repo](https://github.com/YOUR_USERNAME/diary_app) or raise an issue.
-
----
-
-Happy journaling ✨
+*Your life is a story worth remembering. Digital Diary gives you a place to write it down.*
