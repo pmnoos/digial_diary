@@ -11,7 +11,21 @@ Whether you want to write about your day, save a special moment, or look back ov
 Digital Diary was developed to make keeping a personal journal straightforward and accessible. It brings together daily writing, organisation, and the ability to preserve memories over time.
 
 The project is built with Ruby on Rails and is packaged for Docker-based deployment, making it suitable for people who want to run their own diary application.
+## Screenshots
 
+Here is a look at Digital Diary in action.
+
+### Diary Dashboard
+
+![Digital Diary dashboard](app/assets/images/digital-diary-dashboard.png)
+
+### Creating a Diary Entry
+
+![New diary entry form](app/assets/images/digital-diary-new-entry.png)
+
+### Events and Appointments
+
+![Events dashboard](app/assets/images/digital-diary-events.png)
 ## Features
 
 - **Personal diary entries** — Write, edit, and manage your journal entries.
