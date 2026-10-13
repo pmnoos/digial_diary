@@ -1,9 +1,167 @@
+/* ==========================================================================
+   Digital Diary theme — colors/fonts taken from landing.html
+   ========================================================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --bg: #f4f1ea;
+  --surface: #fffdf8;
+  --ink: #1f2a2f;
+  --muted: #55666d;
+  --teal: #0f7c82;
+  --teal-deep: #0a575b;
+  --sand: #f0e4cd;
+  --accent: #d35d2e;
+  --line: #dccdb5;
+  --shadow: 0 14px 35px rgba(25, 38, 44, 0.12);
+  --radius: 18px;
+  /* aliases used elsewhere in this stylesheet */
+  --background: var(--sand);
+  --text: var(--ink);
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at 10% 10%, #ffffff 0%, #f8f4ed 35%, #f2ebe0 100%);
+}
+
+h1, h2, h3, h4, h5, h6,
+.title, .subtitle {
+  font-family: "Fraunces", serif;
+  color: var(--ink) !important;
+}
+
+a {
+  color: var(--teal-deep);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* Navbar */
+.navbar.is-dark,
+.navbar.is-dark .navbar-menu,
+.navbar.is-dark .navbar-dropdown {
+  background: linear-gradient(130deg, var(--teal), var(--teal-deep));
+}
+
+.navbar.is-dark .navbar-item,
+.navbar.is-dark .navbar-link,
+.navbar-burger {
+  color: #fefefe;
+}
+
+.navbar.is-dark a.navbar-item:hover,
+.navbar.is-dark .navbar-link:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fefefe;
+}
+
+/* Buttons */
+.button.is-primary {
+  background: linear-gradient(130deg, var(--teal), var(--teal-deep));
+  border-color: transparent;
+  color: #fefefe;
+}
+
+.button.is-primary:hover {
+  background: linear-gradient(130deg, var(--teal-deep), var(--teal));
+}
+
+.button.is-link {
+  background-color: var(--teal-deep);
+}
+
+.button.is-warning {
+  background-color: var(--accent);
+  color: #fefefe;
+}
+
+.button.is-white {
+  background-color: #fffdf8;
+  color: var(--teal-deep);
+}
+
+.button.is-light {
+  background-color: var(--sand);
+  color: var(--ink);
+}
+
+.button.is-light:hover {
+  background-color: #fff8ea;
+}
+
+/* Hero sections (landing page) */
+.hero.is-primary {
+  background: linear-gradient(130deg, var(--teal), var(--teal-deep)) !important;
+}
+
+.hero.is-primary .title,
+.hero.is-primary .subtitle,
+.hero.is-primary p {
+  color: #fefefe !important;
+}
+
+/* Bulma color helper overrides so the whole app matches the landing theme */
+.has-background-light {
+  background-color: var(--surface) !important;
+}
+
+.has-background-primary {
+  background-color: var(--teal) !important;
+}
+
+.has-text-primary {
+  color: var(--teal-deep) !important;
+}
+
+.has-text-info {
+  color: var(--teal) !important;
+}
+
+.has-text-warning {
+  color: var(--accent) !important;
+}
+
+.has-text-link {
+  color: var(--teal-deep) !important;
+}
+
+section.section {
+  background-color: transparent;
+}
+
+/* Sidebar / menu */
+aside.has-background-light {
+  background-color: var(--surface) !important;
+  border-right: 1px solid var(--line);
+}
+
+.menu-list a {
+  color: var(--ink);
+  border-radius: 999px;
+}
+
+.menu-list a:hover {
+  background-color: var(--sand);
+  color: var(--ink);
+}
+
+.menu-label {
+  color: var(--teal-deep) !important;
+}
+
 /* Subtle background for Bulma boxes */
 /* Subtle background for Bulma boxes, theme-aware */
 .box {
-  background-color: var(--background, #d5dce4) !important;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  background-color: var(--surface) !important;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 /* Fix for Trix editor with Bulma */
 trix-editor {
